@@ -718,13 +718,16 @@ export default function Home() {
         {/* Background Gradients & Patterns */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#00287A] to-transparent pointer-events-none"></div>
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#0066FF] rounded-full blur-[120px] opacity-30 pointer-events-none"></div>
-        <svg className="absolute top-10 left-10 w-32 h-32 text-white/5 pointer-events-none" viewBox="0 0 100 100" fill="currentColor">
-          <circle cx="10" cy="10" r="2" />
-          <circle cx="30" cy="10" r="2" />
-          <circle cx="50" cy="10" r="2" />
-          <circle cx="10" cy="30" r="2" />
-          <circle cx="30" cy="30" r="2" />
-          <circle cx="50" cy="30" r="2" />
+        <svg className="absolute top-12 left-12 w-24 h-24 text-white/10 pointer-events-none" viewBox="0 0 100 100" fill="currentColor">
+          <circle cx="10" cy="10" r="3" />
+          <circle cx="30" cy="10" r="3" />
+          <circle cx="50" cy="10" r="3" />
+          <circle cx="10" cy="30" r="3" />
+          <circle cx="30" cy="30" r="3" />
+          <circle cx="50" cy="30" r="3" />
+          <circle cx="10" cy="50" r="3" />
+          <circle cx="30" cy="50" r="3" />
+          <circle cx="50" cy="50" r="3" />
         </svg>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -734,12 +737,12 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-medium mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white text-sm font-medium mb-6"
               >
                 <LayoutTemplate size={16} className="text-[#00D68F]" />
                 <span>Đa dạng lĩnh vực</span>
               </motion.div>
-              <h2 className="text-[32px] md:text-[40px] font-bold mb-6 leading-tight">
+              <h2 className="text-[36px] md:text-[44px] font-bold mb-6 leading-[1.2]">
                 Thiết kế website chuyên nghiệp theo ngành nghề
               </h2>
               <p className="text-blue-200 text-[18px] leading-relaxed">
@@ -747,17 +750,24 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 'Mỹ phẩm', 'Thực phẩm', 'Công nghệ', 'Khách sạn',
                 'Gia dụng', 'Bất động sản', 'Nội thất', 'Sách - VP phẩm'
               ].map((industry, idx) => (
-                <div key={idx} className="bg-[#00287A]/50 hover:bg-[#003399] transition-all duration-300 rounded-2xl p-6 text-center cursor-pointer border border-blue-400/20 hover:border-blue-400/50 hover:-translate-y-1 group">
-                  <div className="w-14 h-14 mx-auto bg-white/10 rounded-full mb-4 flex items-center justify-center group-hover:bg-[#00D68F]/20 transition-colors">
-                    <LayoutTemplate className="text-blue-200 group-hover:text-[#00D68F] transition-colors" size={24} />
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="bg-[#002066] hover:bg-[#002b80] transition-all duration-300 rounded-2xl p-6 text-center cursor-pointer border border-[#0040B0]/50 hover:border-blue-400/80 hover:-translate-y-1 group flex flex-col items-center justify-center aspect-square shadow-lg shadow-black/10"
+                >
+                  <div className="w-12 h-12 mx-auto rounded-full mb-4 flex items-center justify-center bg-transparent border border-[#0040B0]/50 group-hover:bg-[#0040B0]/50 transition-colors">
+                    <LayoutTemplate className="text-white group-hover:text-white transition-colors" size={20} strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-medium text-[16px]">{industry}</h3>
-                </div>
+                  <h3 className="font-medium text-[15px] text-white">{industry}</h3>
+                </motion.div>
               ))}
             </div>
           </div>
