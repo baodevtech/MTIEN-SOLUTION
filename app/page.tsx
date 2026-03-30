@@ -508,7 +508,7 @@ export default function Home() {
                           initial={{ opacity: 0, width: 0 }}
                           animate={{ opacity: 1, width: 64 }}
                           exit={{ opacity: 0, width: 0 }}
-                          className="bg-white border-r border-slate-100 flex flex-col items-center py-4 gap-6 shrink-0 z-10 hidden md:flex"
+                          className="bg-white border-r border-slate-100 flex-col items-center py-4 gap-6 shrink-0 z-10 hidden md:flex"
                         >
                           <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-xs shadow-md">M</div>
                           <div className="flex flex-col gap-3 w-full px-3">
@@ -786,7 +786,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="flex gap-6 border-l-2 border-slate-200 pl-6 hidden md:flex"
+              className="flex gap-6 border-l-2 border-slate-200 pl-6 md:flex"
             >
               <div>
                 <p className="text-3xl font-black text-slate-900">500+</p>
@@ -886,8 +886,12 @@ export default function Home() {
                       <LayoutTemplate size={12} /> {template.category}
                     </span>
                     <div className="flex text-slate-400 gap-1.5">
-                      <Monitor size={14} title="Desktop responsive" />
-                      <Smartphone size={14} title="Mobile responsive" />
+                      <div title="Desktop responsive">
+                        <Monitor size={14} />
+                      </div>
+                      <div title="Mobile responsive">
+                        <Smartphone size={14} />
+                      </div>
                     </div>
                   </div>
 
@@ -1395,7 +1399,7 @@ export default function Home() {
         </div>
       </section>
 
-    {/* 10. FAQ Section - Detailed Knowledge Base Style */}
+      {/* 10. FAQ Section - Detailed Knowledge Base Style */}
       <section className="py-24 md:py-32 bg-[#F8FAFC] relative overflow-hidden">
         {/* Architectural Background Grid */}
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLCAxMDIsIDI1NSwgMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-60"></div>
@@ -1568,7 +1572,7 @@ export default function Home() {
         </div>
       </section>
 
-    {/* 11. Bottom CTA - Compact & Minimalist Apple Style */}
+      {/* 11. Bottom CTA - Compact & Minimalist Apple Style */}
       <section className="py-16 md:py-20 bg-[#FBFBFD] relative overflow-hidden border-t border-slate-100">
         {/* Very Subtle Glows - Chỉ là những điểm nhấn cực nhẹ */}
         <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-blue-50/50 rounded-full blur-[80px] pointer-events-none"></div>
