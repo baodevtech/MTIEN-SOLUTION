@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { Palette, Megaphone, PenTool, Image as ImageIcon, Layout, ArrowRight, CheckCircle2, TrendingUp, Target } from 'lucide-react';
+import { Megaphone, PenTool, Layout, TrendingUp, MonitorPlay, Search, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
 
 export default function MarketingDesignPage() {
@@ -20,8 +20,8 @@ export default function MarketingDesignPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm font-medium mb-6"
               >
-                <Palette size={16} className="text-[#00D68F]" />
-                <span>Sáng Tạo & Đột Phá</span>
+                <Megaphone size={16} className="text-[#00D68F]" />
+                <span>Nâng Tầm Thương Hiệu Số</span>
               </motion.div>
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
@@ -29,7 +29,7 @@ export default function MarketingDesignPage() {
                 transition={{ delay: 0.1 }}
                 className="text-[40px] md:text-[56px] font-bold leading-tight mb-6"
               >
-                Quảng Cáo & <br />
+                Digital Marketing & <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00D68F] to-[#00b3d6]">Thiết Kế Đồ Họa</span>
               </motion.h1>
               <motion.p 
@@ -38,7 +38,7 @@ export default function MarketingDesignPage() {
                 transition={{ delay: 0.2 }}
                 className="text-blue-200 text-lg mb-8 max-w-xl"
               >
-                Cung cấp dịch vụ quảng cáo, thiết kế chuyên dụng: Logo, Banner, Poster, hình ảnh truyền thông giúp thương hiệu của bạn nổi bật.
+                Cung cấp giải pháp truyền thông số toàn diện, thiết kế bộ nhận diện thương hiệu độc đáo và triển khai quảng cáo trực tuyến giúp bứt phá doanh thu.
               </motion.p>
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -47,7 +47,7 @@ export default function MarketingDesignPage() {
                 className="flex flex-wrap gap-4"
               >
                 <button className="bg-[#00D68F] hover:bg-[#00c280] text-[#001A5F] font-bold px-8 py-4 rounded-full transition-all flex items-center gap-2">
-                  Xem Portfolio
+                  Nhận tư vấn ngay
                   <ArrowRight size={20} />
                 </button>
               </motion.div>
@@ -59,8 +59,8 @@ export default function MarketingDesignPage() {
               className="relative h-[400px] lg:h-[500px]"
             >
               <Image 
-                src="https://picsum.photos/seed/design/800/600" 
-                alt="Graphic Design & Marketing" 
+                src="https://picsum.photos/seed/marketing/800/600" 
+                alt="Marketing and Design" 
                 fill 
                 className="object-cover rounded-2xl shadow-2xl"
                 unoptimized
@@ -75,50 +75,50 @@ export default function MarketingDesignPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-[32px] md:text-[40px] font-bold text-[#1A1A1A] mb-4">
-              Dịch Vụ Sáng Tạo
+              Dịch Vụ Của Chúng Tôi
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Từ ý tưởng đến thực thi, chúng tôi giúp thương hiệu của bạn giao tiếp hiệu quả với khách hàng (Mã ngành 7310, 7410).
+              Sáng tạo không giới hạn kết hợp với chiến lược thực chiến, đem lại tỷ lệ chuyển đổi tối ưu nhất.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: Megaphone,
+                icon: PenTool,
+                title: 'Thiết Kế Đồ Họa',
+                desc: 'Thiết kế logo, bộ nhận diện thương hiệu, banner quảng cáo, bao bì sản phẩm chuyên nghiệp.',
+                code: '7410'
+              },
+              {
+                icon: TrendingUp,
                 title: 'Quảng Cáo Trực Tuyến',
-                desc: 'Chạy quảng cáo Google Ads, Facebook Ads, TikTok Ads tối ưu chi phí, tăng tỷ lệ chuyển đổi.',
+                desc: 'Thiết lập và tối ưu chiến dịch quảng cáo trên nền tảng Facebook Ads, Google Ads, TikTok Ads.',
                 code: '7310'
               },
               {
-                icon: PenTool,
-                title: 'Thiết Kế Logo & Branding',
-                desc: 'Xây dựng bộ nhận diện thương hiệu chuyên nghiệp, ấn tượng, tạo dấu ấn riêng biệt.',
-                code: '7410'
-              },
-              {
-                icon: ImageIcon,
-                title: 'Thiết Kế Banner & Poster',
-                desc: 'Thiết kế ấn phẩm truyền thông, banner quảng cáo, poster sự kiện thu hút ánh nhìn.',
-                code: '7410'
+                icon: Search,
+                title: 'Dịch Vụ SEO',
+                desc: 'Tối ưu hóa công cụ tìm kiếm, đưa website lên top Google bền vững để tiếp cận khách hàng tiềm năng.',
+                code: '7310'
               },
               {
                 icon: Layout,
                 title: 'Thiết Kế UI/UX',
-                desc: 'Thiết kế giao diện người dùng cho Website và App di động, tối ưu trải nghiệm khách hàng.',
+                desc: 'Tạo ra giao diện người dùng hiện đại, tăng trải nghiệm và tỷ lệ giữ chân khách hàng trên web/app.',
                 code: '7410'
               },
               {
-                icon: Target,
-                title: 'Chiến Lược Marketing',
-                desc: 'Lên kế hoạch và triển khai các chiến dịch Marketing tổng thể giúp tăng doanh thu.',
+                icon: Megaphone,
+                title: 'Quản Trị Fanpage',
+                desc: 'Chăm sóc nội dung bài viết, hình ảnh và quản lý tương tác trên các kênh mạng xã hội.',
                 code: '7310'
               },
               {
-                icon: TrendingUp,
-                title: 'SEO & Content',
-                desc: 'Tối ưu hóa công cụ tìm kiếm, sáng tạo nội dung chuẩn SEO, viết bài PR chuyên nghiệp.',
-                code: '7310'
+                icon: MonitorPlay,
+                title: 'Sản Xuất Video',
+                desc: 'Quay dựng video giới thiệu doanh nghiệp, TVC quảng cáo và motion graphics cuốn hút.',
+                code: '7410'
               }
             ].map((service, idx) => (
               <motion.div 
@@ -145,34 +145,53 @@ export default function MarketingDesignPage() {
         </div>
       </section>
 
-      {/* Process */}
+      {/* Why Choose Us */}
       <section className="py-24 bg-[#001A5F] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-[32px] md:text-[40px] font-bold mb-4">
-              Quy Trình Làm Việc
-            </h2>
-            <p className="text-blue-200 text-lg max-w-2xl mx-auto">
-              Minh bạch, sáng tạo và luôn đặt hiệu quả lên hàng đầu.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              { step: '01', title: 'Nghiên Cứu', desc: 'Phân tích thị trường, đối thủ và chân dung khách hàng mục tiêu.' },
-              { step: '02', title: 'Ý Tưởng', desc: 'Brainstorming và đề xuất các concept sáng tạo phù hợp.' },
-              { step: '03', title: 'Thực Thi', desc: 'Thiết kế chi tiết, lên nội dung và setup chiến dịch quảng cáo.' },
-              { step: '04', title: 'Tối Ưu', desc: 'Đo lường hiệu quả, báo cáo và liên tục điều chỉnh tối ưu.' }
-            ].map((item, idx) => (
-              <div key={idx} className="relative">
-                <div className="text-6xl font-black text-white/10 mb-4">{item.step}</div>
-                <h3 className="text-xl font-bold text-[#00D68F] mb-3">{item.title}</h3>
-                <p className="text-gray-300">{item.desc}</p>
-                {idx < 3 && (
-                  <div className="hidden md:block absolute top-8 right-0 w-full h-[2px] bg-gradient-to-r from-white/20 to-transparent -z-10 transform translate-x-1/2"></div>
-                )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-[32px] md:text-[40px] font-bold mb-6">
+                Sáng tạo tạo nên sự khác biệt
+              </h2>
+              <p className="text-blue-200 text-lg mb-8">
+                Chúng tôi cam kết đồng hành cùng doanh nghiệp trong quá trình xây dựng thương hiệu số và thu hút khách hàng mục tiêu.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  'Chiến lược thực chiến bám sát mục tiêu kinh doanh',
+                  'Đội ngũ sáng tạo trẻ trung, luôn cập nhật xu hướng',
+                  'Tối ưu hóa tỷ suất hoàn vốn (ROI) cho các chiến dịch',
+                  'Báo cáo minh bạch, số liệu rõ ràng theo thời gian thực'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <CheckCircle2 className="text-[#00D68F] shrink-0 mt-1" size={20} />
+                    <span className="text-gray-300 text-lg">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
+                  <h4 className="text-4xl font-bold text-[#00D68F] mb-2">200+</h4>
+                  <p className="text-blue-200">Chiến dịch thành công</p>
+                </div>
+                <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
+                  <h4 className="text-4xl font-bold text-[#00D68F] mb-2">300%</h4>
+                  <p className="text-blue-200">Tăng trưởng tiếp cận</p>
+                </div>
               </div>
-            ))}
+              <div className="space-y-4 mt-8">
+                <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
+                  <h4 className="text-4xl font-bold text-[#00D68F] mb-2">24/7</h4>
+                  <p className="text-blue-200">Hỗ trợ đối tác</p>
+                </div>
+                <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
+                  <h4 className="text-4xl font-bold text-[#00D68F] mb-2">5+</h4>
+                  <p className="text-blue-200">Năm kinh nghiệm</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

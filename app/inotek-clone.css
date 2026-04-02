@@ -1,0 +1,203 @@
+/* ==========================================================================
+   TÙY CHỈNH MÀU SẮC THEO THEME INOTEK GỐC
+   ========================================================================== */
+:root {
+  --theme-color: #1053F3;       /* Màu xanh dương chủ đạo */
+  --theme-color3: #061153;      /* Màu xanh đen tối */
+  --dark-color: #061153;
+  --gray-color: #A0A3B5;
+  --gray-color2: #616161;
+  --white-color: #FFFFFF;
+  --light-color: #F4F7FF;       /* Nền xám xanh nhạt */
+  --success-color: #00D68F;     /* Màu xanh lá nhấn */
+}
+
+/* ==========================================================================
+   HỆ THỐNG LƯỚI (GRID) GIẢ LẬP BOOTSTRAP
+   ========================================================================== */
+.container, .container-fluid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.row > * {
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+}
+.gy-30 { row-gap: 30px; }
+
+/* Desktop Grid */
+@media (min-width: 992px) {
+  .col-lg-4 { flex: 0 0 auto; width: 33.33333333%; }
+  .col-lg-6 { flex: 0 0 auto; width: 50%; }
+  .col-lg-12 { flex: 0 0 auto; width: 100%; }
+  .col-xl-3 { flex: 0 0 auto; width: 25%; }
+  .col-xl-4 { flex: 0 0 auto; width: 33.33333333%; }
+}
+/* Tablet Grid */
+@media (min-width: 768px) and (max-width: 991px) {
+  .col-md-6 { flex: 0 0 auto; width: 50%; }
+}
+/* Mobile */
+@media (max-width: 767px) {
+  .col-sm-6 { flex: 0 0 auto; width: 100%; }
+}
+
+/* ==========================================================================
+   TYPOGRAPHY & UTILITIES
+   ========================================================================== */
+.text-center { text-align: center; }
+.text-white { color: var(--white-color) !important; }
+.text-dark { color: var(--dark-color) !important; }
+.text-theme { color: var(--theme-color) !important; }
+.bg-light { background-color: var(--light-color) !important; }
+.bg-theme3 { background-color: var(--theme-color3) !important; }
+.bg-dark { background-color: var(--dark-color) !important; }
+.space { padding-top: 100px; padding-bottom: 100px; }
+.space-bottom { padding-bottom: 100px; }
+.mt--25 { margin-top: -25px; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+.mt-40 { margin-top: 40px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-40 { margin-bottom: 40px; }
+.w-100 { width: 100%; }
+
+/* ==========================================================================
+   NÚT BẤM (BUTTONS)
+   ========================================================================== */
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: var(--theme-color);
+  color: var(--white-color);
+  padding: 14px 30px;
+  border-radius: 30px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+.theme-btn:hover {
+  background-color: var(--theme-color3);
+  color: var(--white-color);
+}
+.theme-btn.style2 {
+  background-color: var(--success-color);
+  color: var(--dark-color);
+}
+.theme-btn.style2:hover {
+  background-color: var(--white-color);
+}
+
+/* ==========================================================================
+   COMPONENTS TRONG TRANG
+   ========================================================================== */
+/* 1. Breadcrumb */
+.tv-breadcrumb-section {
+  padding: 100px 0;
+  margin: 20px;
+  background-color: var(--theme-color3);
+  border-radius: 30px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.tv-breadcrumb-section .bg.image img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.15;
+  z-index: 0;
+}
+.tv-breadcrumb-section .title-outer { position: relative; z-index: 1; }
+.page-title h1 { color: var(--white-color); font-size: 3.5rem; margin-bottom: 15px; }
+.page-breadcrumb {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  color: var(--gray-color);
+}
+.page-breadcrumb a { color: var(--white-color); text-decoration: none; }
+
+/* 2. Features Section */
+.tv-feature-item, .tv-feature-box {
+  background: var(--white-color);
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+.tv-feature-box:hover { transform: translateY(-5px); }
+.tv-feature-box h2 { font-size: 1.5rem; margin-bottom: 15px; line-height: 1.4; color: var(--dark-color);}
+.tv-feature-box p { color: var(--gray-color2); line-height: 1.6; }
+.tv-feature-box .icon-top { margin-bottom: 25px; }
+.client-social-proof { text-align: center; }
+.client-social-proof .social { display: flex; align-items: center; justify-content: center; margin-bottom: 20px;}
+.client-social-proof .social img { width: 45px; height: 45px; border-radius: 50%; border: 3px solid white; margin-left: -15px; }
+.client-social-proof .social h4 { margin-left: 10px; font-size: 1.2rem; }
+.count-number { font-size: 3rem; font-weight: 800; color: var(--theme-color); }
+
+/* 3. Services Layout */
+.tv-service-single-box {
+  background: var(--white-color);
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(6, 17, 83, 0.05);
+  transition: all 0.4s ease;
+  height: 100%;
+}
+.tv-service-single-box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(16, 83, 243, 0.1);
+}
+.tv-service-single-box .icon { width: 70px; height: 70px; margin-bottom: 25px; }
+.tv-service-single-box .title a {
+  color: var(--dark-color);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.tv-service-single-box:hover .title a { color: var(--theme-color); }
+.tv-service-single-box .border2 { height: 2px; width: 50px; background-color: var(--theme-color); }
+.tv-service-single-box .text { color: var(--gray-color2); line-height: 1.7; }
+
+/* 4. Marquee Slider */
+.tv-marquee-section { padding: 40px 0; border-top: 1px solid #e1e5ee; border-bottom: 1px solid #e1e5ee; }
+.slider_marquee { display: flex; animation: marquee 20s linear infinite; }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* 5. Process Section */
+.process-inner { padding: 80px 40px; border-radius: 30px; }
+.big-sec-title { font-size: 3rem; font-weight: 800; margin-bottom: 50px; }
+.tv-process-item .title-text { color: var(--success-color); font-size: 1rem; font-weight: 700; margin-bottom: 15px; }
+.process-box {
+  background: rgba(255,255,255,0.05);
+  padding: 40px 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  height: 100%;
+}
+.process-box .icon { margin-bottom: 20px; height: 60px; }
+.process-box .title { color: var(--white-color); font-size: 1.3rem; margin-bottom: 15px; }
+.process-box p { color: #d1d5db; line-height: 1.6; }
+
+/* 6. Title Wraps */
+.title-wrap.two.white .sub-title-2 { color: var(--theme-color); font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;}
+.title-wrap.two.white .sec-title { font-size: 2.5rem; font-weight: 800; line-height: 1.3; margin-bottom: 50px; }
