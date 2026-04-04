@@ -1,8 +1,8 @@
 'use client';
 
-import React, { Activity, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useInView, AnimatePresence } from 'motion/react';
-import { CheckCircle2, XCircle, Plus, Minus, ArrowRight, Layers, Globe, Smartphone, Users, ShieldCheck, Zap, Sparkles, Cloud, Check, Cpu, BarChart3, Server, Shield } from 'lucide-react';
+import { Activity, CheckCircle2, XCircle, Plus, Minus, ArrowRight, Layers, Globe, Smartphone, Users, ShieldCheck, Zap, Sparkles, Cloud, Check, Cpu, BarChart3, Server, Shield, X, LifeBuoy, Clock, Lock, MessageCircle, Mail, Rocket, ChevronRight } from 'lucide-react';
 import { Manrope } from 'next/font/google';
 
 // --- CẤU HÌNH FONT CHỮ DUY NHẤT CHO TOÀN TRANG ---
@@ -255,48 +255,60 @@ export default function ServicesPage() {
         </div>
       </section>
 
-     {/* 3. HỆ SINH THÁI DỊCH VỤ - CẤU TRÚC APPLE & MÀU SẮC ĐỒNG BỘ */}
-      <section className="py-[120px] bg-white relative overflow-hidden border-b border-[#E8EDFA]">
+      {/* 3. HỆ SINH THÁI DỊCH VỤ - LIGHT BENTO GRID & HARMONIC COLORS */}
+      <section className="py-[60px] lg:py-[80px] flex flex-col justify-center min-h-[calc(100vh-100px)] bg-white relative overflow-hidden border-b border-[#E8EDFA]">
         <div className="container mx-auto px-6 relative z-10 max-w-7xl">
           
-          <div className="text-center mb-[80px]">
-            <motion.span variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-[#1053F3] font-bold text-[13px] tracking-[0.15em] uppercase mb-4 block">
+          {/* Section Header */}
+          <div className="text-center mb-[40px] lg:mb-[50px]">
+            <motion.span variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="font-bold text-[12px] tracking-[0.15em] uppercase mb-3 block text-slate-400">
               Ecosystem
             </motion.span>
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="text-3xl md:text-5xl font-extrabold text-[#061153] leading-tight tracking-tight">
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="text-3xl md:text-4xl font-extrabold text-[#061153] leading-tight tracking-tight">
               Giải Pháp Phần Mềm <br /> Toàn Diện & Chuyên Sâu
             </motion.h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-[30px] lg:gap-[50px] items-start"
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-[24px] lg:gap-[40px] items-stretch"
                onMouseEnter={() => setIsHovered(true)}
                onMouseLeave={() => setIsHovered(false)}
           >
-            {/* LEFT: Tab Navigation - Tech Colors */}
-            <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-4 flex flex-col gap-2">
+            {/* LEFT: Tab Navigation - Dynamic Colors */}
+            <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-4 flex flex-col gap-1.5 justify-between">
               {ecosystemData.map((node, i) => {
                 const isActive = activeService === i;
                 return (
                   <button
                     key={i}
                     onClick={() => setActiveService(i)}
-                    className={`flex items-center gap-4 w-full p-4 rounded-[20px] transition-all duration-300 text-left group border ${
-                      isActive 
-                        ? 'bg-[#1053F3] border-[#1053F3] text-white shadow-[0_10px_25px_rgba(16,83,243,0.3)]' 
-                        : 'bg-transparent border-transparent text-slate-500 hover:bg-[#F4F7FF] hover:text-[#1053F3]'
-                    }`}
+                    className="flex items-center gap-3 w-full p-2.5 md:p-3 rounded-[16px] transition-all duration-300 text-left group border"
+                    style={{
+                      backgroundColor: isActive ? node.hex : 'transparent',
+                      borderColor: isActive ? node.hex : 'transparent',
+                      boxShadow: isActive ? `0 8px 25px ${node.hex}40` : 'none',
+                    }}
                   >
-                    <div className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center transition-colors duration-300 ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-[#F4F7FF] text-[#1053F3] group-hover:bg-white group-hover:shadow-sm'
-                    }`}>
-                      {React.cloneElement(node.icon as React.ReactElement, { size: 20 })}
+                    {/* Icon Box */}
+                    <div className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm"
+                      style={{
+                        backgroundColor: isActive ? 'rgba(255,255,255,0.25)' : `${node.hex}15`,
+                        color: isActive ? '#ffffff' : node.hex
+                      }}
+                    >
+                      {React.cloneElement(node.icon as React.ReactElement, { size: 18 })}
                     </div>
-                    <span className="font-bold text-[17px] tracking-tight">
+                    
+                    {/* Label */}
+                    <span className="font-bold text-[15px] md:text-[16px] tracking-tight group-hover:translate-x-1 transition-transform"
+                      style={{ color: isActive ? '#ffffff' : '#64748B' }}
+                    >
                       {node.label}
                     </span>
+                    
+                    {/* Arrow */}
                     {isActive && (
                       <motion.div layoutId="activeTabIndicator" className="ml-auto text-white">
-                        <ArrowRight size={18} />
+                        <ArrowRight size={16} />
                       </motion.div>
                     )}
                   </button>
@@ -304,121 +316,146 @@ export default function ServicesPage() {
               })}
             </motion.div>
 
-           {/* RIGHT: Active Content Card - BENTO GRID & DASHBOARD UI */}
-            <motion.div variants={fadeInRightBig} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-8 h-full">
-              <div className="bg-[#F4F7FF] rounded-[32px] p-[30px] md:p-[50px] relative overflow-hidden flex flex-col h-full transition-all duration-500 border border-[#E8EDFA] shadow-[0_20px_50px_rgba(6,17,83,0.03)] z-10">
+            {/* RIGHT: Active Content Card - Dynamic Bento Grid */}
+            <motion.div variants={fadeInRightBig} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-8 flex flex-col">
+              
+              <div className="bg-[#F8FAFC] rounded-[24px] md:rounded-[32px] p-[24px] md:p-[36px] relative overflow-hidden flex flex-col flex-1 transition-all duration-500 border shadow-[0_15px_40px_rgba(6,17,83,0.03)] z-10"
+                   style={{ borderColor: `${ecosystemData[activeService].hex}25` }}>
                 
-                {/* 1. Dynamic Background Effects (Quầng sáng & Lưới công nghệ) */}
+                {/* 1. Dynamic Background Glow */}
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-[32px]">
                   <motion.div 
                     key={`glow-${activeService}`}
                     initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 0.15, scale: 1 }}
+                    animate={{ opacity: 0.12, scale: 1 }}
                     transition={{ duration: 0.8 }}
-                    className="absolute -top-[150px] -right-[150px] w-[500px] h-[500px] rounded-full blur-[100px]"
+                    className="absolute -top-[150px] -right-[150px] w-[400px] h-[400px] rounded-full blur-[80px]"
                     style={{ backgroundColor: ecosystemData[activeService].hex }}
                   />
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div>
                 </div>
 
                 {/* 2. Top Progress Bar */}
-                <div className="absolute top-0 left-0 w-full h-[4px] bg-blue-100/60 z-20">
+                <div className="absolute top-0 left-0 w-full h-[4px] bg-slate-200/50 z-20">
                   <motion.div
                     key={`progress-${activeService}`}
                     initial={{ width: "0%" }}
                     animate={{ width: isHovered ? "0%" : "100%" }}
                     transition={{ duration: AUTO_PLAY_DURATION / 1000, ease: "linear" }}
-                    className="h-full shadow-[0_0_10px_rgba(16,83,243,0.5)]"
-                    style={{ backgroundColor: ecosystemData[activeService].hex }}
+                    className="h-full shadow-sm"
+                    style={{ backgroundColor: ecosystemData[activeService].hex, boxShadow: `0 0 10px ${ecosystemData[activeService].hex}80` }}
                   />
                 </div>
 
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeService}
-                    initial={{ opacity: 0, filter: "blur(8px)", y: 20 }}
+                    initial={{ opacity: 0, filter: "blur(6px)", y: 15 }}
                     animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                    exit={{ opacity: 0, filter: "blur(8px)", y: -20 }}
-                    transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                    exit={{ opacity: 0, filter: "blur(6px)", y: -15 }}
+                    transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
                     className="flex flex-col h-full relative z-10"
                   >
                     {/* Header: Status Badge & Title */}
-                    <div className="mb-8">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-blue-50 shadow-sm">
-                          <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: ecosystemData[activeService].hex }}></span>
-                          <span className="text-[12px] font-extrabold uppercase tracking-widest text-[#061153]">
+                    <div className="mb-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border shadow-sm"
+                             style={{ borderColor: `${ecosystemData[activeService].hex}30` }}>
+                          <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: ecosystemData[activeService].hex }}></span>
+                          <span className="text-[10px] font-extrabold uppercase tracking-widest" style={{ color: ecosystemData[activeService].hex }}>
                             Node 0{activeService + 1}
                           </span>
                         </div>
-                        <span className="text-slate-400 font-semibold text-sm tracking-wider uppercase">— {ecosystemData[activeService].label}</span>
+                        <span className="text-slate-400 font-semibold text-[12px] tracking-wider uppercase">— {ecosystemData[activeService].label}</span>
                       </div>
                       
-                      <h3 className="text-[32px] md:text-[44px] font-extrabold text-[#061153] leading-[1.15] tracking-tight mb-5">
+                      <h3 className="text-[28px] md:text-[36px] font-extrabold text-[#061153] leading-[1.15] tracking-tight mb-3">
                         {ecosystemData[activeService].title}
                       </h3>
                       
-                      <p className="text-slate-500 text-[17px] md:text-[19px] leading-[1.6] font-medium max-w-[95%]">
+                      <p className="text-slate-500 text-[15px] md:text-[16px] leading-[1.5] font-medium max-w-[95%]">
                         {ecosystemData[activeService].desc}
                       </p>
                     </div>
 
                     {/* Bento Grid Content */}
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-5 mb-10">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
                       
-                      {/* Box 1: Core Features (Chiếm 3 cột) */}
-                      <div className="md:col-span-3 bg-white rounded-[24px] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-slate-100 hover:border-blue-100 transition-colors group/box">
-                        <h4 className="font-extrabold text-[#061153] mb-5 text-[16px] flex items-center gap-2">
-                          <Sparkles size={18} style={{ color: ecosystemData[activeService].hex }} />
+                      {/* Box 1: Core Features */}
+                      <div className="md:col-span-3 bg-white rounded-[20px] p-4 md:p-5 shadow-sm border flex flex-col justify-center transition-all duration-300 hover:shadow-md"
+                           style={{ borderColor: `${ecosystemData[activeService].hex}15` }}>
+                        <h4 className="font-extrabold text-[#061153] mb-3.5 text-[15px] flex items-center gap-2">
+                          <Sparkles size={16} style={{ color: ecosystemData[activeService].hex }} />
                           Năng lực triển khai
                         </h4>
-                        <ul className="space-y-3.5">
-                          {ecosystemData[activeService].features.map((feature, idx) => (
-                            <li key={idx} className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-50 transition-colors">
-                              <div className="mt-0.5 bg-blue-50 w-6 h-6 rounded-full flex items-center justify-center shrink-0">
-                                <Check size={14} strokeWidth={3} style={{ color: ecosystemData[activeService].hex }} />
+                        <ul className="space-y-2.5">
+                          {ecosystemData[activeService].features.slice(0, 4).map((feature, idx) => (
+                            <li key={idx} className="flex items-start gap-2.5">
+                              <div className="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 border"
+                                   style={{ backgroundColor: `${ecosystemData[activeService].hex}15`, borderColor: `${ecosystemData[activeService].hex}30` }}>
+                                <Check size={12} strokeWidth={3} style={{ color: ecosystemData[activeService].hex }} />
                               </div>
-                              <span className="text-slate-700 font-semibold text-[15px]">{feature}</span>
+                              <span className="text-slate-700 font-semibold text-[14px] leading-tight">{feature}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      {/* Box 2 & 3: Tech Stack & Metrics (Chiếm 2 cột, chia dòng) */}
-                      <div className="md:col-span-2 flex flex-col gap-5">
+                      {/* Box 2 & 3: Tech Stack & Metrics */}
+                      <div className="md:col-span-2 flex flex-col gap-4">
                         
                         {/* Box 2: Tech Stack */}
-                        <div className="bg-white rounded-[24px] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-slate-100 hover:border-blue-100 transition-colors flex-1">
-                          <h4 className="font-extrabold text-[#061153] mb-4 text-[16px] flex items-center gap-2">
-                            <Layers size={18} style={{ color: ecosystemData[activeService].hex }} />
+                        <div className="bg-white rounded-[20px] p-4 shadow-sm border flex-1 flex flex-col justify-center transition-all duration-300 hover:shadow-md"
+                             style={{ borderColor: `${ecosystemData[activeService].hex}15` }}>
+                          <h4 className="font-extrabold text-[#061153] mb-3 text-[14px] flex items-center gap-1.5">
+                            <Layers size={16} style={{ color: ecosystemData[activeService].hex }} />
                             Công nghệ
                           </h4>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-1.5">
                             {ecosystemData[activeService].techs.map((tech, idx) => (
-                              <span key={idx} className="px-3 py-1.5 bg-[#F4F7FF] rounded-lg text-[13px] font-bold text-[#061153] border border-blue-50/50">
+                              <span key={idx} className="px-2.5 py-1 rounded-md text-[12px] font-bold border"
+                                    style={{ 
+                                      color: ecosystemData[activeService].hex, 
+                                      backgroundColor: `${ecosystemData[activeService].hex}10`,
+                                      borderColor: `${ecosystemData[activeService].hex}25` 
+                                    }}>
                                 {tech}
                               </span>
                             ))}
                           </div>
                         </div>
 
-                        {/* Box 3: Enterprise SLA (Khối UI hoành tráng) */}
-                        <div className="bg-gradient-to-br from-[#061153] to-[#18225F] rounded-[24px] p-6 shadow-[0_15px_30px_rgba(6,17,83,0.15)] relative overflow-hidden group/sla border border-white/10">
-                          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl group-hover/sla:bg-blue-500/30 transition-colors"></div>
-                          <h4 className="font-bold text-blue-200 mb-4 text-[13px] uppercase tracking-widest flex items-center gap-2">
-                            <Activity size={14} className="text-blue-400" /> Tiêu chuẩn Enterprise
+                        {/* Box 3: Enterprise SLA - Phối màu đơn sắc (Monochromatic Harmony) */}
+                        <div className="rounded-[20px] p-4 shadow-sm relative overflow-hidden flex-1 flex flex-col justify-center border transition-all duration-500 hover:shadow-md"
+                             style={{ 
+                               background: `linear-gradient(135deg, ${ecosystemData[activeService].hex}15 0%, #ffffff 100%)`,
+                               borderColor: `${ecosystemData[activeService].hex}30` 
+                             }}>
+                          {/* Decorative Glow */}
+                          <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl opacity-40 transition-colors duration-500" 
+                               style={{ backgroundColor: ecosystemData[activeService].hex, transform: 'translate(20%, -30%)' }}></div>
+                          
+                          <h4 className="font-extrabold mb-3 text-[11px] uppercase tracking-widest flex items-center gap-1.5 relative z-10"
+                              style={{ color: ecosystemData[activeService].hex }}>
+                            <Activity size={14} strokeWidth={2.5} /> Tiêu chuẩn Enterprise
                           </h4>
-                          <div className="space-y-4 relative z-10">
+                          
+                          <div className="space-y-3 relative z-10">
                             <div className="flex items-center justify-between">
-                              <span className="text-white font-semibold text-sm flex items-center gap-2"><Server size={14} className="text-blue-400"/> Uptime SLA</span>
-                              <span className="text-white font-extrabold text-sm">99.99%</span>
+                              <span className="text-slate-600 font-semibold text-[13px] flex items-center gap-1.5">
+                                <Server size={14} style={{ color: ecosystemData[activeService].hex }}/> Uptime SLA
+                              </span>
+                              <span className="font-extrabold text-[14px] text-[#061153]">99.99%</span>
                             </div>
-                            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                              <motion.div initial={{ width: 0 }} animate={{ width: "99%" }} transition={{ duration: 1, delay: 0.2 }} className="h-full bg-blue-400 rounded-full"></motion.div>
-                            </div>
-                            <div className="flex items-center justify-between pt-1">
-                              <span className="text-white font-semibold text-sm flex items-center gap-2"><Shield size={14} className="text-emerald-400"/> Bảo mật dữ liệu</span>
-                              <span className="text-emerald-400 font-extrabold text-sm">ISO 27001</span>
+                            <div className="w-full h-1.5 rounded-full overflow-hidden" 
+                                 style={{ backgroundColor: `${ecosystemData[activeService].hex}20` }}>
+                              <motion.div initial={{ width: 0 }} animate={{ width: "99%" }} transition={{ duration: 1, delay: 0.2 }} 
+                                          className="h-full rounded-full"
+                                          style={{ 
+                                            background: `linear-gradient(90deg, ${ecosystemData[activeService].hex}60 0%, ${ecosystemData[activeService].hex} 100%)`,
+                                            boxShadow: `0 0 10px ${ecosystemData[activeService].hex}50` 
+                                          }}>
+                              </motion.div>
                             </div>
                           </div>
                         </div>
@@ -427,21 +464,25 @@ export default function ServicesPage() {
                     </div>
 
                     {/* CTA Footer */}
-                    <div className="mt-auto flex items-center justify-between border-t border-blue-100/50 pt-6">
-                      <div className="flex -space-x-3">
-                        {/* Giả lập hình ảnh team/dev */}
+                    <div className="mt-auto flex items-center justify-between border-t border-slate-200/60 pt-4">
+                      <div className="flex -space-x-2">
                         {[1, 2, 3].map((num) => (
-                          <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" className="w-10 h-10 rounded-full border-2 border-[#F4F7FF] object-cover" />
+                          <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" className="w-8 h-8 rounded-full border-[1.5px] border-white object-cover shadow-sm" />
                         ))}
-                        <div className="w-10 h-10 rounded-full border-2 border-[#F4F7FF] bg-white flex items-center justify-center text-[10px] font-bold text-[#061153] shadow-sm">
+                        <div className="w-8 h-8 rounded-full border-[1.5px] border-white bg-white flex items-center justify-center text-[9px] font-bold shadow-sm"
+                             style={{ color: ecosystemData[activeService].hex }}>
                           +20 Dev
                         </div>
                       </div>
                       
-                      <a href="#lien-he" className="group flex items-center gap-3 bg-[#061153] text-white px-8 py-4 rounded-full text-[15px] font-bold hover:bg-[#1053F3] hover:shadow-[0_15px_30px_rgba(16,83,243,0.3)] hover:-translate-y-1 transition-all duration-300">
-                        Phân tích dự án ngay
-                        <div className="bg-white/20 p-1.5 rounded-full group-hover:bg-white group-hover:text-[#1053F3] transition-colors">
-                          <ArrowRight size={16} />
+                      <a href="#lien-he" className="group flex items-center gap-2 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-full text-[13px] md:text-[14px] font-bold transition-all duration-300 hover:-translate-y-0.5"
+                         style={{ 
+                           backgroundColor: ecosystemData[activeService].hex, 
+                           boxShadow: `0 10px 25px ${ecosystemData[activeService].hex}40` 
+                         }}>
+                        Phân tích dự án
+                        <div className="bg-white/20 p-1 rounded-full group-hover:bg-white/40 transition-colors">
+                          <ArrowRight size={14} />
                         </div>
                       </a>
                     </div>
@@ -472,182 +513,424 @@ export default function ServicesPage() {
         </motion.div>
       </section>
 
-      {/* 5. PROCESS SECTION */}
-      <section className="relative bg-[#F4F7FF]">
-        <motion.div variants={slideInTop} initial="hidden" whileInView="visible" viewport={{ once: true }} className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
-          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-shape-01.webp" alt="Shape" />
+      {/* 5. PROCESS SECTION - MODERNIZED ORIGINAL */}
+      <section className="relative bg-[#F4F7FF] pb-8 md:pb-12">
+        
+        {/* Top Shape */}
+        <motion.div variants={slideInTop} initial="hidden" whileInView="visible" viewport={{ once: true }} className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-shape-01.webp" alt="Shape" className="drop-shadow-sm" />
         </motion.div>
-        <div className="bg-[#09155C] pt-[140px] pb-[120px] rounded-b-[40px] md:mx-5 relative z-0 overflow-hidden shadow-xl">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05]"></div>
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="text-center mb-[80px] -mt-[25px]">
-              <h2 className="text-5xl md:text-7xl font-black text-white/5 tracking-[0.05em] uppercase leading-none absolute left-1/2 -translate-x-1/2 -top-4 w-full">QUY TRÌNH CHUẨN</h2>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight relative z-10">Cách Chúng Tôi Làm Việc</h2>
+        
+        {/* Main Navy Container */}
+        <div className="bg-[#09155C] pt-[140px] pb-[120px] rounded-b-[40px] md:mx-5 relative z-0 overflow-hidden shadow-[0_20px_50px_rgba(9,21,92,0.15)] border border-[#061153]/10">
+          
+          {/* Subtle Background Textures */}
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] pointer-events-none"></div>
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#1053F3]/20 rounded-full blur-[120px] pointer-events-none"></div>
+          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#5080FF]/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+          <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+            
+            {/* Header Titles */}
+            <div className="text-center mb-[80px] -mt-[25px] relative">
+              <h2 className="text-5xl md:text-[80px] font-black text-white/[0.04] tracking-[0.05em] uppercase leading-none absolute left-1/2 -translate-x-1/2 -top-6 md:-top-10 w-full select-none pointer-events-none">
+                QUY TRÌNH CHUẨN
+              </h2>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white tracking-tight relative z-10 drop-shadow-sm">
+                Cách Chúng Tôi Làm Việc
+              </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[30px] relative">
-              {[
-                { title: 'Khảo Sát & Tư Vấn', desc: 'Tìm hiểu chi tiết bài toán kinh doanh và đề xuất giải pháp công nghệ tối ưu.' },
-                { title: 'Phân Tích & Thiết Kế', desc: 'Xây dựng tài liệu kỹ thuật, luồng dữ liệu, và thiết kế UI/UX Mockups.' },
-                { title: 'Lập Trình & Kiểm Thử', desc: 'Code và test (QA/QC) nghiêm ngặt để đảm bảo sản phẩm mượt mà, không lỗi.' },
-                { title: 'Bàn Giao & Vận Hành', desc: 'Triển khai lên server, đào tạo sử dụng và hỗ trợ bảo trì hệ thống định kỳ.' },
-              ].map((step, idx) => (
-                <motion.div key={idx} variants={fadeInRightBig} initial="hidden" whileInView="visible" custom={idx * 0.1} viewport={{ once: true }} className="relative group">
-                  <h4 className="text-[#5080FF] font-extrabold mb-5 tracking-widest text-sm flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#1053F3] animate-pulse"></span> BƯỚC 0{idx + 1}
-                  </h4>
-                  <div className="bg-white/5 backdrop-blur-sm p-[40px] rounded-[24px] h-full transition-all duration-500 border border-white/10 group-hover:border-[#1053F3] group-hover:bg-[#18225F] group-hover:-translate-y-2 group-hover:shadow-[0_15px_30px_rgba(0,0,0,0.2)]">
-                    <div className="mb-[30px] relative">
-                      <div className="absolute inset-0 bg-[#1053F3] blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 rounded-full"></div>
-                      <img src={`https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon${idx + 1}.webp`} className="w-[60px] h-[60px] relative z-10" alt="icon" />
+
+            {/* Grid Flow Layout */}
+            <div className="relative">
+              
+              {/* Connecting Dashed Line (Desktop Only) */}
+              <div className="hidden lg:block absolute top-[110px] left-[12%] right-[12%] h-[2px] border-t-2 border-dashed border-white/10 z-0">
+                {/* Moving dot animation */}
+                <motion.div 
+                  className="w-3 h-3 bg-[#1053F3] rounded-full shadow-[0_0_10px_#1053F3] absolute -top-[7px]"
+                  animate={{ left: ["0%", "100%"] }}
+                  transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[30px] relative z-10">
+                {[
+                  { title: 'Khảo Sát & Tư Vấn', desc: 'Tìm hiểu chi tiết bài toán kinh doanh và đề xuất giải pháp công nghệ tối ưu.' },
+                  { title: 'Phân Tích & Thiết Kế', desc: 'Xây dựng tài liệu kỹ thuật, luồng dữ liệu, và thiết kế UI/UX Mockups.' },
+                  { title: 'Lập Trình & Kiểm Thử', desc: 'Code và test (QA/QC) nghiêm ngặt để đảm bảo sản phẩm mượt mà, không lỗi.' },
+                  { title: 'Bàn Giao & Vận Hành', desc: 'Triển khai lên server, đào tạo sử dụng và hỗ trợ bảo trì hệ thống định kỳ.' },
+                ].map((step, idx) => (
+                  <motion.div key={idx} variants={fadeInRightBig} initial="hidden" whileInView="visible" custom={idx * 0.15} viewport={{ once: true }} className="relative group h-full">
+                    
+                    {/* Modern Glass Card */}
+                    <div className="bg-white/[0.04] backdrop-blur-md p-[40px] rounded-[30px] h-full transition-all duration-500 border border-white/10 group-hover:border-blue-400/40 group-hover:bg-gradient-to-br group-hover:from-white/[0.08] group-hover:to-transparent group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden flex flex-col items-start z-10">
+                      
+                      {/* Faint Background Number inside card */}
+                      <div className="absolute -bottom-4 -right-4 text-[100px] font-black text-white/[0.03] group-hover:text-blue-400/[0.05] transition-colors duration-500 pointer-events-none select-none">
+                        0{idx + 1}
+                      </div>
+
+                      {/* Pill Badge Step */}
+                      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 mb-6">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#5080FF] animate-pulse"></span>
+                        <span className="text-blue-200 font-extrabold tracking-widest text-[11px] uppercase">
+                          BƯỚC 0{idx + 1}
+                        </span>
+                      </div>
+
+                      {/* Icon Container */}
+                      <div className="mb-[30px] relative">
+                        {/* Glow effect behind image */}
+                        <div className="absolute inset-0 bg-[#1053F3] blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500 rounded-full scale-150"></div>
+                        <img 
+                          src={`https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon${idx + 1}.webp`} 
+                          className="w-[64px] h-[64px] relative z-10 group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500 drop-shadow-lg" 
+                          alt="icon" 
+                        />
+                      </div>
+
+                      {/* Text Content */}
+                      <h3 className="text-[22px] font-extrabold text-white mb-3 tracking-tight relative z-10 drop-shadow-sm group-hover:text-blue-100 transition-colors">
+                        {step.title}
+                      </h3>
+                      <p className="text-slate-300/90 text-[15px] leading-relaxed relative z-10">
+                        {step.desc}
+                      </p>
+
                     </div>
-                    <h3 className="text-xl font-extrabold text-white mb-4 tracking-tight">{step.title}</h3>
-                    <p className="text-slate-300 text-[15px] leading-relaxed">{step.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))}
+              </div>
             </div>
+
           </div>
         </div>
       </section>
-
-      {/* 6. PRICING SECTION */}
-      <section className="py-[120px] bg-[#F4F7FF]">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-[80px]">
-            <span className="text-[#1053F3] font-bold flex items-center justify-center gap-2 mb-4 text-sm uppercase tracking-wider bg-blue-100/50 w-fit mx-auto px-4 py-1.5 rounded-full">
-              <CheckCircle2 size={16} /> Gói Giải Pháp Trọn Gói
-            </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#061153] leading-tight tracking-tight">Minh Bạch Chi Phí <br /> Phù Hợp Mọi Quy Mô</h2>
+        {/* 6. PRICING SECTION - ENTERPRISE UNIFIED BOARD */}
+        <section className="py-[60px] lg:py-[80px] flex flex-col justify-center min-h-[calc(100vh-80px)] bg-[#F8FAFC] relative overflow-hidden z-10 border-t border-[#E8EDFA]">
+          
+          {/* Background Ambient Gradient */}
+          <div className="absolute top-0 inset-x-0 h-[400px] bg-gradient-to-b from-white to-transparent pointer-events-none"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] md:w-[1200px] h-[500px] rounded-full opacity-40 blur-[120px] pointer-events-none mix-blend-multiply"
+              style={{ background: 'radial-gradient(circle, rgba(16,83,243,0.15) 0%, rgba(6,17,83,0.05) 50%, transparent 100%)' }}>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px] items-end max-w-7xl mx-auto">
-            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" custom={0} viewport={{ once: true }} className="bg-white rounded-[30px] p-[40px] shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 hover:border-blue-100 flex flex-col h-full hover:-translate-y-2 transition-all duration-300">
-              <h5 className="text-lg font-bold text-slate-400 mb-2">Gói Khởi Nghiệp</h5>
-              <div className="mb-4 flex items-baseline gap-2"><h2 className="text-4xl font-extrabold text-[#061153] leading-none tracking-tight">Web Cơ Bản</h2></div>
-              <p className="text-slate-500 mb-[30px] min-h-[48px] leading-relaxed text-[15px]">Dành cho cá nhân, cửa hàng nhỏ cần xây dựng thương hiệu online.</p>
-              <a href="#lien-he" className="w-full mt-auto py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 mb-[30px] bg-slate-50 text-[#061153] hover:bg-[#1053F3] hover:text-white hover:shadow-lg">
-                Nhận tư vấn <ArrowRight size={18} />
-              </a>
-              <h4 className="font-extrabold text-[#061153] mb-[20px] text-lg">Bao gồm:</h4>
-              <ul className="space-y-[16px]">
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Website chuẩn SEO, Tốc độ cao</li>
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Giao diện Responsive (Mobile)</li>
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Domain & Hosting 1 năm</li>
-                <li className="flex items-start gap-3 text-slate-300 text-[15px]"><XCircle className="shrink-0" size={20} /> Ứng dụng di động (App)</li>
-                <li className="flex items-start gap-3 text-slate-300 text-[15px]"><XCircle className="shrink-0" size={20} /> Hệ thống API phức tạp</li>
-              </ul>
-            </motion.div>
 
-            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="bg-white rounded-[30px] p-[50px] shadow-[0_20px_50px_rgba(16,83,243,0.15)] relative border-2 border-[#1053F3] md:-translate-y-6 flex flex-col h-full z-10 overflow-hidden group">
-              <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
-              <div className="absolute top-[30px] right-[40px] bg-gradient-to-r from-[#FF9D10] to-orange-400 text-white text-xs font-extrabold px-5 py-2 rounded-full uppercase tracking-wide flex items-center gap-2 z-10 shadow-md">Khuyên dùng</div>
-              <motion.img animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 10, ease: "linear" }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/spin-shape02.webp" className="absolute top-[25px] right-[40px] w-[50px] opacity-20" alt="spin" />
-              <h5 className="text-lg font-bold text-[#1053F3] mb-2 relative z-10">Gói Tăng Trưởng</h5>
-              <div className="mb-4 flex items-baseline gap-2 relative z-10"><h2 className="text-4xl font-extrabold text-[#061153] leading-none tracking-tight">Web + App</h2></div>
-              <p className="text-slate-500 mb-[30px] min-h-[48px] leading-relaxed text-[15px] relative z-10">Doanh nghiệp SME cần hệ sinh thái bán hàng đa kênh đồng bộ.</p>
-              <a href="#lien-he" className="relative z-10 w-full mt-auto py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 mb-[30px] bg-gradient-to-r from-[#1053F3] to-blue-600 text-white shadow-[0_10px_20px_rgba(16,83,243,0.3)] hover:shadow-[0_15px_25px_rgba(16,83,243,0.4)] hover:-translate-y-1">
-                Nhận tư vấn ngay <ArrowRight size={18} />
-              </a>
-              <h4 className="font-extrabold text-[#061153] mb-[20px] text-lg relative z-10">Bao gồm:</h4>
-              <ul className="space-y-[16px] relative z-10">
-                <li className="flex items-start gap-3 text-slate-700 font-bold text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Mọi tính năng Gói Khởi Nghiệp</li>
-                <li className="flex items-start gap-3 text-slate-700 font-bold text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Thiết kế App Mobile (iOS/Android)</li>
-                <li className="flex items-start gap-3 text-slate-700 font-bold text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> API đồng bộ dữ liệu Web-App</li>
-                <li className="flex items-start gap-3 text-slate-700 font-bold text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Tích hợp cổng thanh toán</li>
-                <li className="flex items-start gap-3 text-slate-400 text-[15px]"><XCircle className="shrink-0" size={20} /> Phần mềm quản lý ERP</li>
-              </ul>
-            </motion.div>
-
-            <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.4} viewport={{ once: true }} className="bg-white rounded-[30px] p-[40px] shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 hover:border-blue-100 flex flex-col h-full hover:-translate-y-2 transition-all duration-300">
-              <h5 className="text-lg font-bold text-slate-400 mb-2">Gói Chuyên Sâu</h5>
-              <div className="mb-4 flex items-baseline gap-2"><h2 className="text-4xl font-extrabold text-[#061153] leading-none tracking-tight">Custom ERP</h2></div>
-              <p className="text-slate-500 mb-[30px] min-h-[48px] leading-relaxed text-[15px]">Thiết kế riêng biệt cho hệ thống lớn, chuyển đổi số toàn diện.</p>
-              <a href="#lien-he" className="w-full mt-auto py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-300 mb-[30px] bg-slate-50 text-[#061153] hover:bg-[#1053F3] hover:text-white hover:shadow-lg">
-                Nhận tư vấn <ArrowRight size={18} />
-              </a>
-              <h4 className="font-extrabold text-[#061153] mb-[20px] text-lg">Bao gồm:</h4>
-              <ul className="space-y-[16px]">
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Phân tích, tư vấn Server lớn</li>
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Phần mềm nghiệp vụ đặc thù</li>
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Bảo mật cao cấp, Load Balancing</li>
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Bảo hành & hỗ trợ 24/7</li>
-                <li className="flex items-start gap-3 text-slate-600 font-medium text-[15px]"><CheckCircle2 className="text-[#1053F3] shrink-0" size={20} /> Bàn giao Source Code 100%</li>
-              </ul>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6.5 FAQ SECTION */}
-      <section className="py-[100px] bg-white relative overflow-hidden border-t border-slate-100">
-        <div className="absolute top-0 right-0 w-[40%] h-full bg-gradient-to-l from-blue-50/80 to-transparent rounded-l-[100px] opacity-70 z-0 pointer-events-none"></div>
-        <div className="container mx-auto px-6 relative z-10 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-[60px] items-start">
-            <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-5 sticky top-[100px]">
-              <span className="text-[#1053F3] font-bold flex items-center gap-2 mb-4 text-sm uppercase tracking-wider"><CheckCircle2 size={18} /> Giải Đáp Thắc Mắc</span>
-              <h2 className="text-3xl md:text-5xl font-extrabold text-[#061153] leading-tight tracking-tight mb-[24px]">Những Câu Hỏi <br /> Thường Gặp</h2>
-              <p className="text-slate-500 text-[16px] leading-relaxed mb-[40px] max-w-[90%]">Tìm hiểu thêm về quy trình làm việc, chính sách bảo hành và các dịch vụ đi kèm của chúng tôi. Nếu bạn có câu hỏi khác, đừng ngần ngại liên hệ!</p>
-              <div className="flex gap-4">
-                <div className="w-[120px] h-[120px] bg-gradient-to-br from-[#1053F3] to-blue-700 rounded-[30px] flex flex-col items-center justify-center text-white shadow-[0_15px_30px_rgba(16,83,243,0.3)] hover:-translate-y-2 transition-transform duration-300">
-                  <span className="text-4xl font-extrabold tracking-tight">24/7</span>
-                  <span className="text-[11px] uppercase tracking-widest font-bold mt-1 opacity-80">Hỗ trợ</span>
-                </div>
-              </div>
-            </motion.div>
-            <motion.div variants={fadeInRightBig} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-7 space-y-[16px]">
-              {faqs.map((faq, index) => (
-                <div key={index} className={`border rounded-[24px] overflow-hidden transition-all duration-300 ${activeFaq === index ? 'border-[#1053F3]/30 shadow-[0_10px_30px_rgba(16,83,243,0.08)] bg-gradient-to-br from-blue-50/50 to-white' : 'border-slate-200 bg-white hover:border-[#1053F3]/30 hover:bg-blue-50/20'}`}>
-                  <button onClick={() => setActiveFaq(activeFaq === index ? null : index)} className="w-full text-left px-8 py-6 flex items-center justify-between focus:outline-none">
-                    <h4 className={`text-lg font-extrabold pr-6 transition-colors duration-300 leading-snug tracking-tight ${activeFaq === index ? 'text-[#1053F3]' : 'text-[#061153]'}`}>{faq.question}</h4>
-                    <div className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${activeFaq === index ? 'bg-[#1053F3] text-white shadow-md' : 'bg-slate-50 text-[#1053F3] border border-slate-100'}`}>
-                      {activeFaq === index ? <Minus size={20} strokeWidth={2.5} /> : <Plus size={20} strokeWidth={2.5} />}
-                    </div>
-                  </button>
-                  <AnimatePresence>
-                    {activeFaq === index && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3, ease: "easeInOut" }}>
-                        <div className="px-8 pb-8 text-slate-500 text-[15px] leading-relaxed border-t border-blue-100/50 pt-5 mt-2">{faq.answer}</div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. COLLABORATE CTA SECTION */}
-      <section id="lien-he" className="py-[120px] bg-[#F4F7FF] border-t border-[#E8EDFA]">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[80px] items-center">
-            <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <span className="text-[#1053F3] font-bold flex items-center gap-2 mb-4 text-sm uppercase tracking-wider"><CheckCircle2 size={18} /> Khởi tạo dự án</span>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-[#061153] mb-[24px] leading-[1.2] tracking-tight">Hãy Để Chúng Tôi <br /> Hiện Thực Hóa Ý Tưởng </h2>
-              <p className="text-slate-500 mb-[40px] text-[16px] leading-relaxed max-w-md">Đội ngũ chuyên gia kỹ thuật luôn sẵn sàng lắng nghe bài toán của bạn. Liên hệ ngay để nhận bản phác thảo giải pháp và báo giá hoàn toàn miễn phí.</p>
-              <a href="#" className="inline-flex items-center justify-between bg-[#1053F3] text-white px-[32px] py-[16px] rounded-full font-bold hover:bg-[#061153] hover:shadow-[0_15px_30px_rgba(16,83,243,0.3)] hover:-translate-y-1 transition-all duration-300 group">
-                <span className="mr-[20px]">Đăng ký tư vấn miễn phí</span>
-                <span className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center text-white transition-colors group-hover:bg-white group-hover:text-[#061153]"><ArrowRight size={18} strokeWidth={2.5} /></span>
-              </a>
-            </motion.div>
-            <motion.div variants={fadeInRightBig} initial="hidden" whileInView="visible" viewport={{ once: true }} className="relative h-[550px] w-full">
-              <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 opacity-[0.04] z-0">
-                {Array.from({ length: 16 }).map((_, i) => (<div key={i} className="border-r border-b border-[#061153]"></div>))}
-              </div>
-              <div className="absolute inset-0 z-10 flex gap-[24px] items-center px-4">
-                <div className="w-1/2 space-y-[24px]">
-                  <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/details01.webp" alt="Hình ảnh 1" className="w-full rounded-[30px] shadow-lg hover:scale-[1.02] transition-transform duration-500" />
-                  <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/details03.webp" alt="Hình ảnh 3" className="w-full rounded-[30px] shadow-lg hover:scale-[1.02] transition-transform duration-500" />
-                </div>
-                <div className="w-1/2 space-y-[24px] -mt-[80px]">
-                  <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/details02.webp" alt="Hình ảnh 2" className="w-full rounded-[30px] shadow-lg hover:scale-[1.02] transition-transform duration-500" />
-                  <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/details04.webp" alt="Hình ảnh 4" className="w-[85%] rounded-[30px] shadow-lg hover:scale-[1.02] transition-transform duration-500" />
-                </div>
-              </div>
-              <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[140px] h-[140px] bg-white rounded-full shadow-[0_20px_50px_rgba(16,83,243,0.2)] flex items-center justify-center border-8 border-[#F4F7FF]">
-                <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/icon-handshake.png" className="w-[65px]" alt="Hợp tác" />
+          <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+            
+            {/* Header */}
+            <div className="text-center mb-[40px]">
+              <motion.div variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-blue-100 shadow-sm mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1053F3] animate-pulse"></span>
+                <span className="text-[#1053F3] font-bold text-[11px] uppercase tracking-widest">Đầu Tư Thông Minh</span>
               </motion.div>
+              <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="text-3xl md:text-5xl font-black text-[#061153] leading-tight tracking-tighter drop-shadow-sm">
+                Bảng Giá Dịch Vụ
+              </motion.h2>
+            </div>
+
+            {/* UNIFIED PRICING BOARD */}
+            <motion.div 
+              variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.4} viewport={{ once: true }}
+              className="bg-white/70 backdrop-blur-2xl rounded-[40px] p-2.5 md:p-3 shadow-[0_40px_100px_rgba(6,17,83,0.08)] border border-white relative flex flex-col"
+            >
+              {/* 3 Pricing Columns */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-2.5 flex-1">
+                
+                {/* GÓI 1: KHỞI NGHIỆP */}
+                <div className="bg-white rounded-[32px] p-[32px] flex flex-col h-full hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] transition-all duration-300 border border-slate-100">
+                  <div className="mb-6">
+                    <h5 className="text-[12px] font-extrabold text-slate-400 mb-2 uppercase tracking-widest">Khởi Nghiệp</h5>
+                    <h2 className="text-[32px] font-black text-[#061153] leading-none tracking-tight mb-3">Web Cơ Bản</h2>
+                    <p className="text-slate-500 text-[14px] font-medium leading-relaxed min-h-[42px]">Dành cho cá nhân, cửa hàng nhỏ cần xây dựng thương hiệu online chuyên nghiệp.</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 mb-6 px-3 py-2 bg-slate-50 rounded-lg text-[13px] font-semibold text-slate-600 border border-slate-100">
+                    <Clock size={14} className="text-[#1053F3]" /> Triển khai: <span className="text-[#061153]">2 - 4 tuần</span>
+                  </div>
+                  
+                  <ul className="space-y-[14px] mb-8 flex-1">
+                    {[
+                      { text: 'Website chuẩn SEO (Score 90+)', active: true },
+                      { text: 'Responsive mượt mà (Mobile-First)', active: true },
+                      { text: 'Hosting tiêu chuẩn (1 Năm)', active: true },
+                      { text: 'Thiết kế Mobile App (Native)', active: false },
+                      { text: 'Hệ thống Quản trị Doanh nghiệp (ERP)', active: false },
+                    ].map((item, idx) => (
+                      <li key={idx} className={`flex items-start gap-3 text-[14px] ${item.active ? 'text-slate-700 font-semibold' : 'text-slate-400 font-medium'}`}>
+                        <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${item.active ? 'bg-blue-50 text-[#1053F3]' : 'bg-slate-50 text-slate-300'}`}>
+                          {item.active ? <Check size={10} strokeWidth={3} /> : <X size={10} strokeWidth={3} />}
+                        </div>
+                        <span className="leading-tight">{item.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a href="#lien-he" className="w-full py-3.5 rounded-[16px] font-bold flex items-center justify-center gap-2 transition-all duration-300 bg-[#F4F7FF] text-[#061153] border border-blue-100/50 hover:bg-[#061153] hover:text-white group text-[14px]">
+                    Yêu cầu báo giá <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+
+                {/* GÓI 2: TĂNG TRƯỞNG (HIGHLIGHT - METALLIC DARK) */}
+                <div className="bg-gradient-to-b from-[#061153] to-[#111A3A] rounded-[32px] p-[32px] flex flex-col h-full relative overflow-hidden shadow-[0_20px_50px_rgba(6,17,83,0.4)] border border-[#1053F3]/50 z-10 transform lg:scale-[1.03]">
+                  
+                  {/* Glow & Texture */}
+                  <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-[#1053F3]/30 rounded-full blur-[60px] pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay pointer-events-none"></div>
+                  
+                  {/* Badge */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#1053F3] to-[#5080FF] text-white px-4 py-1.5 rounded-b-[12px] text-[10px] font-black uppercase tracking-widest shadow-[0_5px_15px_rgba(16,83,243,0.4)] flex items-center gap-1.5 z-10">
+                    <Zap size={12} className="fill-white" /> Phổ biến nhất
+                  </div>
+
+                  <div className="mb-6 relative z-10 mt-3">
+                    <h5 className="text-[12px] font-extrabold text-[#5080FF] mb-2 uppercase tracking-widest">Tăng Trưởng</h5>
+                    <h2 className="text-[36px] font-black text-white leading-none tracking-tighter mb-3 drop-shadow-md">Web + App</h2>
+                    <p className="text-slate-300 text-[14px] font-medium leading-relaxed min-h-[42px]">Doanh nghiệp SME cần hệ sinh thái đa kênh, đồng bộ dữ liệu Real-time.</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 mb-6 px-3 py-2 bg-white/10 rounded-lg text-[13px] font-semibold text-white border border-white/10 backdrop-blur-sm relative z-10">
+                    <Clock size={14} className="text-[#5080FF]" /> Triển khai: <span className="text-white">4 - 8 tuần</span>
+                  </div>
+                  
+                  <ul className="space-y-[14px] mb-8 flex-1 relative z-10">
+                    {[
+                      { text: 'Mọi tính năng từ Gói Khởi Nghiệp', active: true },
+                      { text: 'Thiết kế App iOS/Android (Flutter/React Native)', active: true },
+                      { text: 'API đồng bộ dữ liệu bảo mật (OAuth 2.0)', active: true },
+                      { text: 'Tích hợp cổng thanh toán (VNPay, Momo, Stripe)', active: true },
+                      { text: 'Hệ thống Quản trị Doanh nghiệp (ERP)', active: false },
+                    ].map((item, idx) => (
+                      <li key={idx} className={`flex items-start gap-3 text-[14px] ${item.active ? 'text-white font-semibold' : 'text-slate-400 font-medium'}`}>
+                        <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${item.active ? 'bg-[#1053F3] text-white shadow-[0_0_12px_rgba(16,83,243,0.8)]' : 'bg-white/10 text-slate-500'}`}>
+                          {item.active ? <Check size={10} strokeWidth={3} /> : <X size={10} strokeWidth={3} />}
+                        </div>
+                        <span className="leading-tight">{item.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a href="#lien-he" className="relative z-10 w-full py-3.5 rounded-[16px] font-bold flex items-center justify-center gap-2 transition-all duration-300 bg-[#1053F3] text-white hover:bg-white hover:text-[#061153] shadow-[0_10px_20px_rgba(16,83,243,0.4)] group text-[14px]">
+                    Bắt đầu dự án <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+
+                {/* GÓI 3: CHUYÊN SÂU */}
+                <div className="bg-white rounded-[32px] p-[32px] flex flex-col h-full hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] transition-all duration-300 border border-slate-100">
+                  <div className="mb-6">
+                    <h5 className="text-[12px] font-extrabold text-slate-400 mb-2 uppercase tracking-widest">Chuyên Sâu</h5>
+                    <h2 className="text-[32px] font-black text-[#061153] leading-none tracking-tight mb-3">Custom ERP</h2>
+                    <p className="text-slate-500 text-[14px] font-medium leading-relaxed min-h-[42px]">Tập đoàn, hệ thống chuỗi cần phần mềm đặc thù & chuyển đổi số toàn diện.</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 mb-6 px-3 py-2 bg-slate-50 rounded-lg text-[13px] font-semibold text-slate-600 border border-slate-100">
+                    <Clock size={14} className="text-[#1053F3]" /> Triển khai: <span className="text-[#061153]">Theo từng Sprint</span>
+                  </div>
+                  
+                  <ul className="space-y-[14px] mb-8 flex-1">
+                    {[
+                      { text: 'Phân tích & thiết kế kiến trúc Server lớn', active: true },
+                      { text: 'Phần mềm nghiệp vụ Custom theo yêu cầu', active: true },
+                      { text: 'Hạ tầng Auto-scaling & Load Balancing', active: true },
+                      { text: 'Cam kết SLA 99.99% & Hỗ trợ 24/7', active: true },
+                      { text: 'Bàn giao 100% Source Code & IP', active: true },
+                    ].map((item, idx) => (
+                      <li key={idx} className={`flex items-start gap-3 text-[14px] ${item.active ? 'text-slate-700 font-semibold' : 'text-slate-400 font-medium'}`}>
+                        <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${item.active ? 'bg-blue-50 text-[#1053F3]' : 'bg-slate-50 text-slate-300'}`}>
+                          {item.active ? <Check size={10} strokeWidth={3} /> : <X size={10} strokeWidth={3} />}
+                        </div>
+                        <span className="leading-tight">{item.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a href="#lien-he" className="w-full py-3.5 rounded-[16px] font-bold flex items-center justify-center gap-2 transition-all duration-300 bg-[#F4F7FF] text-[#061153] border border-blue-100/50 hover:bg-[#061153] hover:text-white group text-[14px]">
+                    Tư vấn chuyên sâu <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+
+              </div>
+
+              {/* GLOBAL ENTERPRISE FEATURES STRIP (New Element) */}
+              <div className="mt-2.5 bg-slate-50/80 backdrop-blur-md border border-slate-200 rounded-[24px] p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2.5 text-[#061153] font-bold text-[14px]">
+                  <Shield size={18} className="text-[#1053F3]" />
+                  Mọi dự án đều bao gồm tiêu chuẩn Enterprise:
+                </div>
+                <div className="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-2">
+                  <div className="flex items-center gap-1.5 text-slate-600 text-[13px] font-semibold">
+                    <Lock size={14} className="text-slate-400" /> Miễn phí SSL & WAF
+                  </div>
+                  <div className="flex items-center gap-1.5 text-slate-600 text-[13px] font-semibold">
+                    <Server size={14} className="text-slate-400" /> Backup dữ liệu tự động
+                  </div>
+                  <div className="flex items-center gap-1.5 text-slate-600 text-[13px] font-semibold">
+                    <LifeBuoy size={14} className="text-slate-400" /> Support Kỹ thuật 24/7
+                  </div>
+                </div>
+              </div>
+
             </motion.div>
+
           </div>
+        </section>
+
+      {/* 6.5 FAQ SECTION - PREMIUM SAAS STYLE */}
+      <section className="py-[80px] lg:py-[120px] bg-white relative overflow-hidden z-10 border-t border-[#E8EDFA]">
+        
+        {/* Background Mesh Decor */}
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#F4F7FF] rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-[50px] lg:gap-[80px] items-start">
+            
+            {/* LEFT COLUMN: Title & Support Card (Sticky) */}
+            <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-5 lg:sticky lg:top-[120px]">
+              
+              {/* Badge */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F4F7FF] border border-blue-100 shadow-sm mb-5">
+                <span className="text-[#1053F3] font-extrabold text-[11px] uppercase tracking-widest">Hỗ Trợ Khách Hàng</span>
+              </div>
+              
+              <h2 className="text-3xl md:text-5xl font-extrabold text-[#061153] leading-[1.15] tracking-tight mb-[24px]">
+                Những Câu Hỏi <br /> Thường Gặp
+              </h2>
+              
+              <p className="text-slate-500 text-[16px] leading-relaxed mb-[40px] max-w-[90%]">
+                Tìm hiểu thêm về quy trình làm việc, chính sách bảo hành và các dịch vụ đi kèm. Đội ngũ của chúng tôi luôn sẵn sàng giải đáp mọi thắc mắc của bạn.
+              </p>
+              
+              {/* Premium Support Card */}
+              <div className="bg-gradient-to-br from-[#061153] to-[#18225F] rounded-[24px] p-6 shadow-[0_20px_40px_rgba(6,17,83,0.15)] relative overflow-hidden border border-[#1053F3]/20 max-w-[360px]">
+                {/* Glow effect inside card */}
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#1053F3]/40 rounded-full blur-2xl"></div>
+                
+                <h4 className="text-white font-bold text-[18px] mb-2 relative z-10">Vẫn còn thắc mắc?</h4>
+                <p className="text-blue-200/80 text-[14px] mb-6 relative z-10 leading-relaxed">
+                  Liên hệ trực tiếp với chuyên gia công nghệ của chúng tôi để được tư vấn 1:1.
+                </p>
+                
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3].map((num) => (
+                      <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" className="w-10 h-10 rounded-full border-2 border-[#061153] object-cover shadow-sm" />
+                    ))}
+                  </div>
+                  
+                  <a href="#lien-he" className="flex items-center gap-2 bg-[#1053F3] text-white px-5 py-2.5 rounded-full text-[13px] font-bold hover:bg-white hover:text-[#061153] transition-colors duration-300 shadow-md">
+                    <MessageCircle size={16} /> Chat ngay
+                  </a>
+                </div>
+              </div>
+
+            </motion.div>
+
+            {/* RIGHT COLUMN: Interactive Accordions */}
+            <motion.div variants={fadeInRightBig} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-7 space-y-[16px]">
+              {faqs.map((faq, index) => {
+                const isActive = activeFaq === index;
+                return (
+                  <div 
+                    key={index} 
+                    className={`rounded-[24px] overflow-hidden transition-all duration-300 border ${
+                      isActive 
+                        ? 'border-[#1053F3]/30 shadow-[0_15px_30px_rgba(16,83,243,0.08)] bg-[#F4F7FF]/50' 
+                        : 'border-slate-200 bg-white hover:border-blue-200 hover:shadow-sm'
+                    }`}
+                  >
+                    <button 
+                      onClick={() => setActiveFaq(isActive ? null : index)} 
+                      className="w-full text-left px-6 py-6 md:px-8 md:py-7 flex items-center justify-between focus:outline-none group"
+                    >
+                      <h4 className={`text-[16px] md:text-[18px] font-extrabold pr-6 transition-colors duration-300 leading-snug tracking-tight ${isActive ? 'text-[#1053F3]' : 'text-[#061153] group-hover:text-[#1053F3]'}`}>
+                        {faq.question}
+                      </h4>
+                      
+                      {/* Interactive Plus Icon */}
+                      <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 shadow-sm border ${
+                        isActive 
+                          ? 'bg-[#1053F3] text-white border-[#1053F3] rotate-45' 
+                          : 'bg-slate-50 text-slate-500 border-slate-100 group-hover:bg-[#F4F7FF] group-hover:text-[#1053F3] group-hover:border-blue-100'
+                      }`}>
+                        <Plus size={20} strokeWidth={isActive ? 2.5 : 2} />
+                      </div>
+                    </button>
+                    
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.div 
+                          initial={{ height: 0, opacity: 0 }} 
+                          animate={{ height: "auto", opacity: 1 }} 
+                          exit={{ height: 0, opacity: 0 }} 
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                        >
+                          <div className="px-6 pb-6 md:px-8 md:pb-8 text-slate-500 text-[15px] leading-relaxed border-t border-blue-100/50 pt-5 mt-1">
+                            {faq.answer}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+      {/* 7. COLLABORATE CTA SECTION - LIGHT MODE APPLE-LIKE */}
+      <section id="lien-he" className="py-[80px] lg:py-[120px] bg-[#F8FAFC] relative overflow-hidden border-t border-[#E8EDFA]">
+        
+        {/* Background Ambient (Very subtle global glow) */}
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#1053F3]/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+          
+          <motion.div 
+            variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} 
+            className="bg-white rounded-[40px] md:rounded-[64px] p-[50px] md:p-[80px] lg:p-[100px] relative overflow-hidden flex flex-col items-center text-center shadow-[0_20px_80px_rgba(6,17,83,0.04)] border border-[#E8EDFA]"
+          >
+            {/* Soft Monochromatic Inner Glows */}
+            <div className="absolute top-[-30%] left-[-10%] w-[60%] h-[60%] bg-blue-50/60 rounded-full blur-[80px] pointer-events-none"></div>
+            <div className="absolute bottom-[-30%] right-[-10%] w-[60%] h-[60%] bg-[#1053F3]/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+            {/* Minimalist Top Label */}
+            <h4 className="text-[#1053F3] font-bold text-[13px] md:text-[14px] uppercase tracking-[0.15em] mb-5 relative z-10 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#1053F3] animate-pulse"></span>
+              Khởi tạo tương lai
+            </h4>
+            
+            {/* Stark, Clean Headline */}
+            <h2 className="text-[42px] md:text-[64px] lg:text-[80px] font-extrabold text-[#061153] mb-6 leading-[1.05] tracking-tighter relative z-10">
+              Sẵn Sàng Để <br className="hidden md:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1053F3] to-[#5080FF]">
+                Chuyển Đổi Số.
+              </span>
+            </h2>
+            
+            {/* Clean Subtitle */}
+            <p className="text-slate-500 text-[18px] md:text-[21px] leading-[1.6] max-w-2xl mb-10 md:mb-12 font-medium relative z-10">
+              Đội ngũ kỹ sư chuyên sâu của chúng tôi luôn sẵn sàng lắng nghe bài toán của bạn. Nhận bản phác thảo kiến trúc hệ thống và báo giá hoàn toàn miễn phí.
+            </p>
+            
+            {/* Apple-style Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full relative z-10">
+              
+              {/* Primary CTA: Solid Brand Blue */}
+              <a href="#lien-he" className="w-full sm:w-auto inline-flex items-center justify-center bg-[#1053F3] text-white px-8 py-4 rounded-full font-semibold text-[16px] md:text-[17px] hover:bg-[#061153] hover:scale-[1.02] hover:shadow-[0_10px_30px_rgba(16,83,243,0.25)] transition-all duration-300">
+                Đăng ký tư vấn
+              </a>
+
+              {/* Secondary CTA: Soft Monochromatic Button with Chevron */}
+              <a href="mailto:contact@yourdomain.com" className="w-full sm:w-auto inline-flex items-center justify-center bg-[#F4F7FF] text-[#061153] px-8 py-4 rounded-full font-semibold text-[16px] md:text-[17px] hover:bg-blue-50 hover:text-[#1053F3] transition-colors duration-300 group">
+                Gửi email cho chúng tôi
+                <ChevronRight size={18} className="ml-1 text-slate-400 group-hover:text-[#1053F3] group-hover:translate-x-1 transition-all" />
+              </a>
+              
+            </div>
+            
+          </motion.div>
         </div>
       </section>
 
