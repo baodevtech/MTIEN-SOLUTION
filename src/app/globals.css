@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 /* ==========================================================================
+   GLOBAL FONT — Manrope applied to everything
+   ========================================================================== */
+html, body, * {
+  font-family: var(--font-manrope), var(--font-noto-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* ==========================================================================
    MOBILE PERFORMANCE — GPU & CPU optimizations only
    Layout/spacing is handled by each component's Tailwind responsive classes.
    ========================================================================== */
@@ -14,7 +21,7 @@
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Kill infinite ping animation — CPU waster */
+  /* Kill infinite animations — CPU killer */
   .animate-ping { animation: none !important; }
 }
 

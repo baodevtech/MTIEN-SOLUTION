@@ -108,7 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd />
       </head>
       <body
-        className="font-[var(--font-manrope),var(--font-noto-sans),sans-serif] bg-white text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900"
+        className="bg-white text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900"
         suppressHydrationWarning
       >
         {/* Skip to main content - Accessibility */}
