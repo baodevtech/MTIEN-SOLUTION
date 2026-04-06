@@ -2,21 +2,10 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Star, ShoppingCart, ArrowRight } from 'lucide-react';
-
-/* ---- Types ---- */
-
-interface Product {
-  name: string;
-  category: 'laptop' | 'pc' | 'ngoaivi' | 'phanmem';
-  price: string;
-  image: string;
-  rating: number;
-  inStock: boolean;
-  badge?: string;
-}
-
-/* ---- Data ---- */
+import Link from 'next/link';
+import { Star, ShoppingCart, ArrowRight, Zap } from 'lucide-react';
+import { PRODUCTS } from '@/data/products';
+import type { Product } from '@/data/products';
 
 const FILTER_TABS = [
   { key: 'all', label: 'Tất cả' },
@@ -26,235 +15,177 @@ const FILTER_TABS = [
   { key: 'phanmem', label: 'Phần mềm' },
 ] as const;
 
-const PRODUCTS: Product[] = [
-  {
-    name: 'Laptop Dell XPS 15',
-    category: 'laptop',
-    price: '29.990.000₫',
-    image: 'https://picsum.photos/seed/dell_xps/400/400',
-    rating: 4.8,
-    inStock: true,
-    badge: 'Best Seller',
-  },
-  {
-    name: 'PC Gaming RTX 4070',
-    category: 'pc',
-    price: '25.990.000₫',
-    image: 'https://picsum.photos/seed/gaming_pc/400/400',
-    rating: 4.9,
-    inStock: true,
-    badge: 'Hot',
-  },
-  {
-    name: 'CPU Intel Core i7-14700K',
-    category: 'pc',
-    price: '9.490.000₫',
-    image: 'https://picsum.photos/seed/intel_cpu/400/400',
-    rating: 4.7,
-    inStock: true,
-  },
-  {
-    name: 'GPU NVIDIA RTX 4060 Ti',
-    category: 'pc',
-    price: '11.990.000₫',
-    image: 'https://picsum.photos/seed/rtx_4060/400/400',
-    rating: 4.8,
-    inStock: true,
-    badge: 'Mới',
-  },
-  {
-    name: 'Tai nghe Sony WH-1000XM5',
-    category: 'ngoaivi',
-    price: '6.490.000₫',
-    image: 'https://picsum.photos/seed/sony_headphone/400/400',
-    rating: 5.0,
-    inStock: true,
-  },
-  {
-    name: 'Webcam Logitech Brio 4K',
-    category: 'ngoaivi',
-    price: '3.990.000₫',
-    image: 'https://picsum.photos/seed/logitech_brio/400/400',
-    rating: 4.6,
-    inStock: false,
-  },
-  {
-    name: 'Windows 11 Pro License',
-    category: 'phanmem',
-    price: '3.890.000₫',
-    image: 'https://picsum.photos/seed/windows_11/400/400',
-    rating: 4.5,
-    inStock: true,
-  },
-  {
-    name: 'Microsoft 365 Family 1 năm',
-    category: 'phanmem',
-    price: '1.699.000₫',
-    image: 'https://picsum.photos/seed/office_365/400/400',
-    rating: 4.7,
-    inStock: true,
-  },
-];
+const SORT_OPTIONS = [
+  { key: 'default', label: 'Nổi bật' },
+  { key: 'price-asc', label: 'Giá tăng dần' },
+  { key: 'price-desc', label: 'Giá giảm dần' },
+  { key: 'rating', label: 'Đánh giá cao' },
+] as const;
 
-/* ---- Helpers ---- */
-
-function StarRating({ rating }: { rating: number }) {
-  return (
-    <span className="inline-flex items-center gap-1">
-      {Array.from({ length: 5 }, (_, i) => {
-        const fill = rating >= i + 1 ? 'full' : rating >= i + 0.5 ? 'half' : 'empty';
-        return (
-          <Star
-            key={i}
-            size={13}
-            className={
-              fill === 'empty'
-                ? 'text-slate-200'
-                : 'text-amber-400'
-            }
-            fill={fill !== 'empty' ? 'currentColor' : 'none'}
-            strokeWidth={fill === 'empty' ? 1.5 : 0}
-          />
-        );
-      })}
-      <span className="ml-0.5 text-xs font-medium text-slate-500">{rating.toFixed(1)}</span>
-    </span>
-  );
+function sortProducts(products: Product[], sort: string): Product[] {
+  switch (sort) {
+    case 'price-asc': return [...products].sort((a, b) => a.price - b.price);
+    case 'price-desc': return [...products].sort((a, b) => b.price - a.price);
+    case 'rating': return [...products].sort((a, b) => b.rating - a.rating);
+    default: return products;
+  }
 }
 
-function BadgePill({ text }: { text: string }) {
-  const colors: Record<string, string> = {
-    'Best Seller': 'bg-[#0066FF] text-white',
-    Hot: 'bg-[#FF6B00] text-white',
-    Mới: 'bg-[#00D68F] text-white',
-  };
-
-  return (
-    <span
-      className={`absolute top-3 right-3 z-10 rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide ${
-        colors[text] ?? 'bg-slate-800 text-white'
-      }`}
-    >
-      {text}
-    </span>
-  );
-}
-
-/* ---- Component ---- */
+const BADGE_STYLE: Record<string, string> = {
+  'Best Seller': 'bg-orange-500 text-white',
+  Hot: 'bg-red-500 text-white',
+  'Flash Sale': 'bg-[#0066FF] text-white',
+  Mới: 'bg-emerald-500 text-white',
+};
 
 export default function ShopProducts() {
   const [activeTab, setActiveTab] = useState<string>('all');
+  const [sort, setSort] = useState<string>('default');
 
-  const filtered =
-    activeTab === 'all'
-      ? PRODUCTS
-      : PRODUCTS.filter((p) => p.category === activeTab);
+  const filtered = activeTab === 'all'
+    ? PRODUCTS
+    : PRODUCTS.filter((p) => {
+        if (activeTab === 'pc') return p.category === 'pc' || p.category === 'linhkien';
+        return p.category === activeTab;
+      });
+
+  const sorted = sortProducts(filtered, sort);
 
   return (
-    <section className="bg-slate-50 py-16 md:py-20" aria-label="Sản phẩm nổi bật">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6">
-        {/* ---- Header & Filter Tabs ---- */}
-        <div className="mb-10 flex flex-col items-start gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
-            Sản phẩm nổi bật
-          </h2>
+    <section className="bg-gray-50 py-10 md:py-12" aria-label="Sản phẩm nổi bật">
+      <div className="mx-auto max-w-7xl px-4">
 
-          <div className="scrollbar-hide flex gap-2 overflow-x-auto">
-            {FILTER_TABS.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setActiveTab(tab.key)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  activeTab === tab.key
-                    ? 'bg-slate-900 text-white'
-                    : 'bg-white text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+        {/* Header row */}
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-[18px] font-bold text-gray-900 md:text-[22px]">Sản phẩm nổi bật</h2>
+            <p className="text-[12px] text-gray-400">{sorted.length} sản phẩm</p>
           </div>
+          {/* Sort dropdown */}
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-[12px] font-medium text-gray-600 outline-none focus:border-[#0066FF] focus:ring-1 focus:ring-[#0066FF]/20"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.key} value={o.key}>{o.label}</option>
+            ))}
+          </select>
         </div>
 
-        {/* ---- Product Grid ---- */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
-          {filtered.map((product) => (
-            <article
-              key={product.name}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:border-[#0066FF]/30 hover:shadow-md"
+        {/* Filter Tabs */}
+        <div className="mb-5 flex gap-2 overflow-x-auto scrollbar-hide pb-0.5">
+          {FILTER_TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`whitespace-nowrap rounded-full border px-4 py-1.5 text-[12px] font-semibold transition-all duration-150 ${
+                activeTab === tab.key
+                  ? 'border-[#0066FF] bg-[#0066FF] text-white shadow-sm'
+                  : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-gray-700'
+              }`}
             >
-              {/* Badge */}
-              {product.badge && <BadgePill text={product.badge} />}
-
-              {/* Image */}
-              <div className="relative h-44 w-full bg-slate-50 p-4 md:h-52">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="flex flex-1 flex-col p-4 md:p-5">
-                <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-slate-900">
-                  {product.name}
-                </h3>
-
-                <div className="mt-2">
-                  <StarRating rating={product.rating} />
-                </div>
-
-                <p className="mt-auto pt-3 text-lg font-bold text-slate-900">
-                  {product.price}
-                </p>
-
-                {/* Stock status */}
-                <span
-                  className={`mt-1.5 text-xs font-medium ${
-                    product.inStock ? 'text-emerald-600' : 'text-slate-400'
-                  }`}
-                >
-                  {product.inStock ? 'Còn hàng' : 'Hết hàng'}
-                </span>
-
-                {/* Action */}
-                {product.inStock ? (
-                  <button
-                    type="button"
-                    aria-label={`Thêm ${product.name} vào giỏ hàng`}
-                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-white transition-colors"
-                    style={{
-                      background: 'linear-gradient(135deg, #0066FF 0%, #0055DD 100%)',
-                    }}
-                  >
-                    <ShoppingCart size={15} strokeWidth={2.2} />
-                    Thêm vào giỏ
-                  </button>
-                ) : (
-                  <span className="mt-3 block w-full rounded-xl bg-slate-100 py-2.5 text-center text-sm font-medium text-slate-400">
-                    Tạm hết hàng
-                  </span>
-                )}
-              </div>
-            </article>
+              {tab.label}
+            </button>
           ))}
         </div>
 
-        {/* ---- View All Link ---- */}
-        <div className="mt-12 text-center">
-          <a
+        {/* Product Grid — 2 cols mobile, 3 tablet, 5 desktop */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {sorted.map((product) => (
+            <Link
+              key={product.slug}
+              href={`/shop/${product.slug}`}
+              className="group flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-[#0066FF]/30 hover:shadow-lg"
+            >
+              {/* Image */}
+              <div className="relative bg-gray-50">
+                <div className="relative aspect-square w-full">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                    className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                {/* Top-left: discount badge */}
+                {product.discount && (
+                  <span className="absolute left-2 top-2 rounded bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                    {product.discount}
+                  </span>
+                )}
+                {/* Top-right: badge */}
+                {product.badge && !product.discount && (
+                  <span className={`absolute right-2 top-2 rounded px-1.5 py-0.5 text-[10px] font-bold ${BADGE_STYLE[product.badge] ?? 'bg-gray-800 text-white'}`}>
+                    {product.badge}
+                  </span>
+                )}
+                {/* Flash sale icon */}
+                {product.badge === 'Flash Sale' && (
+                  <span className="absolute bottom-2 left-2 flex items-center gap-0.5 rounded-full bg-[#FF6B00] px-1.5 py-0.5 text-[9px] font-bold text-white">
+                    <Zap className="h-2.5 w-2.5 fill-white" /> Sale
+                  </span>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="flex flex-1 flex-col gap-1 p-3">
+                <p className="line-clamp-2 text-[12px] font-medium leading-tight text-gray-800 group-hover:text-[#0066FF]">
+                  {product.name}
+                </p>
+
+                {/* Rating row */}
+                <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} className={`h-2.5 w-2.5 ${s <= Math.floor(product.rating) ? 'fill-amber-400 text-amber-400' : 'fill-gray-200 text-gray-200'}`} />
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-gray-400">{product.rating}</span>
+                  <span className="text-[10px] text-gray-300">·</span>
+                  <span className="text-[10px] text-gray-400">
+                    {product.sold >= 1000 ? `${(product.sold / 1000).toFixed(1).replace(/\.0$/, '')}k` : product.sold} đã bán
+                  </span>
+                </div>
+
+                {/* Price */}
+                <div className="mt-auto pt-1">
+                  <p className="text-[14px] font-bold text-[#0066FF]">{product.priceDisplay}</p>
+                  {product.oldPriceDisplay && (
+                    <p className="text-[11px] text-gray-400 line-through">{product.oldPriceDisplay}</p>
+                  )}
+                </div>
+
+                {/* CTA */}
+                <button
+                  type="button"
+                  onClick={(e) => e.preventDefault()}
+                  disabled={!product.inStock}
+                  className={`mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-[11px] font-semibold transition-colors ${
+                    product.inStock
+                      ? 'bg-[#0066FF] text-white hover:bg-blue-700'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  {product.inStock ? (
+                    <><ShoppingCart className="h-3.5 w-3.5" /> Thêm giỏ hàng</>
+                  ) : 'Hết hàng'}
+                </button>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* View all */}
+        <div className="mt-8 text-center">
+          <Link
             href="/shop"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold transition-colors hover:text-[#0055DD]"
-            style={{ color: '#0066FF' }}
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#0066FF] px-6 py-2.5 text-[13px] font-semibold text-[#0066FF] transition-colors hover:bg-[#0066FF] hover:text-white"
           >
-            Xem tất cả sản phẩm
-            <ArrowRight size={16} strokeWidth={2.2} />
-          </a>
+            Xem tất cả sản phẩm <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

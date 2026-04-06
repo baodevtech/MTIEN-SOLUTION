@@ -2,71 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ShoppingCart, Star, Zap } from 'lucide-react';
-
-/* ---- PRODUCT DATA ---- */
-
-interface Product {
-  name: string;
-  price: string;
-  oldPrice: string;
-  discount: string;
-  rating: number;
-  image: string;
-}
-
-const products: Product[] = [
-  {
-    name: 'Laptop ASUS TUF Gaming F15',
-    price: '18.990.000₫',
-    oldPrice: '22.490.000₫',
-    discount: '-15%',
-    rating: 4.8,
-    image: 'https://picsum.photos/seed/asus_tuf/400/400',
-  },
-  {
-    name: 'RAM Kingston Fury 16GB DDR5',
-    price: '1.290.000₫',
-    oldPrice: '1.690.000₫',
-    discount: '-24%',
-    rating: 4.9,
-    image: 'https://picsum.photos/seed/ram_kingston/400/400',
-  },
-  {
-    name: 'SSD Samsung 990 Pro 1TB',
-    price: '2.790.000₫',
-    oldPrice: '3.490.000₫',
-    discount: '-20%',
-    rating: 5.0,
-    image: 'https://picsum.photos/seed/ssd_samsung/400/400',
-  },
-  {
-    name: 'Màn hình Dell S2722QC 27" 4K',
-    price: '7.990.000₫',
-    oldPrice: '9.490.000₫',
-    discount: '-16%',
-    rating: 4.7,
-    image: 'https://picsum.photos/seed/dell_monitor/400/400',
-  },
-  {
-    name: 'Bàn phím cơ Keychron K8 Pro',
-    price: '2.190.000₫',
-    oldPrice: '2.690.000₫',
-    discount: '-19%',
-    rating: 4.8,
-    image: 'https://picsum.photos/seed/keychron_k8/400/400',
-  },
-  {
-    name: 'Chuột Logitech MX Master 3S',
-    price: '1.890.000₫',
-    oldPrice: '2.490.000₫',
-    discount: '-24%',
-    rating: 4.9,
-    image: 'https://picsum.photos/seed/mx_master/400/400',
-  },
-];
-
-/* ---- COUNTDOWN TIMER ---- */
+import Link from 'next/link';
+import { Zap, ArrowRight } from 'lucide-react';
+import { getFlashSaleProducts } from '@/data/products';
 
 function useCountdown() {
   const [time, setTime] = useState({ hours: 5, minutes: 23, seconds: 47 });
@@ -76,20 +14,12 @@ function useCountdown() {
       setTime((prev) => {
         let { hours, minutes, seconds } = prev;
         if (hours === 0 && minutes === 0 && seconds === 0) return prev;
-
         seconds -= 1;
-        if (seconds < 0) {
-          seconds = 59;
-          minutes -= 1;
-        }
-        if (minutes < 0) {
-          minutes = 59;
-          hours -= 1;
-        }
+        if (seconds < 0) { seconds = 59; minutes -= 1; }
+        if (minutes < 0) { minutes = 59; hours -= 1; }
         return { hours, minutes, seconds };
       });
     }, 1000);
-
     return () => clearInterval(id);
   }, []);
 
@@ -100,128 +30,93 @@ function pad(n: number) {
   return String(n).padStart(2, '0');
 }
 
-/* ---- RATING STARS ---- */
-
-function RatingStars({ rating }: { rating: number }) {
-  return (
-    <span className="inline-flex items-center gap-1">
-      {Array.from({ length: 5 }, (_, i) => (
-        <Star
-          key={i}
-          size={14}
-          className={
-            i < Math.round(rating)
-              ? 'fill-amber-400 text-amber-400'
-              : 'fill-slate-200 text-slate-200'
-          }
-        />
-      ))}
-      <span className="ml-1 text-xs font-medium text-slate-500">{rating}</span>
-    </span>
-  );
+function formatSold(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, '')}K`;
+  return String(n);
 }
-
-/* ---- MAIN COMPONENT ---- */
 
 export default function ShopDeals() {
   const { hours, minutes, seconds } = useCountdown();
-
-  const timerUnits = [
-    { value: pad(hours), label: 'Giờ' },
-    { value: pad(minutes), label: 'Phút' },
-    { value: pad(seconds), label: 'Giây' },
-  ];
+  const products = getFlashSaleProducts();
 
   return (
-    <section className="bg-[#FFF8F0] py-16">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6">
-        {/* ---- HEADER ---- */}
-        <div className="mb-10 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
-          {/* Left: badge + heading */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#FF6B00] px-4 py-1.5 text-sm font-bold text-white shadow-md shadow-orange-200">
-              <Zap size={16} className="fill-white" />
-              Flash Sale
-            </span>
-            <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-              Ưu đãi sốc hôm nay
-            </h2>
-          </div>
+    <section className="bg-gradient-to-r from-[#FFF5F0] to-[#FFF0E6] py-8">
+      <div className="mx-auto max-w-7xl px-4">
+        {/* Header */}
+        <div className="mb-4 flex items-center gap-3">
+          <span className="inline-flex items-center gap-1 rounded-md bg-[#FF6B00] px-2.5 py-1 text-[13px] font-bold text-white">
+            <Zap size={14} className="fill-white" />
+            Flash Sale
+          </span>
 
-          {/* Right: countdown */}
-          <div className="flex items-center gap-2">
-            <span className="mr-1 text-sm font-semibold text-slate-500">
-              Kết thúc sau
-            </span>
-            {timerUnits.map((u, i) => (
-              <div key={u.label} className="flex items-center gap-2">
-                <div className="flex min-w-[48px] flex-col items-center rounded-xl bg-slate-900 px-3 py-2 shadow-md">
-                  <span className="text-lg font-bold leading-none text-white">
-                    {u.value}
-                  </span>
-                  <span className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-400">
-                    {u.label}
-                  </span>
-                </div>
-                {i < timerUnits.length - 1 && (
-                  <span className="text-lg font-bold text-slate-400">:</span>
-                )}
-              </div>
+          <span className="text-[13px] font-medium text-slate-500">
+            Kết thúc sau
+          </span>
+
+          <div className="flex items-center gap-1">
+            {[pad(hours), pad(minutes), pad(seconds)].map((v, i) => (
+              <span key={i} className="flex items-center gap-1">
+                <span className="flex h-7 w-7 items-center justify-center rounded bg-[#FF6B00] text-[11px] font-bold text-white">
+                  {v}
+                </span>
+                {i < 2 && <span className="text-[11px] font-bold text-slate-400">:</span>}
+              </span>
             ))}
           </div>
+
+          <Link
+            href="/shop?sale=true"
+            className="ml-auto flex items-center gap-0.5 text-[13px] font-semibold text-[#FF6B00] transition-colors hover:text-[#e65e00]"
+          >
+            Xem tất cả
+            <ArrowRight size={14} />
+          </Link>
         </div>
 
-        {/* ---- PRODUCT GRID / SCROLL ---- */}
-        <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-x-visible">
-          {products.map((p) => (
-            <div
-              key={p.name}
-              className="group relative min-w-[260px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg md:min-w-0"
+        {/* Product grid */}
+        <div className="flex gap-2 overflow-x-auto snap-x scrollbar-hide md:grid md:grid-cols-3 md:overflow-visible lg:grid-cols-6">
+          {products.slice(0, 6).map((product) => (
+            <Link
+              key={product.slug}
+              href={`/shop/${product.slug}`}
+              className="group relative min-w-[150px] flex-shrink-0 snap-start overflow-hidden rounded-xl border border-slate-100 bg-white p-2 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md md:min-w-0"
             >
               {/* Discount badge */}
-              <span className="absolute left-3 top-3 z-10 rounded-lg bg-[#FF6B00] px-2.5 py-1 text-xs font-bold text-white shadow">
-                {p.discount}
-              </span>
+              {product.discount && (
+                <span className="absolute left-1.5 top-1.5 z-10 rounded bg-[#FF6B00] px-1.5 py-0.5 text-[9px] font-bold text-white">
+                  {product.discount}
+                </span>
+              )}
 
               {/* Image */}
-              <div className="relative h-36 w-full bg-slate-50 sm:h-48">
+              <div className="relative mx-auto h-24 w-full rounded-lg bg-slate-50">
                 <Image
-                  src={p.image}
-                  alt={p.name}
+                  src={product.image}
+                  alt={product.name}
                   fill
-                  sizes="(max-width: 768px) 260px, (max-width: 1024px) 50vw, 25vw"
-                  className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                  sizes="150px"
+                  className="object-contain p-2 transition-transform duration-200 group-hover:scale-105"
                 />
               </div>
 
               {/* Info */}
-              <div className="flex flex-col gap-2 p-4">
-                <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-tight text-slate-800">
-                  {p.name}
+              <div className="mt-1.5 flex flex-col gap-0.5">
+                <h3 className="line-clamp-2 min-h-[2rem] text-[11px] font-medium leading-tight text-slate-800">
+                  {product.name}
                 </h3>
-
-                <RatingStars rating={p.rating} />
-
-                {/* Pricing */}
-                <div className="flex items-baseline gap-2">
-                  <span className="text-lg font-bold text-[#FF6B00]">
-                    {p.price}
+                <span className="text-[13px] font-bold text-[#FF6B00]">
+                  {product.priceDisplay}
+                </span>
+                {product.oldPriceDisplay && (
+                  <span className="text-[10px] text-slate-400 line-through">
+                    {product.oldPriceDisplay}
                   </span>
-                  <span className="text-xs text-slate-400 line-through">
-                    {p.oldPrice}
-                  </span>
-                </div>
-
-                {/* CTA */}
-                <button
-                  type="button"
-                  className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0066FF] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0055DD] active:bg-[#0044BB]"
-                >
-                  <ShoppingCart size={16} />
-                  Thêm vào giỏ
-                </button>
+                )}
+                <span className="text-[9px] text-slate-400">
+                  Đã bán {formatSold(product.sold)}
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

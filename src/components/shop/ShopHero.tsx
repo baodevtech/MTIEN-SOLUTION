@@ -2,46 +2,28 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import {
-  Search,
-  Laptop,
-  Monitor,
-  Cpu,
-  Mouse,
-  AppWindow,
-  Star,
-  ShieldCheck,
-  Truck,
-  ChevronRight,
-  Zap,
-  Tag,
-} from 'lucide-react';
+import Link from 'next/link';
+import { Search, ChevronRight } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
 /* ------------------------------------------------------------------ */
 
-const categories = [
-  { label: 'Laptop', icon: Laptop },
-  { label: 'PC', icon: Monitor },
-  { label: 'Linh kiện', icon: Cpu },
-  { label: 'Ngoại vi', icon: Mouse },
-  { label: 'Phần mềm', icon: AppWindow },
-] as const;
+const trustItems = [
+  { emoji: '✓', text: 'Chính hãng 100%' },
+  { emoji: '🚚', text: 'Freeship từ 2 triệu' },
+  { emoji: '🔄', text: 'Đổi trả 7 ngày' },
+  { emoji: '📞', text: '1900.xxxx' },
+];
 
-const featuredProduct = {
-  name: 'MacBook Air M3 15"',
-  price: '32.990.000₫',
-  oldPrice: '34.990.000₫',
-  specs: ['Apple M3 chip', '16GB RAM', '512GB SSD', '15.3" Liquid Retina'],
-  image: 'https://picsum.photos/seed/macbook_m3/600/400',
-  badge: 'Giảm 6%',
-};
-
-const trustBadges = [
-  { icon: ShieldCheck, text: 'Chính hãng 100%' },
-  { icon: Truck, text: 'Giao hàng toàn quốc' },
-  { icon: Star, text: 'Đánh giá 4.9/5' },
+const categoryLinks = [
+  { label: 'Laptop', href: '/shop?category=laptop' },
+  { label: 'PC', href: '/shop?category=pc' },
+  { label: 'Linh kiện', href: '/shop?category=linh-kien' },
+  { label: 'Ngoại vi', href: '/shop?category=ngoai-vi' },
+  { label: 'Phần mềm', href: '/shop?category=phan-mem' },
+  { label: 'Mạng', href: '/shop?category=mang' },
+  { label: 'Sửa chữa', href: '/shop?category=sua-chua' },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -52,183 +34,180 @@ export default function ShopHero() {
   const [query, setQuery] = useState('');
 
   return (
-    <section
-      aria-label="Shop hero banner"
-      className="relative overflow-hidden"
-      style={{
-        background: 'linear-gradient(180deg, #F0F4FF 0%, #FFFFFF 100%)',
-      }}
-    >
-      {/* Decorative blobs */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-32 -top-32 h-[480px] w-[480px] rounded-full opacity-[0.07]"
-        style={{ background: 'radial-gradient(circle, #0066FF 0%, transparent 70%)' }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-24 bottom-0 h-[360px] w-[360px] rounded-full opacity-[0.05]"
-        style={{ background: 'radial-gradient(circle, #00D68F 0%, transparent 70%)' }}
-      />
+    <section aria-label="Shop hero">
+      {/* ============================================================ */}
+      {/* ZONE 1 — Trust Strip                                         */}
+      {/* ============================================================ */}
+      <div className="bg-[#001A5F]">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-6 px-5 py-1.5">
+          {trustItems.map((item, i) => (
+            <span
+              key={item.text}
+              className={`flex items-center gap-1 text-[11px] text-white/80 ${
+                i >= 2 ? 'hidden sm:flex' : 'flex'
+              } ${i < trustItems.length - 1 ? '' : ''}`}
+            >
+              <span className="text-[10px] sm:text-[11px]">{item.emoji}</span>
+              <span className="text-[10px] sm:text-[11px]">{item.text}</span>
+              {i < trustItems.length - 1 && (
+                <span className="ml-6 hidden text-[8px] text-white/30 sm:inline" aria-hidden>·</span>
+              )}
+            </span>
+          ))}
+        </div>
+      </div>
 
-      <div className="relative mx-auto max-w-7xl px-5 py-16 md:py-24">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* -------- LEFT COLUMN -------- */}
-          <div className="flex flex-col gap-8">
-            {/* Trust badges row */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
-              {trustBadges.map((b) => (
-                <span key={b.text} className="flex items-center gap-1.5">
-                  <b.icon className="h-4 w-4 text-[#00D68F]" strokeWidth={2.2} />
-                  {b.text}
-                </span>
-              ))}
-            </div>
-
-            {/* Heading */}
-            <div className="flex flex-col gap-4">
-              <h1 className="text-4xl font-extrabold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl xl:text-[3.5rem]">
-                MTIEN{' '}
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: 'linear-gradient(135deg, #0066FF 0%, #0099FF 100%)',
-                  }}
-                >
-                  TECH STORE
-                </span>
-              </h1>
-
-              <p className="max-w-lg text-base leading-relaxed text-slate-500 sm:text-lg">
-                Nhà phân phối uỷ quyền các thương hiệu công nghệ hàng đầu.
-                Cam&nbsp;kết chính hãng&nbsp;—&nbsp;bảo hành tận nơi&nbsp;—&nbsp;giá tốt nhất thị&nbsp;trường.
-              </p>
-            </div>
-
-            {/* Search bar */}
-            <div className="relative max-w-xl">
-              <label htmlFor="shop-search" className="sr-only">
-                Tìm kiếm sản phẩm
-              </label>
-              <Search
-                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
-                strokeWidth={2}
-              />
-              <input
-                id="shop-search"
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Tìm laptop, PC, linh kiện..."
-                className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-12 pr-28 text-sm text-slate-700 shadow-sm outline-none transition-shadow placeholder:text-slate-400 focus:border-[#0066FF]/40 focus:ring-2 focus:ring-[#0066FF]/10 sm:text-base"
-              />
-              <button
-                type="button"
-                aria-label="Tìm kiếm"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl px-5 py-2 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg active:scale-[0.97]"
-                style={{
-                  background: 'linear-gradient(135deg, #0066FF 0%, #0055DD 100%)',
-                }}
+      {/* ============================================================ */}
+      {/* ZONE 2 — Category Nav + Search                               */}
+      {/* ============================================================ */}
+      <div className="border-b border-slate-100 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          {/* Categories — horizontal scroll on mobile */}
+          <nav
+            aria-label="Danh mục sản phẩm"
+            className="order-2 -mx-5 flex gap-3 overflow-x-auto px-5 pb-1 scrollbar-hide sm:order-1 sm:mx-0 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0"
+          >
+            {categoryLinks.map((cat, i) => (
+              <Link
+                key={cat.label}
+                href={cat.href}
+                className="shrink-0 text-[12px] font-medium text-slate-600 transition-colors hover:text-[#0066FF] sm:text-[13px]"
               >
-                Tìm kiếm
-              </button>
+                {cat.label}
+                {i < categoryLinks.length - 1 && (
+                  <span className="ml-3 hidden text-slate-300 sm:inline" aria-hidden>·</span>
+                )}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Search bar */}
+          <div className="relative order-1 w-full sm:order-2 sm:max-w-xs">
+            <label htmlFor="hero-search" className="sr-only">
+              Tìm kiếm sản phẩm
+            </label>
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              strokeWidth={2}
+            />
+            <input
+              id="hero-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Tìm laptop, PC, linh kiện..."
+              className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-700 outline-none transition-shadow placeholder:text-slate-400 focus:border-[#0066FF]/40 focus:ring-2 focus:ring-[#0066FF]/10"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ============================================================ */}
+      {/* ZONE 3 — Banner Grid                                         */}
+      {/* ============================================================ */}
+      <div className="bg-slate-50 py-4">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-3 px-5 lg:grid-cols-[7fr_3fr]">
+          {/* ---------- Main Banner ---------- */}
+          <div className="relative h-[200px] overflow-hidden rounded-xl bg-gradient-to-r from-[#0052CC] to-[#0066FF] lg:h-[280px]">
+            {/* Text content */}
+            <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-10">
+              <span className="mb-2 inline-flex w-fit items-center gap-1 rounded-full bg-[#FF6B00] px-3 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
+                ⚡ Flash Sale Mùa Hè
+              </span>
+              <h2 className="text-xl font-extrabold leading-tight text-white sm:text-2xl lg:text-3xl">
+                MacBook Air M3
+                <br />
+                <span className="text-white/90">Giảm 2 triệu</span>
+              </h2>
+              <div className="mt-3 flex items-center gap-3">
+                <span className="text-lg font-extrabold text-white sm:text-xl">
+                  32.990.000₫
+                </span>
+                <span className="text-sm text-white/50 line-through">
+                  34.990.000₫
+                </span>
+              </div>
+              <Link
+                href="/shop/macbook-air-m3-15"
+                className="group mt-4 inline-flex w-fit items-center gap-1 rounded-lg bg-white px-5 py-2 text-sm font-semibold text-[#0066FF] transition-all hover:bg-white/90 active:scale-[0.97]"
+              >
+                Mua ngay
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </div>
 
-            {/* Category pills */}
-            <nav aria-label="Danh mục nổi bật" className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
-              {categories.map((cat) => (
-                <button
-                  key={cat.label}
-                  type="button"
-                  className="flex shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-[#0066FF]/30 hover:text-[#0066FF] hover:shadow-md active:scale-[0.97]"
-                >
-                  <cat.icon className="h-4 w-4" strokeWidth={2} />
-                  {cat.label}
-                </button>
-              ))}
-            </nav>
+            {/* Product image — right side overlay */}
+            <div className="absolute bottom-0 right-0 top-0 hidden w-[45%] sm:block">
+              <Image
+                src="https://picsum.photos/seed/macbook_hero/600/400"
+                alt="MacBook Air M3"
+                fill
+                sizes="(max-width: 1024px) 45vw, 360px"
+                className="object-contain object-right-bottom opacity-90"
+                priority
+              />
+              {/* Soft left-edge fade into gradient */}
+              <div
+                className="absolute inset-y-0 left-0 w-24"
+                style={{
+                  background:
+                    'linear-gradient(to right, #0066FF 0%, transparent 100%)',
+                }}
+                aria-hidden
+              />
+            </div>
           </div>
 
-          {/* -------- RIGHT COLUMN – Featured product -------- */}
-          <div className="flex justify-center lg:justify-end">
-            <article
-              aria-label={`Sản phẩm nổi bật: ${featuredProduct.name}`}
-              className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/60"
-            >
-              {/* Badge */}
-              <span
-                className="absolute left-4 top-4 z-10 inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold text-white"
-                style={{ background: '#FF6B00' }}
-              >
-                <Tag className="h-3 w-3" strokeWidth={2.5} />
-                {featuredProduct.badge}
-              </span>
-
-              {/* Product image */}
-              <div className="relative aspect-[3/2] w-full bg-gradient-to-b from-slate-50 to-white">
+          {/* ---------- Side Banners ---------- */}
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
+            {/* Side banner 1 — PC Gaming */}
+            <div className="relative h-[100px] overflow-hidden rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 lg:h-[136px]">
+              <div className="relative z-10 flex h-full flex-col justify-center px-4 lg:px-5">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                  Hot Deal
+                </span>
+                <h3 className="mt-0.5 text-sm font-bold leading-snug text-white lg:text-base">
+                  PC Gaming từ 15tr
+                </h3>
+                <Link
+                  href="/shop?category=pc-gaming"
+                  className="mt-1.5 inline-flex items-center gap-0.5 text-[11px] font-medium text-[#0066FF] transition-colors hover:text-[#3388FF]"
+                >
+                  Xem ngay <ChevronRight className="h-3 w-3" />
+                </Link>
+              </div>
+              <div className="absolute bottom-0 right-0 top-0 w-[40%]">
                 <Image
-                  src={featuredProduct.image}
-                  alt={featuredProduct.name}
+                  src="https://picsum.photos/seed/pcgaming_side/300/200"
+                  alt="PC Gaming"
                   fill
-                  sizes="(max-width: 768px) 100vw, 448px"
-                  className="object-cover"
-                  priority
+                  sizes="(max-width: 1024px) 20vw, 140px"
+                  className="object-contain object-right-bottom opacity-70"
                 />
               </div>
+            </div>
 
-              {/* Card body */}
-              <div className="flex flex-col gap-4 p-5 sm:p-6">
-                {/* Name + rating */}
-                <div className="flex flex-col gap-1.5">
-                  <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
-                    {featuredProduct.name}
-                  </h2>
-                  <div className="flex items-center gap-1" aria-label="Đánh giá 5 sao">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-3.5 w-3.5 fill-amber-400 text-amber-400"
-                        strokeWidth={0}
-                      />
-                    ))}
-                    <span className="ml-1 text-xs text-slate-400">(128)</span>
-                  </div>
-                </div>
-
-                {/* Specs */}
-                <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
-                  {featuredProduct.specs.map((spec) => (
-                    <li key={spec} className="flex items-center gap-1.5 text-xs text-slate-500 sm:text-sm">
-                      <Zap className="h-3 w-3 shrink-0 text-[#0066FF]" strokeWidth={2.5} />
-                      {spec}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Price + CTA */}
-                <div className="flex items-end justify-between gap-4 pt-1">
-                  <div className="flex flex-col">
-                    <span className="text-xs text-slate-400 line-through">
-                      {featuredProduct.oldPrice}
-                    </span>
-                    <span className="text-xl font-extrabold text-[#0066FF] sm:text-2xl">
-                      {featuredProduct.price}
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="group flex items-center gap-1.5 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl active:scale-[0.97]"
-                    style={{
-                      background: 'linear-gradient(135deg, #0066FF 0%, #0055DD 100%)',
-                    }}
-                  >
-                    Mua ngay
-                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                  </button>
-                </div>
+            {/* Side banner 2 — Repair */}
+            <div className="relative h-[100px] overflow-hidden rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 lg:h-[136px]">
+              <div className="relative z-10 flex h-full flex-col justify-center px-4 lg:px-5">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-200/80">
+                  Dịch vụ
+                </span>
+                <h3 className="mt-0.5 text-sm font-bold leading-snug text-white lg:text-base">
+                  Sửa chữa — Nhanh 2h
+                </h3>
+                <Link
+                  href="/shop?category=sua-chua"
+                  className="mt-1.5 inline-flex items-center gap-0.5 text-[11px] font-medium text-white/90 transition-colors hover:text-white"
+                >
+                  Đặt lịch <ChevronRight className="h-3 w-3" />
+                </Link>
               </div>
-            </article>
+              {/* Wrench icon decorative */}
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[48px] leading-none text-white/15 lg:right-5 lg:text-[56px]" aria-hidden>
+                🔧
+              </div>
+            </div>
           </div>
         </div>
       </div>
