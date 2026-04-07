@@ -3,10 +3,10 @@ import { Facebook, Youtube, Instagram } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0a0f1a] text-gray-400 pt-10 md:pt-16 pb-6 md:pb-8 border-t border-gray-800 text-[12px] md:text-sm" role="contentinfo">
+    <footer className="bg-[#0a0f1a] text-gray-400 pt-8 md:pt-16 pb-5 md:pb-8 border-t border-gray-800 text-[11px] md:text-sm" role="contentinfo">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         {/* Mobile: 2-column grid / Desktop: 5-column */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-5 md:gap-8 mb-8 md:mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-8 mb-6 md:mb-12">
           <div>
             <h3 className="font-bold text-white mb-3 md:mb-4 text-[13px] md:text-sm">MTIENSOLUTION.vn</h3>
             <ul className="space-y-2 md:space-y-3" aria-label="Liên kết MTIEN SOLUTION">
@@ -54,7 +54,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Section — 2-col on mobile */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8 pt-6 md:pt-8 border-t border-gray-800">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 pt-5 md:pt-8 border-t border-gray-800">
           <div>
             <h3 className="font-bold text-white mb-3 md:mb-4 text-[13px] md:text-sm">Trợ giúp</h3>
             <ul className="space-y-2 md:space-y-3" aria-label="Trợ giúp">

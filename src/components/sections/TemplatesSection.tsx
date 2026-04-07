@@ -16,16 +16,16 @@ const filters = ['Tất cả', 'Bán hàng', 'Doanh nghiệp', 'Landing Page', '
 
 export default function TemplatesSection() {
   return (
-    <section className="py-16 md:py-24 bg-slate-50 relative border-t border-slate-200" aria-label="Kho giao diện">
+    <section className="py-8 md:py-24 bg-slate-50 relative border-t border-slate-200" aria-label="Kho giao diện">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4 md:gap-8 mb-6 md:mb-12">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-3 md:gap-8 mb-4 md:mb-12">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-2 py-1 rounded-md bg-blue-100/80 text-blue-700 text-[10px] md:text-xs font-bold mb-3 md:mb-4 uppercase tracking-wider">
               <LayoutTemplate size={12} aria-hidden="true" />
               <span>Kho giao diện</span>
             </div>
-            <h2 className="text-[22px] md:text-[40px] font-extrabold text-slate-900 mb-2 md:mb-4 leading-tight">
+            <h2 className="text-[18px] md:text-[40px] font-extrabold text-slate-900 mb-1 md:mb-4 leading-tight">
               Khám phá +500 giao diện <br className="hidden md:block" /> chuẩn SEO, tối ưu chuyển đổi
             </h2>
             <p className="text-slate-600 text-[12px] md:text-[16px] hidden md:block">
@@ -45,10 +45,10 @@ export default function TemplatesSection() {
         </div>
 
         {/* Toolbar */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 mb-6 md:mb-10 bg-white p-1.5 md:p-2 rounded-xl md:rounded-2xl shadow-sm border border-slate-200">
-          <div className="flex flex-wrap gap-1 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-hide" role="tablist" aria-label="Lọc giao diện">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-1.5 md:gap-4 mb-4 md:mb-10 bg-white p-1 md:p-2 rounded-lg md:rounded-2xl shadow-sm border border-slate-200">
+          <div className="flex flex-wrap gap-0.5 md:gap-1 w-full md:w-auto overflow-x-auto pb-0 md:pb-0 scrollbar-hide" role="tablist" aria-label="Lọc giao diện">
             {filters.map((filter, idx) => (
-              <button key={idx} className={`px-3 md:px-5 py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-[11px] md:text-[14px] font-semibold transition-all whitespace-nowrap ${idx === 0 ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`} role="tab" aria-selected={idx === 0}>
+              <button key={idx} className={`px-2.5 md:px-5 py-1 md:py-2.5 rounded-md md:rounded-xl text-[10px] md:text-[14px] font-semibold transition-all whitespace-nowrap ${idx === 0 ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`} role="tab" aria-selected={idx === 0}>
                 {filter}
               </button>
             ))}
@@ -66,10 +66,10 @@ export default function TemplatesSection() {
         </div>
 
         {/* Grid — 2 cols on mobile for density */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-6 mb-5 md:mb-12">
           {templates.map((template, idx) => (
-            <div key={idx} className="bg-white rounded-xl md:rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col group">
-              <div className="relative h-[140px] md:h-[240px] bg-slate-100 overflow-hidden border-b border-slate-100">
+            <div key={idx} className="bg-white rounded-lg md:rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col group">
+              <div className="relative h-[100px] md:h-[240px] bg-slate-100 overflow-hidden border-b border-slate-100">
                 <Image src={`https://picsum.photos/seed/${template.img}/600/400`} alt={`Giao diện ${template.name}`} fill className="object-cover object-top" sizes="(max-width: 768px) 50vw, 33vw" loading="lazy" />
                 <div className="absolute top-1.5 md:top-3 left-1.5 md:left-3 flex flex-wrap gap-1 z-10">
                   {template.tags.map((tag, i) => (
@@ -89,7 +89,7 @@ export default function TemplatesSection() {
                 </div>
               </div>
 
-              <div className="p-3 md:p-5 flex-1 flex flex-col">
+              <div className="p-2 md:p-5 flex-1 flex flex-col">
                 <div className="flex justify-between items-center mb-1 md:mb-2">
                   <span className="text-[9px] md:text-xs font-semibold text-blue-600 bg-blue-50 px-1.5 md:px-2 py-0.5 md:py-1 rounded flex items-center gap-1">
                     <LayoutTemplate size={10} aria-hidden="true" /> {template.category}
@@ -99,8 +99,8 @@ export default function TemplatesSection() {
                     <Smartphone size={14} aria-hidden="true" />
                   </div>
                 </div>
-                <h3 className="font-bold text-[13px] md:text-lg text-slate-900 mb-0.5 md:mb-1.5 line-clamp-1">{template.name}</h3>
-                <div className="flex items-center gap-2 text-[9px] md:text-xs text-slate-500 mb-1.5 md:mb-4 pb-1.5 md:pb-4 border-b border-slate-100">
+                <h3 className="font-bold text-[11px] md:text-lg text-slate-900 mb-0.5 md:mb-1.5 line-clamp-1">{template.name}</h3>
+                <div className="flex items-center gap-1.5 md:gap-2 text-[8px] md:text-xs text-slate-500 mb-1 md:mb-4 pb-1 md:pb-4 border-b border-slate-100">
                   <div className="flex items-center text-amber-400">
                     <Star size={10} className="fill-current" aria-hidden="true" />
                     <span className="ml-0.5 font-semibold text-slate-700">{template.rating}</span>
@@ -116,12 +116,12 @@ export default function TemplatesSection() {
                     <li key={f} className="flex items-start gap-1.5"><CheckCircle2 size={14} className="text-emerald-500 shrink-0 mt-0.5" aria-hidden="true" /> {f}</li>
                   ))}
                 </ul>
-                <div className="mt-auto flex items-end justify-between pt-1 md:pt-2">
+                <div className="mt-auto flex items-end justify-between pt-0.5 md:pt-2">
                   <div>
-                    <p className="text-[9px] md:text-xs text-slate-400 line-through mb-0">{template.oldPrice}</p>
-                    <p className="font-extrabold text-[13px] md:text-xl text-emerald-600 leading-none">{template.price}</p>
+                    <p className="text-[8px] md:text-xs text-slate-400 line-through mb-0">{template.oldPrice}</p>
+                    <p className="font-extrabold text-[12px] md:text-xl text-emerald-600 leading-none">{template.price}</p>
                   </div>
-                  <button className="px-2 md:px-4 py-1 md:py-2 bg-slate-900 text-white rounded-lg text-[10px] md:text-sm font-semibold flex items-center gap-1">
+                  <button className="px-1.5 md:px-4 py-0.5 md:py-2 bg-slate-900 text-white rounded-md md:rounded-lg text-[9px] md:text-sm font-semibold flex items-center gap-0.5 md:gap-1">
                     Chi tiết <ArrowRight size={12} aria-hidden="true" />
                   </button>
                 </div>

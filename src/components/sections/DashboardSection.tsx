@@ -162,14 +162,14 @@ export default function DashboardSection() {
   const reduced = useReducedMotion();
 
   return (
-    <section className="py-10 md:py-32 bg-white relative overflow-hidden" aria-label="Trình kiến tạo Dashboard">
+    <section className="py-6 md:py-32 bg-white relative overflow-hidden" aria-label="Trình kiến tạo Dashboard">
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[800px] h-[800px] bg-slate-50 rounded-full blur-[120px] -z-10 pointer-events-none" aria-hidden="true"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-16 lg:gap-24 items-start md:items-center">
           {/* Interactive Dashboard Visual */}
           {reduced ? (
-            <div className="relative order-2 lg:order-1 h-[320px] md:h-[650px] w-full bg-slate-50/50 rounded-[2.5rem] border border-slate-100/80 flex items-center justify-center p-6 md:p-10 overflow-hidden shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]">
+            <div className="relative order-2 lg:order-1 h-[250px] md:h-[650px] w-full bg-slate-50/50 rounded-[2.5rem] border border-slate-100/80 flex items-center justify-center p-4 md:p-10 overflow-hidden shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]">
               <div
                 className="bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-slate-200/80 overflow-hidden flex flex-col relative z-10"
                 style={{
@@ -223,7 +223,7 @@ export default function DashboardSection() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative order-2 lg:order-1 h-[320px] md:h-[650px] w-full bg-slate-50/50 rounded-[2.5rem] border border-slate-100/80 flex items-center justify-center p-6 md:p-10 overflow-hidden shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]"
+              className="relative order-2 lg:order-1 h-[250px] md:h-[650px] w-full bg-slate-50/50 rounded-[2.5rem] border border-slate-100/80 flex items-center justify-center p-4 md:p-10 overflow-hidden shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]"
             >
               <motion.div
                 layout
@@ -401,8 +401,8 @@ export default function DashboardSection() {
           {/* Right: Stepper */}
           <div className="order-1 lg:order-2 lg:pl-8">
             {reduced ? (
-              <div className="mb-12">
-                <h2 className="text-[22px] md:text-[48px] font-black text-slate-900 leading-[1.1] tracking-tight mb-6">
+              <div className="mb-5 md:mb-12">
+                <h2 className="text-[20px] md:text-[48px] font-black text-slate-900 leading-[1.1] tracking-tight mb-3 md:mb-6">
                   Sáng tạo không rào cản. <br />
                   <span
                     className="text-transparent bg-clip-text transition-colors duration-500"
@@ -411,7 +411,7 @@ export default function DashboardSection() {
                     Quản trị tinh gọn.
                   </span>
                 </h2>
-                <p className="text-slate-500 text-[13px] md:text-[18px] leading-relaxed max-w-lg">
+                <p className="text-slate-500 text-[12px] md:text-[18px] leading-relaxed max-w-lg">
                   Nền tảng được thiết kế tập trung vào tính hiệu quả. Bạn chỉ cần tập trung kinh doanh, công nghệ để chúng tôi lo.
                 </p>
               </div>
@@ -420,9 +420,9 @@ export default function DashboardSection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mb-12"
+                className="mb-5 md:mb-12"
               >
-                <h2 className="text-[22px] md:text-[48px] font-black text-slate-900 leading-[1.1] tracking-tight mb-6">
+                <h2 className="text-[20px] md:text-[48px] font-black text-slate-900 leading-[1.1] tracking-tight mb-3 md:mb-6">
                   Sáng tạo không rào cản. <br />
                   <motion.span
                     className="text-transparent bg-clip-text transition-colors duration-500"
@@ -437,7 +437,7 @@ export default function DashboardSection() {
               </motion.div>
             )}
 
-            <div className="relative pl-4 md:pl-8 space-y-3 md:space-y-8 border-l-2 border-slate-100">
+            <div className="relative pl-4 md:pl-8 space-y-2 md:space-y-8 border-l-2 border-slate-100">
               {reduced ? (
                 <div
                   className="absolute left-[-2px] w-[2px] rounded-full"

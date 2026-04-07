@@ -22,14 +22,14 @@ export default function IndustrySection() {
   const [activeIndustry, setActiveIndustry] = useState(0);
 
   return (
-    <section className="py-16 md:py-32 bg-[#FBFBFD] relative overflow-hidden" aria-label="Giao diện đa ngành">
+    <section className="py-8 md:py-32 bg-[#FBFBFD] relative overflow-hidden" aria-label="Giao diện đa ngành">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10 flex flex-col">
-        <div className="text-center max-w-3xl mx-auto mb-8 md:mb-24">
+        <div className="text-center max-w-3xl mx-auto mb-4 md:mb-24">
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[11px] md:text-[12px] font-bold mb-3 md:mb-6 shadow-sm">
             <LayoutTemplate size={12} className="text-[#00D68F]" aria-hidden="true" />
             <span className="uppercase tracking-[0.1em]">Giao diện đa ngành</span>
           </div>
-          <h2 className="text-[24px] md:text-[60px] font-semibold text-[#1D1D1F] tracking-tight leading-[1.05] mb-3 md:mb-6">
+          <h2 className="text-[20px] md:text-[60px] font-semibold text-[#1D1D1F] tracking-tight leading-[1.05] mb-2 md:mb-6">
             Thiết kế độc bản. <br /><span className="text-slate-400">Dành riêng cho bạn.</span>
           </h2>
           <p className="text-[13px] md:text-[22px] text-[#86868B] tracking-tight leading-relaxed max-w-2xl mx-auto hidden md:block">
@@ -39,17 +39,17 @@ export default function IndustrySection() {
 
         {/* Mobile: Horizontal scroll cards / Desktop: Accordion gallery */}
         {/* Mobile Grid */}
-        <div className="grid grid-cols-4 gap-2 md:hidden">
+        <div className="grid grid-cols-4 gap-1.5 md:hidden">
           {industries.map((industry, idx) => (
             <button
               key={idx}
               onClick={() => setActiveIndustry(idx)}
-              className={`relative rounded-xl overflow-hidden h-[110px] ${activeIndustry === idx ? 'ring-2 ring-[#00D68F]' : ''}`}
+              className={`relative rounded-lg overflow-hidden h-[80px] ${activeIndustry === idx ? 'ring-2 ring-[#00D68F]' : ''}`}
             >
               <Image src={`https://picsum.photos/seed/${industry.img}/200/200`} alt={industry.name} fill className="object-cover" sizes="25vw" loading="lazy" />
               <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
-                <industry.icon size={16} className="text-white mb-1" aria-hidden="true" />
-                <span className="text-white text-[10px] font-bold text-center leading-tight px-0.5">{industry.name}</span>
+                <industry.icon size={14} className="text-white mb-0.5" aria-hidden="true" />
+                <span className="text-white text-[9px] font-bold text-center leading-tight px-0.5">{industry.name}</span>
               </div>
             </button>
           ))}
@@ -101,7 +101,7 @@ export default function IndustrySection() {
           ))}
         </div>
 
-        <div className="mt-10 md:mt-24 text-center">
+        <div className="mt-5 md:mt-24 text-center">
           <p className="text-[#86868B] text-[14px] md:text-[17px] mb-2 md:mb-4 font-medium">Bạn muốn xem thêm nhiều hơn?</p>
           <a href="#" className="text-[15px] md:text-[20px] font-semibold text-[#0066CC] hover:text-[#0044BB] transition-colors inline-flex items-center gap-1 group">
             Khám phá thư viện +400 giao diện

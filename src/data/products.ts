@@ -8,6 +8,7 @@ export interface ProductSpec {
 }
 
 export interface Product {
+  id: Key | null | undefined;
   slug: string;
   name: string;
   category: 'laptop' | 'pc' | 'linhkien' | 'ngoaivi' | 'phanmem' | 'mang';

@@ -14,8 +14,8 @@ const mainLinks = [
     subLinks: [
       { href: '/dich-vu/phan-mem', label: 'Phần mềm & App' },
       { href: '/dich-vu/cloud-server', label: 'Cloud & Server' },
-      { href: '/dich-vu/marketing-design', label: 'Marketing & Thiết kế' },
-      { href: '/dich-vu/thiet-bi-it', label: 'Thiết bị IT' },
+      { href: '/dich-vu/marketing-design', label: 'Design UX/UI' },
+      { href: '/dich-vu/marketing', label: 'Digital Marketing' },
     ],
   },
   { href: '/shop', label: 'Shop', hasDropdown: false, isHot: true },
@@ -43,13 +43,13 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Main Navbar — 48px on mobile */}
+      {/* Main Navbar — compact on mobile */}
       <nav className="bg-white border-b border-gray-100" aria-label="Điều hướng chính">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-14 md:h-20 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-12 md:h-20 items-center">
             <div className="flex items-center gap-8">
               <Link href="/" className="flex items-center" aria-label="MTIEN SOLUTION - Trang chủ">
-                <span className="font-bold text-2xl md:text-3xl text-[#0066FF] tracking-tighter">
+                <span className="font-bold text-xl md:text-3xl text-[#0066FF] tracking-tighter">
                   MTIEN SOLUTION
                 </span>
               </Link>
