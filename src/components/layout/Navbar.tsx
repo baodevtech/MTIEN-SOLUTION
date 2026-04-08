@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, ArrowRight, Phone, Mail, Sparkles, Smartphone, Cloud, PenTool, Megaphone, Store, Users, CreditCard, Newspaper, MonitorPlay } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight, Phone, Mail, Sparkles, Smartphone, Cloud, PenTool, Megaphone, Store, Users, CreditCard, Newspaper, MonitorPlay, Search, ShoppingCart } from 'lucide-react';
 
 const mainLinks = [
   { href: '/', label: 'Trang chủ', icon: Store, hasDropdown: false, isHot: false },
@@ -171,19 +171,37 @@ export default function Navbar() {
                 </Link>
               </div>
 
-              {/* Mobile Menu Button */}
-              <div className="flex items-center gap-3 lg:hidden">
-                <Link href="#" className="text-[12px] font-bold text-white bg-gray-900 px-4 py-2 rounded-xl shadow-md">Tư vấn</Link>
+              {/* Mobile Right Actions (Search & Hamburger) */}
+              <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden">
+                {/* Search Button */}
+                <button className="hidden sm:flex w-9 h-9 sm:w-10 sm:h-10 items-center justify-center text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-[12px] transition-colors border border-gray-100/80 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20" aria-label="Tìm kiếm">
+                  <Search size={18} strokeWidth={2.5} />
+                </button>
+
+                {/* Cart Button */}
+                <Link href="/cart" className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-[12px] transition-colors border border-gray-100/80 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20" aria-label="Giỏ hàng">
+                  <ShoppingCart size={18} strokeWidth={2.5} />
+                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-extrabold w-4 h-4 md:w-4.5 md:h-4.5 flex items-center justify-center rounded-full shadow-sm border border-white">2</span>
+                </Link>
+                
+                {/* CTA Button (Tư vấn) */}
+                <Link href="tel:18006750" className="text-[13px] font-bold text-white bg-gray-900 hover:bg-[#0066FF] px-3.5 py-[9px] rounded-[14px] shadow-sm transition-all flex items-center gap-1.5 focus:ring-2 focus:ring-[#0066FF]/20 ml-1">
+                  <span>Tư vấn</span>
+                </Link>
+
+                {/* Mobile Menu Hamburger Button */}
                 <button
                   onClick={toggleMenu}
-                  className="relative text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-xl p-2.5 w-10 h-10 transition-colors focus:ring-2 focus:ring-[#0066FF]/50 outline-none flex items-center justify-center border border-gray-100"
+                  className="relative text-gray-700 bg-white hover:bg-gray-50 rounded-[14px] p-2 w-10 h-10 transition-colors focus:ring-2 focus:ring-[#0066FF]/20 border border-gray-200/60 items-center justify-center flex ml-1 shadow-sm"
                   aria-expanded={isOpen}
                   aria-controls="mobile-menu"
                   aria-label={isOpen ? 'Đóng menu' : 'Mở menu'}
                 >
-                  <span className={`absolute h-[2px] rounded-full w-5 bg-gray-700 transition-all duration-300 ease-in-out ${isOpen ? 'rotate-45' : '-translate-y-1.5'}`}></span>
-                  <span className={`absolute h-[2px] rounded-full w-5 bg-gray-700 transition-all duration-300 ease-in-out ${isOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}></span>
-                  <span className={`absolute h-[2px] rounded-full w-5 bg-gray-700 transition-all duration-300 ease-in-out ${isOpen ? '-rotate-45' : 'translate-y-1.5'}`}></span>
+                  <div className="flex flex-col justify-center items-center w-5 h-4 relative">
+                    <span className={`absolute h-[2.5px] rounded-full w-full bg-gray-800 transition-all duration-300 ease-in-out ${isOpen ? 'rotate-45 top-1.5' : 'top-0'}`}></span>
+                    <span className={`absolute h-[2.5px] rounded-full w-full bg-gray-800 transition-all duration-300 ease-in-out top-1.5 ${isOpen ? 'opacity-0 scale-x-0' : 'opacity-100 scale-x-100'}`}></span>
+                    <span className={`absolute h-[2.5px] rounded-full w-full bg-gray-800 transition-all duration-300 ease-in-out ${isOpen ? '-rotate-45 top-1.5' : 'top-3'}`}></span>
+                  </div>
                 </button>
               </div>
             </div>
