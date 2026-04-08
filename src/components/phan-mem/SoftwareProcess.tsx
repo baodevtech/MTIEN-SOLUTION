@@ -29,21 +29,21 @@ export default function SoftwareProcess() {
       </motion.div>
       
       {/* Main Navy Container */}
-      <div className="bg-[#09155C] pt-[140px] pb-[120px] rounded-b-[40px] md:mx-5 relative z-0 overflow-hidden shadow-[0_20px_50px_rgba(9,21,92,0.15)] border border-[#061153]/10">
+      <div className="bg-[#09155C] pt-[80px] md:pt-[140px] pb-[60px] md:pb-[120px] rounded-b-[24px] md:rounded-b-[40px] mx-3 md:mx-5 relative z-0 overflow-hidden shadow-[0_20px_50px_rgba(9,21,92,0.15)] border border-[#061153]/10">
         
         {/* Subtle Background Textures */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] pointer-events-none"></div>
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#1053F3]/20 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#5080FF]/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-        <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+        <div className="container mx-auto px-5 md:px-6 relative z-10 max-w-7xl">
           
           {/* Header Titles */}
-          <div className="text-center mb-[80px] -mt-[25px] relative">
-            <h2 className="text-5xl md:text-[80px] font-black text-white/[0.04] tracking-[0.05em] uppercase leading-none absolute left-1/2 -translate-x-1/2 -top-6 md:-top-10 w-full select-none pointer-events-none">
+          <div className="text-center mb-[40px] md:mb-[80px] -mt-[15px] md:-mt-[25px] relative">
+            <h2 className="text-3xl md:text-5xl md:text-[80px] font-black text-white/[0.04] tracking-[0.05em] uppercase leading-none absolute left-1/2 -translate-x-1/2 -top-4 md:-top-6 md:-top-10 w-full select-none pointer-events-none">
               QUY TRÌNH CHUẨN
             </h2>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white tracking-tight relative z-10 drop-shadow-sm">
+            <h2 className="text-[26px] md:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white tracking-tight relative z-10 drop-shadow-sm">
               Cách Chúng Tôi Làm Việc
             </h2>
           </div>
@@ -61,7 +61,7 @@ export default function SoftwareProcess() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[30px] relative z-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-[30px] relative z-10">
               {[
                 { title: 'Khảo Sát & Tư Vấn', desc: 'Tìm hiểu chi tiết bài toán kinh doanh và đề xuất giải pháp công nghệ tối ưu.' },
                 { title: 'Phân Tích & Thiết Kế', desc: 'Xây dựng tài liệu kỹ thuật, luồng dữ liệu, và thiết kế UI/UX Mockups.' },
@@ -71,37 +71,37 @@ export default function SoftwareProcess() {
                 <motion.div key={idx} variants={fadeInRightBig} initial="hidden" whileInView="visible" custom={idx * 0.15} viewport={{ once: true }} className="relative group h-full">
                   
                   {/* Modern Glass Card */}
-                  <div className="bg-white/[0.04] backdrop-blur-md p-[40px] rounded-[30px] h-full transition-all duration-500 border border-white/10 group-hover:border-blue-400/40 group-hover:bg-gradient-to-br group-hover:from-white/[0.08] group-hover:to-transparent group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden flex flex-col items-start z-10">
+                  <div className="bg-white/[0.04] backdrop-blur-md p-5 md:p-[40px] rounded-2xl md:rounded-[30px] h-full transition-all duration-500 border border-white/10 group-hover:border-blue-400/40 group-hover:bg-gradient-to-br group-hover:from-white/[0.08] group-hover:to-transparent group-hover:-translate-y-3 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden flex flex-col items-start z-10">
                     
                     {/* Faint Background Number inside card */}
-                    <div className="absolute -bottom-4 -right-4 text-[100px] font-black text-white/[0.03] group-hover:text-blue-400/[0.05] transition-colors duration-500 pointer-events-none select-none">
+                    <div className="absolute -bottom-4 -right-4 text-[60px] md:text-[100px] font-black text-white/[0.03] group-hover:text-blue-400/[0.05] transition-colors duration-500 pointer-events-none select-none">
                       0{idx + 1}
                     </div>
 
                     {/* Pill Badge Step */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 mb-6">
+                    <div className="inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3.5 py-1 md:py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 mb-4 md:mb-6">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#5080FF] animate-pulse"></span>
-                      <span className="text-blue-200 font-extrabold tracking-widest text-[11px] uppercase">
+                      <span className="text-blue-200 font-extrabold tracking-widest text-[9px] md:text-[11px] uppercase">
                         BƯỚC 0{idx + 1}
                       </span>
                     </div>
 
                     {/* Icon Container */}
-                    <div className="mb-[30px] relative">
+                    <div className="mb-4 md:mb-[30px] relative">
                       {/* Glow effect behind image */}
                       <div className="absolute inset-0 bg-[#1053F3] blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500 rounded-full scale-150"></div>
                       <img 
                         src={`https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon${idx + 1}.webp`} 
-                        className="w-[64px] h-[64px] relative z-10 group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500 drop-shadow-lg" 
+                        className="w-[42px] h-[42px] md:w-[64px] md:h-[64px] relative z-10 group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500 drop-shadow-lg" 
                         alt="icon" 
                       />
                     </div>
 
                     {/* Text Content */}
-                    <h3 className="text-[22px] font-extrabold text-white mb-3 tracking-tight relative z-10 drop-shadow-sm group-hover:text-blue-100 transition-colors">
+                    <h3 className="text-[16px] md:text-[22px] font-extrabold text-white mb-2 md:mb-3 tracking-tight relative z-10 drop-shadow-sm group-hover:text-blue-100 transition-colors">
                       {step.title}
                     </h3>
-                    <p className="text-slate-300/90 text-[15px] leading-relaxed relative z-10">
+                    <p className="text-slate-300/90 text-[12px] md:text-[15px] leading-relaxed relative z-10">
                       {step.desc}
                     </p>
 

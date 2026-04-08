@@ -24,7 +24,7 @@ export default function AppStoreRedesign() {
   const reduced = useReducedMotion();
 
   return (
-    <section className="bg-[#FBFBFC] py-8 md:py-16 relative z-20 border-y border-slate-200/60 overflow-hidden font-sans lg:h-[90vh] flex items-center" aria-label="Hệ sinh thái ứng dụng">
+    <section className="bg-[#FBFBFC] pt-6 md:pt-45 pb-16 md:pb-16 relative mt-0 md:-mt-35 z-10 border-y border-slate-200/60 overflow-hidden font-sans md:min-h-[80vh] flex items-center" aria-label="Hệ sinh thái ứng dụng">
       
       {/* Background Cinematic Texture & Lights */}
       {!reduced && (
@@ -36,28 +36,28 @@ export default function AppStoreRedesign() {
       )}
 
       <div className="max-w-[1260px] mx-auto px-6 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 lg:gap-16 items-center">
           
           {/* Cột Trái: High-Density Bento Gallery */}
-          <div className="lg:col-span-6 flex flex-col order-2 lg:order-1">
-            <header className="mb-4 md:mb-8">
-              <div className="inline-flex items-center gap-2 px-2.5 md:px-3 py-0.5 md:py-1 bg-white shadow-sm border border-slate-100 rounded-full text-blue-600 text-[10px] md:text-[11px] font-bold mb-2 md:mb-4 uppercase tracking-widest">
+          <div className="md:col-span-6 flex flex-col order-2 md:order-1">
+            <header className="hidden md:block mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white shadow-sm border border-slate-100 rounded-full text-blue-600 text-[11px] font-bold mb-4 uppercase tracking-widest">
                 <Cpu size={12} /> <span>Hệ sinh thái MTIEN SOLUTION</span>
               </div>
-              <h2 className="text-2xl md:text-5xl font-bold text-slate-900 tracking-tighter leading-[1.1] mb-2 md:mb-4">
-                Mở rộng sức mạnh. <br className="hidden md:block"/>
+              <h2 className="text-5xl font-bold text-slate-900 tracking-tighter leading-[1.1] mb-4">
+                Mở rộng sức mạnh. <br/>
                 <span className="text-slate-400">Không giới hạn tính năng.</span>
               </h2>
             </header>
 
             {/* Bento Grid: Optimized for High Density */}
-            <div className="grid grid-cols-4 gap-2 md:gap-3 auto-rows-[70px] md:auto-rows-[105px]">
+            <div className="grid grid-cols-4 gap-2.5 md:gap-3 auto-rows-[80px] md:auto-rows-[105px]">
               {apps.map((app, idx) => (
                 <motion.div
                   key={idx}
                   whileHover={{ y: -4, scale: 0.99 }}
                   className={`
-                    relative rounded-[1.2rem] md:rounded-[1.8rem] p-2.5 md:p-4 flex flex-col overflow-hidden group border border-white bg-white/70 backdrop-blur-xl transition-all shadow-[0_4px_20px_rgba(0,0,0,0.02)]
+                    relative rounded-[1.2rem] md:rounded-[1.8rem] p-3 md:p-4 flex flex-col overflow-hidden group border border-white bg-white/70 backdrop-blur-xl transition-all shadow-[0_4px_20px_rgba(0,0,0,0.02)]
                     ${app.size === 'large' ? 'col-span-2 row-span-2' : ''}
                     ${app.size === 'medium' ? 'col-span-2 row-span-1' : ''}
                     ${app.size === 'small' ? 'col-span-1 row-span-1' : ''}
@@ -94,8 +94,25 @@ export default function AppStoreRedesign() {
           </div>
 
           {/* Cột Phải: Apple Studio Display (Cinema Visual) */}
-          <div className="lg:col-span-6 relative order-1 lg:order-2 h-[280px] lg:h-[500px] flex items-center">
+          <div className="md:col-span-6 relative order-1 md:order-2 flex items-center">
             
+            {/* Mobile: unified rounded card wrapping image + text */}
+            <div className="w-full rounded-[2rem] md:rounded-none overflow-hidden relative md:h-[400px] lg:h-[500px] md:overflow-visible">
+
+              {/* Mockup + floating data wrapper */}
+              <div className="relative md:h-full flex items-center">
+
+            {/* Mobile Text Overlay — inside image */}
+            <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-6 pt-24 bg-gradient-to-t from-black/70 via-black/40 to-transparent md:hidden">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/20 backdrop-blur-sm border border-white/20 rounded-full text-white text-[10px] font-bold mb-3 uppercase tracking-widest">
+                <Cpu size={11} /> <span>Hệ sinh thái</span>
+              </div>
+              <h2 className="text-[28px] font-bold text-white tracking-tight leading-[1.08]">
+                Mở rộng sức mạnh.<br/>
+                <span className="text-white/60">Không giới hạn.</span>
+              </h2>
+            </div>
+
             {/* Professional Floating Data */}
             {!reduced && (
               <>
@@ -126,7 +143,7 @@ export default function AppStoreRedesign() {
             )}
 
             {/* Apple Studio Display Mockup */}
-            <div className="relative w-full aspect-square md:aspect-[4/3] bg-[#E8E8ED] rounded-[2rem] md:rounded-[3.5rem] p-2 md:p-2.5 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.12)] border border-slate-300 ring-1 ring-white/50 overflow-hidden">
+            <div className="relative w-full h-[320px] md:h-auto md:aspect-[4/3] bg-[#E8E8ED] rounded-none md:rounded-[3.5rem] p-0 md:p-2.5 shadow-none md:shadow-[0_50px_100px_-20px_rgba(0,0,0,0.12)] border-0 md:border md:border-slate-300 md:ring-1 md:ring-white/50 overflow-hidden">
                <div className="w-full h-full bg-[#1D1D1F] rounded-[1.8rem] md:rounded-[3rem] p-1 md:p-1.5 overflow-hidden relative shadow-inner">
                   
                   {/* Glass Reflection */}
@@ -158,20 +175,25 @@ export default function AppStoreRedesign() {
                </div>
                
                {/* Stand Shadow Underneath */}
-               <div className="absolute bottom-[-30px] left-1/2 -translate-x-1/2 w-[70%] h-10 bg-blue-900/5 blur-3xl rounded-full -z-10" />
+               <div className="absolute bottom-[-30px] left-1/2 -translate-x-1/2 w-[70%] h-10 bg-blue-900/5 blur-3xl rounded-full -z-10 hidden md:block" />
             </div>
+              </div>{/* end mockup + floating wrapper */}
+            </div>{/* end unified rounded card */}
           </div>
         </div>
 
-        {/* Professional Footer Ticker - Mật độ cao nhưng gọn */}
-        <div className="mt-6 md:mt-12 pt-5 md:pt-8 border-t border-slate-200/60 flex flex-col md:flex-row md:flex-wrap justify-between items-center gap-4 md:gap-6">
-           <div className="flex gap-8 items-center grayscale opacity-40 hover:opacity-100 transition-all duration-700 overflow-x-auto scrollbar-hide py-2">
-              {['Google Partner', 'Meta Business', 'TikTok Agency', 'GHN Delivery', 'Visa Secured'].map(brand => (
-                <span key={brand} className="text-[11px] font-black text-slate-900 whitespace-nowrap tracking-widest uppercase">{brand}</span>
+        {/* Footer */}
+        <div className="mt-8 md:mt-12 pt-5 md:pt-8 border-t border-slate-200/60 flex items-center justify-between gap-4">
+           <div className="flex items-center gap-2 md:gap-8 text-[10px] md:text-[11px] font-semibold md:font-black text-slate-400 md:text-slate-900 md:grayscale md:opacity-40 md:hover:opacity-100 md:transition-all md:duration-700 overflow-x-auto scrollbar-hide md:uppercase md:tracking-widest">
+              {['Google Partner', 'Meta Business', 'TikTok Agency', 'GHN Delivery', 'Visa Secured'].map((brand, i) => (
+                <span key={brand} className="whitespace-nowrap flex items-center gap-2">
+                  {i > 0 && <span className="w-0.5 h-0.5 md:w-0 md:h-0 rounded-full bg-slate-300 shrink-0" aria-hidden="true"></span>}
+                  {brand}
+                </span>
               ))}
            </div>
-           <button className="bg-blue-600 hover:bg-slate-900 text-white rounded-full px-8 py-3.5 font-bold text-sm shadow-xl shadow-blue-500/20 transition-all flex items-center gap-3">
-              Dùng thử miễn phí <ArrowRight size={18} />
+           <button className="shrink-0 text-blue-600 font-semibold text-[12px] md:text-sm hover:text-blue-700 transition-colors inline-flex items-center gap-1">
+              Dùng thử <ArrowRight size={14} />
            </button>
         </div>
       </div>

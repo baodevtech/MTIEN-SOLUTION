@@ -98,15 +98,15 @@ export default function SoftwareEcosystem() {
   }, [isHovered]);
 
   return (
-    <section className="py-[60px] lg:py-[80px] flex flex-col justify-center min-h-[calc(100vh-100px)] bg-white relative overflow-hidden border-b border-[#E8EDFA]">
-      <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+    <section className="py-[40px] md:py-[60px] lg:py-[80px] flex flex-col justify-center min-h-0 md:min-h-[calc(100vh-100px)] bg-white relative overflow-hidden border-b border-[#E8EDFA]">
+      <div className="container mx-auto px-5 md:px-6 relative z-10 max-w-7xl">
         
         {/* Section Header */}
-        <div className="text-center mb-[40px] lg:mb-[50px]">
-          <motion.span variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="font-bold text-[12px] tracking-[0.15em] uppercase mb-3 block text-slate-400">
+        <div className="text-center mb-6 md:mb-[40px] lg:mb-[50px]">
+          <motion.span variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="font-bold text-[10px] md:text-[12px] tracking-[0.15em] uppercase mb-2 md:mb-3 block text-slate-400">
             Ecosystem
           </motion.span>
-          <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="text-3xl md:text-4xl font-extrabold text-[#061153] leading-tight tracking-tight">
+          <motion.h2 variants={fadeInUp} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="text-[24px] md:text-4xl font-extrabold text-[#061153] leading-tight tracking-tight">
             Giải Pháp Phần Mềm <br /> Toàn Diện & Chuyên Sâu
           </motion.h2>
         </div>
@@ -115,15 +115,15 @@ export default function SoftwareEcosystem() {
              onMouseEnter={() => setIsHovered(true)}
              onMouseLeave={() => setIsHovered(false)}
         >
-          {/* LEFT: Tab Navigation - Dynamic Colors */}
-          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-4 flex flex-col gap-1.5 justify-between">
+          {/* LEFT: Tab Navigation - Horizontal scroll on mobile, vertical on desktop */}
+          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-4 flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-visible scrollbar-hide pb-2 lg:pb-0 justify-start lg:justify-between">
             {ecosystemData.map((node, i) => {
               const isActive = activeService === i;
               return (
                 <button
                   key={i}
                   onClick={() => setActiveService(i)}
-                  className="flex items-center gap-3 w-full p-2.5 md:p-3 rounded-[16px] transition-all duration-300 text-left group border"
+                  className="flex items-center gap-2 md:gap-3 shrink-0 lg:w-full p-2 md:p-2.5 md:p-3 rounded-xl md:rounded-[16px] transition-all duration-300 text-left group border"
                   style={{
                     backgroundColor: isActive ? node.hex : 'transparent',
                     borderColor: isActive ? node.hex : 'transparent',
@@ -131,7 +131,7 @@ export default function SoftwareEcosystem() {
                   }}
                 >
                   {/* Icon Box */}
-                  <div className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm"
+                  <div className="w-8 h-8 md:w-10 md:h-10 shrink-0 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm"
                     style={{
                       backgroundColor: isActive ? 'rgba(255,255,255,0.25)' : `${node.hex}15`,
                       color: isActive ? '#ffffff' : node.hex
@@ -141,7 +141,7 @@ export default function SoftwareEcosystem() {
                   </div>
                   
                   {/* Label */}
-                  <span className="font-bold text-[15px] md:text-[16px] tracking-tight group-hover:translate-x-1 transition-transform"
+                  <span className="font-bold text-[13px] md:text-[15px] md:text-[16px] tracking-tight group-hover:translate-x-1 transition-transform whitespace-nowrap"
                     style={{ color: isActive ? '#ffffff' : '#64748B' }}
                   >
                     {node.label}
@@ -161,7 +161,7 @@ export default function SoftwareEcosystem() {
           {/* RIGHT: Active Content Card - Dynamic Bento Grid */}
           <motion.div variants={fadeInRightBig} initial="hidden" whileInView="visible" viewport={{ once: true }} className="lg:col-span-8 flex flex-col">
             
-            <div className="bg-[#F8FAFC] rounded-[24px] md:rounded-[32px] p-[24px] md:p-[36px] relative overflow-hidden flex flex-col flex-1 transition-all duration-500 border shadow-[0_15px_40px_rgba(6,17,83,0.03)] z-10"
+            <div className="bg-[#F8FAFC] rounded-2xl md:rounded-[24px] md:rounded-[32px] p-4 md:p-[24px] md:p-[36px] relative overflow-hidden flex flex-col flex-1 transition-all duration-500 border shadow-[0_15px_40px_rgba(6,17,83,0.03)] z-10"
                  style={{ borderColor: `${ecosystemData[activeService].hex}25` }}>
               
               {/* 1. Dynamic Background Glow */}
@@ -211,22 +211,22 @@ export default function SoftwareEcosystem() {
                       <span className="text-slate-400 font-semibold text-[12px] tracking-wider uppercase">— {ecosystemData[activeService].label}</span>
                     </div>
                     
-                    <h3 className="text-[28px] md:text-[36px] font-extrabold text-[#061153] leading-[1.15] tracking-tight mb-3">
+                    <h3 className="text-[22px] md:text-[28px] md:text-[36px] font-extrabold text-[#061153] leading-[1.15] tracking-tight mb-2 md:mb-3">
                       {ecosystemData[activeService].title}
                     </h3>
                     
-                    <p className="text-slate-500 text-[15px] md:text-[16px] leading-[1.5] font-medium max-w-[95%]">
+                    <p className="text-slate-500 text-[13px] md:text-[15px] md:text-[16px] leading-[1.5] font-medium max-w-[95%]">
                       {ecosystemData[activeService].desc}
                     </p>
                   </div>
 
                   {/* Bento Grid Content */}
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 mb-4 md:mb-6">
                     
                     {/* Box 1: Core Features */}
-                    <div className="md:col-span-3 bg-white rounded-[20px] p-4 md:p-5 shadow-sm border flex flex-col justify-center transition-all duration-300 hover:shadow-md"
+                    <div className="md:col-span-3 bg-white rounded-2xl md:rounded-[20px] p-4 md:p-5 shadow-sm border flex flex-col justify-center transition-all duration-300 hover:shadow-md"
                          style={{ borderColor: `${ecosystemData[activeService].hex}15` }}>
-                      <h4 className="font-extrabold text-[#061153] mb-3.5 text-[15px] flex items-center gap-2">
+                      <h4 className="font-extrabold text-[#061153] mb-3 md:mb-3.5 text-[14px] md:text-[15px] flex items-center gap-2">
                         <Sparkles size={16} style={{ color: ecosystemData[activeService].hex }} />
                         Năng lực triển khai
                       </h4>
@@ -237,14 +237,14 @@ export default function SoftwareEcosystem() {
                                  style={{ backgroundColor: `${ecosystemData[activeService].hex}15`, borderColor: `${ecosystemData[activeService].hex}30` }}>
                               <Check size={12} strokeWidth={3} style={{ color: ecosystemData[activeService].hex }} />
                             </div>
-                            <span className="text-slate-700 font-semibold text-[14px] leading-tight">{feature}</span>
+                            <span className="text-slate-700 font-semibold text-[13px] md:text-[14px] leading-tight">{feature}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
                     {/* Box 2 & 3: Tech Stack & Metrics */}
-                    <div className="md:col-span-2 flex flex-col gap-4">
+                    <div className="md:col-span-2 flex flex-row md:flex-col gap-3 md:gap-4">
                       
                       {/* Box 2: Tech Stack */}
                       <div className="bg-white rounded-[20px] p-4 shadow-sm border flex-1 flex flex-col justify-center transition-all duration-300 hover:shadow-md"
@@ -306,12 +306,12 @@ export default function SoftwareEcosystem() {
                   </div>
 
                   {/* CTA Footer */}
-                  <div className="mt-auto flex items-center justify-between border-t border-slate-200/60 pt-4">
+                  <div className="mt-auto flex items-center justify-between border-t border-slate-200/60 pt-3 md:pt-4">
                     <div className="flex -space-x-2">
                       {[1, 2, 3].map((num) => (
-                        <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" className="w-8 h-8 rounded-full border-[1.5px] border-white object-cover shadow-sm" />
+                        <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" className="w-7 h-7 md:w-8 md:h-8 rounded-full border-[1.5px] border-white object-cover shadow-sm" />
                       ))}
-                      <div className="w-8 h-8 rounded-full border-[1.5px] border-white bg-white flex items-center justify-center text-[9px] font-bold shadow-sm"
+                      <div className="w-7 h-7 md:w-8 md:h-8 rounded-full border-[1.5px] border-white bg-white flex items-center justify-center text-[8px] md:text-[9px] font-bold shadow-sm"
                            style={{ color: ecosystemData[activeService].hex }}>
                         +20 Dev
                       </div>

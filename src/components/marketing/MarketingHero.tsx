@@ -25,7 +25,7 @@ export default function MarketingHero() {
   const opacityHero = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-      <section ref={containerRef} className="relative min-h-[90vh] flex items-center pt-32 pb-20 px-6 overflow-hidden bg-neutral-950 text-white">
+      <section ref={containerRef} className="relative min-h-[70vh] md:min-h-[90vh] flex items-center pt-24 md:pt-32 pb-16 md:pb-20 px-4 md:px-6 overflow-hidden bg-neutral-950 text-white">
         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=2000&q=80" alt="Data background" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(37,99,235,0.15),rgba(0,0,0,1))]"></div>
         
@@ -36,7 +36,7 @@ export default function MarketingHero() {
               <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" /> Performance Marketing Agency
             </motion.div>
             
-            <motion.h1 variants={fadeUp} custom={1} initial="hidden" animate="visible" className="text-5xl lg:text-[70px] font-extrabold tracking-tight text-white leading-[1.05] mb-6">
+            <motion.h1 variants={fadeUp} custom={1} initial="hidden" animate="visible" className="text-[32px] md:text-5xl lg:text-[70px] font-extrabold tracking-tight text-white leading-[1.05] mb-4 md:mb-6">
               Marketing dựa trên<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-500 relative">
                 Những Con Số 
@@ -45,21 +45,21 @@ export default function MarketingHero() {
               Thực Tế.
             </motion.h1>
             
-            <motion.p variants={fadeUp} custom={2} initial="hidden" animate="visible" className="text-lg md:text-xl text-neutral-400 font-medium leading-relaxed mb-10 max-w-lg">
+            <motion.p variants={fadeUp} custom={2} initial="hidden" animate="visible" className="text-[15px] md:text-lg lg:text-xl text-neutral-400 font-medium leading-relaxed mb-8 md:mb-10 max-w-lg">
               Chấm dứt việc tiêu ngân sách vô ích. Trực tiếp đốt cháy doanh số với chiến lược Digital Marketing đa kênh, tối ưu ROAS và chuyển đổi qua từng lượt click.
             </motion.p>
             
             <motion.div variants={fadeUp} custom={3} initial="hidden" animate="visible" className="flex flex-wrap gap-4">
-               <Link href="#explore" className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-md hover:from-blue-700 hover:to-cyan-600 transition-all shadow-[0_10px_20px_rgba(37,99,235,0.2)] flex items-center gap-2">
+               <Link href="#explore" className="px-6 py-3 md:px-8 md:py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm md:text-md hover:from-blue-700 hover:to-cyan-600 transition-all shadow-[0_10px_20px_rgba(37,99,235,0.2)] flex items-center gap-2">
                  Tăng Trưởng Ngay <ArrowRight size={18} />
                </Link>
                <div className="flex items-center gap-4 ml-2">
                  <div className="flex -space-x-3">
-                   <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop" alt="User" className="w-10 h-10 rounded-full border-2 border-neutral-900 object-cover z-30" />
-                   <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop" alt="User" className="w-10 h-10 rounded-full border-2 border-neutral-900 object-cover z-20" />
-                   <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop" alt="User" className="w-10 h-10 rounded-full border-2 border-neutral-900 object-cover z-10" />
+                   <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-30" />
+                   <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-20" />
+                   <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-10" />
                  </div>
-                 <div className="text-sm font-medium text-neutral-300">Scale up cho 300+ Brands</div>
+                 <div className="text-xs md:text-sm font-medium text-neutral-300">Scale up cho 300+ Brands</div>
                </div>
             </motion.div>
           </motion.div>

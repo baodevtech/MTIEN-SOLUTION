@@ -13,14 +13,6 @@ html, body, * {
    ========================================================================== */
 
 @media (max-width: 767px) {
-  /* Kill blur/backdrop-blur — GPU killer on low-end mobile */
-  [class*="blur-3xl"],
-  [class*="blur-\\["] { display: none !important; }
-  [class*="backdrop-blur"] {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
   /* Kill infinite animations — CPU killer */
   .animate-ping { animation: none !important; }
 }

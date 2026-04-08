@@ -18,10 +18,10 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <HeroSection />
       <StatsSection />
-      <FeaturesSection />
-      <DashboardSection />
-      <TemplatesSection />
       <AppStoreSection />
+      <DashboardSection />
+      <FeaturesSection />
+      <TemplatesSection />
       <PricingSection />
       <IndustrySection />
       <TrustSection />

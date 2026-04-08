@@ -30,12 +30,42 @@ export default function CloudPricing() {
       {/* ==========================================
           8. PRICING TIERS
       ========================================== */}
-      <section className="py-20 relative z-20 bg-[#F8FAFC] border-t border-slate-200/50">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-[44px] font-bold text-slate-900 tracking-tighter mb-4">Chi phí tối giản. <br/><span className="text-slate-400">Giá trị tối đa.</span></h2>
+      <section className="py-12 md:py-20 relative z-20 bg-[#F8FAFC] border-t border-slate-200/50">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-6">
+          <div className="text-center mb-8 md:mb-16">
+            <h2 className="text-[26px] md:text-[44px] font-bold text-slate-900 tracking-tighter mb-4">Chi phí tối giản. <br/><span className="text-slate-400">Giá trị tối đa.</span></h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          {/* Mobile: compact vertical cards */}
+          <div className="md:hidden space-y-3">
+            {pricingPlans.map((plan, idx) => (
+              <div key={idx} className={`rounded-2xl p-5 flex flex-col relative ${plan.pro ? 'bg-[#1D1D1F] text-white shadow-2xl border border-slate-800' : 'bg-white/80 backdrop-blur-xl border border-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)] text-slate-900 ring-1 ring-slate-900/5'}`}>
+                {plan.pro && <div className="absolute -top-3 left-5 bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">Khuyên dùng</div>}
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 className={`text-[16px] font-bold tracking-tight ${plan.pro ? 'text-white' : 'text-slate-900'}`}>{plan.name}</h3>
+                    <p className={`text-[11px] font-medium ${plan.pro ? 'text-slate-400' : 'text-slate-500'}`}>{plan.desc}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className={`text-2xl font-black tracking-tighter ${plan.pro ? 'text-white' : 'text-slate-900'}`}>{plan.price}k</span>
+                    <span className={`text-[10px] font-medium ${plan.pro ? 'text-slate-400' : 'text-slate-500'}`}>/tháng</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-x-3 gap-y-1.5 mb-4 pt-3 border-t border-slate-200/10">
+                  {plan.specs.map((spec, i) => (
+                    <span key={i} className={`flex items-center gap-1.5 text-[11px] font-semibold tracking-tight ${plan.pro ? 'text-slate-300' : 'text-slate-600'}`}>
+                      <CheckCircle2 size={12} className={`shrink-0 ${plan.pro ? 'text-blue-400' : 'text-blue-500'}`} strokeWidth={2.5}/> {spec}
+                    </span>
+                  ))}
+                </div>
+                <button className={`w-full py-3 rounded-full font-bold text-[13px] transition-all ${plan.pro ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'bg-slate-100 hover:bg-slate-200 text-slate-900'}`}>
+                  Khởi tạo ngay
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: 3-col grid */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6 items-center">
             {pricingPlans.map((plan, idx) => (
               <div key={idx} className={`rounded-[2.5rem] p-10 flex flex-col relative transition-all duration-500 ${plan.pro ? 'bg-[#1D1D1F] text-white shadow-2xl scale-105 border border-slate-800 z-10' : 'bg-white/80 backdrop-blur-xl border border-white shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)] text-slate-900 ring-1 ring-slate-900/5'}`}>
                 {plan.pro && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">Khuyên dùng</div>}
@@ -64,15 +94,15 @@ export default function CloudPricing() {
       {/* ==========================================
           9. FINAL CTA
       ========================================== */}
-      <section className="py-24 relative z-20 bg-[#F8FAFC]">
-        <div className="max-w-[1000px] mx-auto px-6">
-          <div className="bg-white/80 backdrop-blur-3xl rounded-[3.5rem] p-12 md:p-20 text-center relative overflow-hidden border border-white shadow-[0_40px_100px_-20px_rgba(0,0,0,0.08)] ring-1 ring-slate-900/5">
+      <section className="py-12 md:py-24 relative z-20 bg-[#F8FAFC]">
+        <div className="max-w-[1000px] mx-auto px-4 md:px-6">
+          <div className="bg-white/80 backdrop-blur-3xl rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-20 text-center relative overflow-hidden border border-white shadow-[0_40px_100px_-20px_rgba(0,0,0,0.08)] ring-1 ring-slate-900/5">
             <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none" />
             <div className="relative z-10 flex flex-col items-center">
-              <div className="w-16 h-16 rounded-[1.5rem] bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/20 mb-8"><Cloud size={32}/></div>
-              <h2 className="text-4xl md:text-[56px] font-bold tracking-tighter mb-6 text-slate-900 leading-[1.1]">Sẵn sàng để đưa <br/>hệ thống lên Cloud?</h2>
-              <p className="text-slate-500 text-[16px] mb-10 max-w-xl mx-auto font-medium">Khởi tạo và thiết lập máy chủ chuyên nghiệp chỉ với vài thao tác. Tận hưởng hiệu năng phần cứng đỉnh cao ngay hôm nay.</p>
-              <button className="bg-[#1D1D1F] hover:bg-blue-600 text-white rounded-full px-10 py-4 font-bold text-[15px] transition-all shadow-xl shadow-slate-900/10 flex items-center gap-2 mx-auto">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.2rem] md:rounded-[1.5rem] bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/20 mb-6 md:mb-8"><Cloud size={28}/></div>
+              <h2 className="text-[26px] md:text-4xl md:text-[56px] font-bold tracking-tighter mb-4 md:mb-6 text-slate-900 leading-[1.1]">Sẵn sàng để đưa <br/>hệ thống lên Cloud?</h2>
+              <p className="text-slate-500 text-[14px] md:text-[16px] mb-8 md:mb-10 max-w-xl mx-auto font-medium">Khởi tạo và thiết lập máy chủ chuyên nghiệp chỉ với vài thao tác. Tận hưởng hiệu năng phần cứng đỉnh cao ngay hôm nay.</p>
+              <button className="bg-[#1D1D1F] hover:bg-blue-600 text-white rounded-full px-8 md:px-10 py-3.5 md:py-4 font-bold text-[14px] md:text-[15px] transition-all shadow-xl shadow-slate-900/10 flex items-center gap-2 mx-auto">
                 Tạo tài khoản miễn phí <ArrowRight size={18} />
               </button>
             </div>

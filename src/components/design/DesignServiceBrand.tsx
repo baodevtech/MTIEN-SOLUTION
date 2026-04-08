@@ -23,16 +23,59 @@ const scaleIn: any = {
 export default function DesignServiceBrand() {
   return (
     <>
+      {/* ===== MOBILE LAYOUT — Bento Horizontal ===== */}
+      <section className="md:hidden py-10 px-4">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex gap-3 h-[280px]">
+          {/* Brand Identity — Tall left card */}
+          <div className="flex-1 relative rounded-[20px] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="Brand Identity" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-purple-950/90 via-purple-900/40 to-black/10" />
+            <div className="absolute inset-0 p-4 flex flex-col justify-end">
+              <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-md flex items-center justify-center mb-2"><PenTool size={14} className="text-white" /></div>
+              <h3 className="text-[15px] font-bold text-white leading-snug mb-1.5">Bộ nhận diện vượt thời gian</h3>
+              <div className="flex flex-wrap gap-1">
+                {['Logo', 'Typography', 'Guidelines'].map((t, i) => (
+                  <span key={i} className="px-2 py-0.5 rounded-full bg-white/15 backdrop-blur-sm text-white/90 text-[10px] font-medium">{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Marketing Assets — Right stacked */}
+          <div className="flex-1 flex flex-col gap-3">
+            {/* Top image card */}
+            <div className="flex-1 relative rounded-[20px] overflow-hidden bg-neutral-900">
+              <img src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80" alt="Marketing Assets" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+              <div className="absolute bottom-3 left-3 right-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Palette size={12} className="text-cyan-400" />
+                  <span className="text-cyan-400 text-[10px] font-semibold uppercase">Marketing</span>
+                </div>
+                <h3 className="text-[13px] font-bold text-white leading-snug">Truyền thông tối đa chuyển đổi</h3>
+              </div>
+            </div>
+            {/* Bottom tags card */}
+            <div className="bg-[#F5F5F7] rounded-[16px] p-3 flex flex-wrap gap-1.5 content-center">
+              {['Banner Ads', 'Pitch Deck', 'Brochure'].map((t, i) => (
+                <span key={i} className="px-2.5 py-1 rounded-full bg-white text-neutral-700 text-[10px] font-semibold shadow-sm">{t}</span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ===== DESKTOP LAYOUT ===== */}
       {/* SECTION 7: SERVICE - BRANDING */}
-      <section className="py-32 px-6 bg-white overflow-hidden border-b border-neutral-100">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
+      <section className="hidden md:block py-32 px-6 bg-white overflow-hidden border-b border-neutral-100">
+        <div className="max-w-7xl mx-auto flex flex-row items-center gap-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 relative h-[450px] w-full rounded-[40px] shadow-2xl border border-neutral-100 overflow-hidden group">
              <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="Brand Identity" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none" />
              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/60 to-transparent opacity-100 transition-opacity duration-700 pointer-events-none" />
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-100 text-purple-700 font-bold mb-6"><PenTool size={18} /> Brand Identity</div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-6">Bộ nhận diện<br/>vượt thời gian.</h2>
+            <h2 className="text-5xl font-bold tracking-tight text-neutral-900 mb-6">Bộ nhận diện<br/>vượt thời gian.</h2>
             <p className="text-lg text-neutral-600 leading-relaxed mb-8">Logo và màu sắc thương hiệu là tài sản tạo nên giá trị dài hạn. Chúng tôi thiết kế bộ Brand Guidelines toàn diện, đảm bảo hình ảnh doanh nghiệp của bạn đồng nhất trên mọi nền tảng.</p>
             <ul className="space-y-4">
                {['Thiết kế Logo tiêu chuẩn', 'Hệ thống màu sắc & Typography', 'Cẩm nang Brand Guidelines'].map((l, i)=><li key={i} className="flex items-center gap-3 text-neutral-800 font-medium"><CheckCircle2 className="text-purple-500" size={20}/> {l}</li>)}
@@ -42,14 +85,14 @@ export default function DesignServiceBrand() {
       </section>
 
       {/* SECTION 8: SERVICE - MARKETING ASSETS */}
-      <section className="py-32 px-6 bg-neutral-900 text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row-reverse items-center gap-16">
+      <section className="hidden md:block py-32 px-6 bg-neutral-900 text-white overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-row-reverse items-center gap-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 relative h-[450px] w-full rounded-[40px] shadow-2xl border border-white/10 overflow-hidden group">
              <img src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80" alt="Marketing Assets" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-cyan-400 font-bold mb-6"><Palette size={18} /> Marketing Assets</div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">Thiết kế truyền thông<br/>tối đa chuyển đổi.</h2>
+            <h2 className="text-5xl font-bold tracking-tight mb-6">Thiết kế truyền thông<br/>tối đa chuyển đổi.</h2>
             <p className="text-lg text-neutral-400 leading-relaxed mb-8">Thống trị nhãn quan trên mạng xã hội bằng những ấn phẩm sắc nét. Chúng tôi cung cấp banner, profile, hồ sơ năng lực mang đậm tính Sales và Marketing chuyên nghiệp.</p>
             <ul className="space-y-4">
                {['Banner quảng cáo (Ads)', 'Hồ sơ năng lực (Pitch Deck)', 'Brochure & Catalog'].map((l, i)=><li key={i} className="flex items-center gap-3 font-medium"><CheckCircle2 className="text-cyan-400" size={20}/> {l}</li>)}

@@ -41,62 +41,62 @@ const NumberCounter = ({ to, duration = 2 }: { to: number; duration?: number }) 
 
 export default function SoftwareFeatures() {
   return (
-    <section className="bg-[#F4F7FF] py-[120px]">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
-          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" custom={0} viewport={{ once: true }} className="bg-white p-[40px] rounded-[30px] shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(16,83,243,0.1)] transition-all duration-500 border border-transparent hover:border-blue-50 group">
-            <div className="flex items-center mb-[30px]">
-              <div className="flex -space-x-4">
+    <section className="bg-[#F4F7FF] py-[60px] md:py-[120px]">
+      <div className="container mx-auto px-5 md:px-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-[30px]">
+          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" custom={0} viewport={{ once: true }} className="col-span-2 lg:col-span-1 bg-white p-5 md:p-[40px] rounded-2xl md:rounded-[30px] shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(16,83,243,0.1)] transition-all duration-500 border border-transparent hover:border-blue-50 group">
+            <div className="flex items-center mb-5 md:mb-[30px]">
+              <div className="flex -space-x-3 md:-space-x-4">
                 {[1, 2, 3, 4].map((num) => (
-                  <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="khach-hang" className="w-[52px] h-[52px] rounded-full border-4 border-white object-cover shadow-sm group-hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${num * 50}ms` }} />
+                  <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="khach-hang" className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full border-[3px] md:border-4 border-white object-cover shadow-sm group-hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${num * 50}ms` }} />
                 ))}
-                <div className="w-[52px] h-[52px] rounded-full bg-gradient-to-br from-[#1053F3] to-blue-700 border-4 border-white flex items-center justify-center text-white font-bold text-sm z-10 relative shadow-md">
+                <div className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full bg-gradient-to-br from-[#1053F3] to-blue-700 border-[3px] md:border-4 border-white flex items-center justify-center text-white font-bold text-xs md:text-sm z-10 relative shadow-md">
                   +500
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-4 mb-2">
-              <h3 className="text-[50px] font-extrabold text-[#1053F3] leading-none tracking-tight drop-shadow-sm">
+            <div className="flex items-center gap-3 md:gap-4 mb-2">
+              <h3 className="text-[36px] md:text-[50px] font-extrabold text-[#1053F3] leading-none tracking-tight drop-shadow-sm">
                 <NumberCounter to={500} />+
               </h3>
-              <motion.img animate={{ x: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 3 }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/scribble.webp" className="w-[50px]" alt="shape" />
+              <motion.img animate={{ x: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 3 }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/scribble.webp" className="w-[40px] md:w-[50px]" alt="shape" />
             </div>
-            <p className="text-slate-500 text-base leading-relaxed mb-[30px]">Dự án phần mềm & web đã triển khai thành công.</p>
-            <a href="#lien-he" className="inline-flex items-center justify-between w-full bg-[#061153] text-white px-[30px] py-[15px] rounded-full font-semibold hover:bg-[#1053F3] hover:shadow-[0_10px_20px_rgba(16,83,243,0.3)] transition-all duration-300 group/btn">
-              <span className="relative overflow-hidden flex flex-col h-[24px]">
+            <p className="text-slate-500 text-sm md:text-base leading-relaxed mb-5 md:mb-[30px]">Dự án phần mềm & web đã triển khai thành công.</p>
+            <a href="#lien-he" className="inline-flex items-center justify-between w-full bg-[#061153] text-white px-5 md:px-[30px] py-3 md:py-[15px] rounded-full font-semibold hover:bg-[#1053F3] hover:shadow-[0_10px_20px_rgba(16,83,243,0.3)] transition-all duration-300 group/btn text-[13px] md:text-base">
+              <span className="relative overflow-hidden flex flex-col h-[20px] md:h-[24px]">
                 <span className="group-hover/btn:-translate-y-full transition-transform duration-300">Nhận báo giá ngay</span>
                 <span className="absolute top-full group-hover/btn:-translate-y-full transition-transform duration-300">Nhận báo giá ngay</span>
               </span>
-              <span className="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center group-hover/btn:bg-white group-hover/btn:text-[#1053F3] transition-colors shadow-sm">
+              <span className="bg-white/10 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center group-hover/btn:bg-white group-hover/btn:text-[#1053F3] transition-colors shadow-sm">
                 <ArrowRight size={16} strokeWidth={2.5} />
               </span>
             </a>
           </motion.div>
 
-          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="bg-white p-[40px] rounded-[30px] shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(16,83,243,0.1)] transition-all duration-500 relative group hover:-translate-y-2 border border-transparent hover:border-blue-50">
-            <div className="absolute top-[40px] right-[40px]">
-              <div className="w-[50px] h-[50px] rounded-full bg-[#F4F7FF] flex items-center justify-center text-[#061153] group-hover:bg-[#1053F3] group-hover:text-white transition-all duration-300 cursor-pointer">
-                <ArrowRight size={18} strokeWidth={2.5} className="group-hover:-rotate-45 transition-transform duration-300" />
+          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" custom={0.2} viewport={{ once: true }} className="bg-white p-4 md:p-[40px] rounded-2xl md:rounded-[30px] shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(16,83,243,0.1)] transition-all duration-500 relative group hover:-translate-y-2 border border-transparent hover:border-blue-50">
+            <div className="absolute top-4 right-4 md:top-[40px] md:right-[40px]">
+              <div className="w-8 h-8 md:w-[50px] md:h-[50px] rounded-full bg-[#F4F7FF] flex items-center justify-center text-[#061153] group-hover:bg-[#1053F3] group-hover:text-white transition-all duration-300 cursor-pointer">
+                <ArrowRight size={14} className="md:!w-[18px] md:!h-[18px] group-hover:-rotate-45 transition-transform duration-300" strokeWidth={2.5} />
               </div>
             </div>
-            <div className="mb-[40px]">
-              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon01.webp" alt="icon" className="h-[60px] group-hover:scale-110 transition-transform duration-500" />
+            <div className="mb-4 md:mb-[40px]">
+              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon01.webp" alt="icon" className="h-9 md:h-[60px] group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <h2 className="text-[24px] font-extrabold text-[#061153] mb-4 leading-snug tracking-tight">Tư Vấn & Thiết Kế <br /> Kiến Trúc IT</h2>
-            <p className="text-slate-500 leading-relaxed text-base">Phân tích quy trình kinh doanh, định hướng nền tảng công nghệ bền vững cho doanh nghiệp.</p>
+            <h2 className="text-[15px] md:text-[24px] font-extrabold text-[#061153] mb-2 md:mb-4 leading-snug tracking-tight">Tư Vấn & Thiết Kế <br /> Kiến Trúc IT</h2>
+            <p className="text-slate-500 leading-relaxed text-[11px] md:text-base">Phân tích quy trình kinh doanh, định hướng nền tảng công nghệ bền vững cho doanh nghiệp.</p>
           </motion.div>
 
-          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" custom={0.4} viewport={{ once: true }} className="bg-gradient-to-br from-[#061153] to-blue-950 p-[40px] rounded-[30px] relative group hover:-translate-y-2 transition-all duration-500 shadow-[0_10px_30px_rgba(6,17,83,0.2)] hover:shadow-[0_20px_40px_rgba(16,83,243,0.3)]">
-            <div className="absolute top-[40px] right-[40px]">
-              <div className="w-[50px] h-[50px] rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-[#1053F3] transition-all duration-300 cursor-pointer">
-                <ArrowRight size={18} strokeWidth={2.5} className="group-hover:-rotate-45 transition-transform duration-300" />
+          <motion.div variants={fadeInLeft} initial="hidden" whileInView="visible" custom={0.4} viewport={{ once: true }} className="bg-gradient-to-br from-[#061153] to-blue-950 p-4 md:p-[40px] rounded-2xl md:rounded-[30px] relative group hover:-translate-y-2 transition-all duration-500 shadow-[0_10px_30px_rgba(6,17,83,0.2)] hover:shadow-[0_20px_40px_rgba(16,83,243,0.3)]">
+            <div className="absolute top-4 right-4 md:top-[40px] md:right-[40px]">
+              <div className="w-8 h-8 md:w-[50px] md:h-[50px] rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-[#1053F3] transition-all duration-300 cursor-pointer">
+                <ArrowRight size={14} className="md:!w-[18px] md:!h-[18px] group-hover:-rotate-45 transition-transform duration-300" strokeWidth={2.5} />
               </div>
             </div>
-            <div className="mb-[40px]">
-              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon02.webp" alt="icon" className="h-[60px] brightness-0 invert group-hover:scale-110 transition-transform duration-500" />
+            <div className="mb-4 md:mb-[40px]">
+              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon02.webp" alt="icon" className="h-9 md:h-[60px] brightness-0 invert group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <h2 className="text-[24px] font-extrabold text-white mb-4 leading-snug tracking-tight">Chuyển Đổi Số & <br /> Tự Động Hóa</h2>
-            <p className="text-blue-100/80 leading-relaxed text-base">Số hóa quy trình làm việc thủ công, nâng cao hiệu suất và bảo mật dữ liệu an toàn tuyệt đối.</p>
+            <h2 className="text-[15px] md:text-[24px] font-extrabold text-white mb-2 md:mb-4 leading-snug tracking-tight">Chuyển Đổi Số & <br /> Tự Động Hóa</h2>
+            <p className="text-blue-100/80 leading-relaxed text-[11px] md:text-base">Số hóa quy trình làm việc thủ công, nâng cao hiệu suất và bảo mật dữ liệu an toàn tuyệt đối.</p>
           </motion.div>
         </div>
       </div>

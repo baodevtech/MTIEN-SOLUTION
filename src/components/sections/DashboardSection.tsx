@@ -53,7 +53,7 @@ function DashboardContent({ builderColor, deviceMode }: { builderColor: string; 
       <div className="flex-1 flex bg-slate-50/50 overflow-hidden">
         {/* Sidebar (PC Only) */}
         {deviceMode === 'pc' && (
-          <div className="bg-white border-r border-slate-100 flex-col items-center py-4 gap-6 shrink-0 z-10 hidden md:flex w-16">
+          <div className="bg-white border-r border-slate-100 flex flex-col items-center py-4 gap-6 shrink-0 z-10 w-12 md:w-16">
             <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-xs shadow-md">M</div>
             <div className="flex flex-col gap-3 w-full px-3">
               {[LayoutDashboard, ShoppingCart, Users, Layers, Settings].map((Icon, i) => (
@@ -103,7 +103,7 @@ function DashboardContent({ builderColor, deviceMode }: { builderColor: string; 
               ].map((stat, i) => (
                 <div
                   key={i}
-                  className={`bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-2 ${stat.hideMobile && deviceMode === 'mobile' ? 'hidden md:flex' : 'flex'}`}
+                  className={`bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-2 ${stat.hideMobile && deviceMode === 'mobile' ? 'hidden' : 'flex'}`}
                 >
                   <div className="flex justify-between items-start">
                     <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: themeColors[builderColor].light, color: themeColors[builderColor].main }}>
@@ -162,59 +162,62 @@ export default function DashboardSection() {
   const reduced = useReducedMotion();
 
   return (
-    <section className="py-6 md:py-32 bg-white relative overflow-hidden" aria-label="Trình kiến tạo Dashboard">
+    <section className="py-10 md:py-32 bg-white relative overflow-hidden" aria-label="Trình kiến tạo Dashboard">
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[800px] h-[800px] bg-slate-50 rounded-full blur-[120px] -z-10 pointer-events-none" aria-hidden="true"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-16 lg:gap-24 items-start md:items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 lg:gap-24 items-start md:items-center">
           {/* Interactive Dashboard Visual */}
+          <div className="order-2 md:order-1">
           {reduced ? (
-            <div className="relative order-2 lg:order-1 h-[250px] md:h-[650px] w-full bg-slate-50/50 rounded-[2.5rem] border border-slate-100/80 flex items-center justify-center p-4 md:p-10 overflow-hidden shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]">
+            <div className="relative h-[420px] md:h-[500px] lg:h-[650px] w-full bg-slate-50/80 md:bg-slate-50/50 rounded-2xl md:rounded-[2.5rem] md:border md:border-slate-100/80 flex items-center justify-center md:p-10 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]">
               <div
                 className="bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-slate-200/80 overflow-hidden flex flex-col relative z-10"
                 style={{
-                  width: deviceMode === 'pc' ? '100%' : '320px',
-                  height: deviceMode === 'pc' ? '100%' : '560px',
-                  borderRadius: deviceMode === 'pc' ? '16px' : '40px',
+                  width: deviceMode === 'pc' ? '100%' : '260px',
+                  height: deviceMode === 'pc' ? '100%' : '85%',
+                  borderRadius: deviceMode === 'pc' ? '16px' : '36px',
                 }}
               >
                 <DashboardContent builderColor={builderColor} deviceMode={deviceMode} />
               </div>
 
-              {/* Color Palette Control */}
-              <div className="absolute top-6 left-4 md:left-6 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 z-20">
-                <div className="flex gap-2" role="radiogroup" aria-label="Chọn màu chủ đạo">
-                  {(['blue', 'emerald', 'rose', 'amber'] as const).map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setBuilderColor(color)}
-                      className={`w-6 h-6 rounded-full cursor-pointer transition-all duration-300 ${builderColor === color ? 'scale-110 shadow-md' : 'hover:scale-110 opacity-60 hover:opacity-100'}`}
-                      style={{
-                        backgroundColor: themeColors[color].main,
-                        boxShadow: builderColor === color ? `0 0 0 2px white, 0 0 0 3px ${themeColors[color].main}` : 'none',
-                      }}
-                      aria-label={`Màu ${color}`}
-                      aria-pressed={builderColor === color}
-                    />
-                  ))}
+              {/* Desktop-only controls */}
+              <div className="absolute top-6 left-6 hidden md:flex items-center gap-3 z-20">
+                <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100">
+                  <div className="flex gap-2" role="radiogroup" aria-label="Chọn màu chủ đạo">
+                    {(['blue', 'emerald', 'rose', 'amber'] as const).map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setBuilderColor(color)}
+                        className={`w-6 h-6 rounded-full cursor-pointer transition-all duration-300 ${builderColor === color ? 'scale-110 shadow-md' : 'hover:scale-110 opacity-60 hover:opacity-100'}`}
+                        style={{
+                          backgroundColor: themeColors[color].main,
+                          boxShadow: builderColor === color ? `0 0 0 2px white, 0 0 0 3px ${themeColors[color].main}` : 'none',
+                        }}
+                        aria-label={`Màu ${color}`}
+                        aria-pressed={builderColor === color}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Device Toggle */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-2xl shadow-2xl border border-slate-700/50 flex items-center gap-1 z-20">
+              {/* Device Toggle — desktop only (centered bottom) */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-2xl shadow-2xl border border-slate-700/50 hidden md:flex items-center gap-1 z-20">
                 <button
                   onClick={() => setDeviceMode('pc')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 ${deviceMode === 'pc' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-white'}`}
                   aria-pressed={deviceMode === 'pc'}
                 >
-                  <Monitor size={14} aria-hidden="true" /> <span className="hidden md:block">Desktop</span>
+                  <Monitor size={14} aria-hidden="true" /> Desktop
                 </button>
                 <button
                   onClick={() => setDeviceMode('mobile')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 ${deviceMode === 'mobile' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-white'}`}
                   aria-pressed={deviceMode === 'mobile'}
                 >
-                  <Smartphone size={14} aria-hidden="true" /> <span className="hidden md:block">Mobile</span>
+                  <Smartphone size={14} aria-hidden="true" /> Mobile
                 </button>
               </div>
             </div>
@@ -223,15 +226,15 @@ export default function DashboardSection() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="relative order-2 lg:order-1 h-[250px] md:h-[650px] w-full bg-slate-50/50 rounded-[2.5rem] border border-slate-100/80 flex items-center justify-center p-4 md:p-10 overflow-hidden shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]"
+              className="relative h-[420px] md:h-[500px] lg:h-[650px] w-full bg-slate-50/80 md:bg-slate-50/50 rounded-2xl md:rounded-[2.5rem] md:border md:border-slate-100/80 flex items-center justify-center md:p-10 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]"
             >
               <motion.div
                 layout
                 initial={false}
                 animate={{
-                  width: deviceMode === 'pc' ? '100%' : '320px',
-                  height: deviceMode === 'pc' ? '100%' : '560px',
-                  borderRadius: deviceMode === 'pc' ? '16px' : '40px',
+                  width: deviceMode === 'pc' ? '100%' : '260px',
+                  height: deviceMode === 'pc' ? '100%' : '85%',
+                  borderRadius: deviceMode === 'pc' ? '16px' : '36px',
                 }}
                 transition={{ type: 'spring', bounce: 0.15, duration: 0.8 }}
                 className="bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-slate-200/80 overflow-hidden flex flex-col relative z-10"
@@ -257,7 +260,7 @@ export default function DashboardSection() {
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: 64 }}
                         exit={{ opacity: 0, width: 0 }}
-                        className="bg-white border-r border-slate-100 flex-col items-center py-4 gap-6 shrink-0 z-10 hidden md:flex"
+                        className="bg-white border-r border-slate-100 flex flex-col items-center py-4 gap-6 shrink-0 z-10"
                       >
                         <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white font-bold text-xs shadow-md">M</div>
                         <div className="flex flex-col gap-3 w-full px-3">
@@ -309,7 +312,7 @@ export default function DashboardSection() {
                         ].map((stat, i) => (
                           <div
                             key={i}
-                            className={`bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-2 ${stat.hideMobile && deviceMode === 'mobile' ? 'hidden md:flex' : 'flex'}`}
+                            className={`bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-2 ${stat.hideMobile && deviceMode === 'mobile' ? 'hidden' : 'flex'}`}
                           >
                             <div className="flex justify-between items-start">
                               <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: themeColors[builderColor].light, color: themeColors[builderColor].main }}>
@@ -359,59 +362,104 @@ export default function DashboardSection() {
                 </motion.div>
               </motion.div>
 
-              {/* Color Palette Control */}
-              <div className="absolute top-6 left-4 md:left-6 bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100 z-20">
-                <div className="flex gap-2" role="radiogroup" aria-label="Chọn màu chủ đạo">
-                  {(['blue', 'emerald', 'rose', 'amber'] as const).map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setBuilderColor(color)}
-                      className={`w-6 h-6 rounded-full cursor-pointer transition-all duration-300 ${builderColor === color ? 'scale-110 shadow-md' : 'hover:scale-110 opacity-60 hover:opacity-100'}`}
-                      style={{
-                        backgroundColor: themeColors[color].main,
-                        boxShadow: builderColor === color ? `0 0 0 2px white, 0 0 0 3px ${themeColors[color].main}` : 'none',
-                      }}
-                      aria-label={`Màu ${color}`}
-                      aria-pressed={builderColor === color}
-                    />
-                  ))}
+              {/* Desktop-only controls */}
+              <div className="absolute top-6 left-6 hidden md:flex items-center gap-3 z-20">
+                <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-slate-100">
+                  <div className="flex gap-2" role="radiogroup" aria-label="Chọn màu chủ đạo">
+                    {(['blue', 'emerald', 'rose', 'amber'] as const).map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setBuilderColor(color)}
+                        className={`w-6 h-6 rounded-full cursor-pointer transition-all duration-300 ${builderColor === color ? 'scale-110 shadow-md' : 'hover:scale-110 opacity-60 hover:opacity-100'}`}
+                        style={{
+                          backgroundColor: themeColors[color].main,
+                          boxShadow: builderColor === color ? `0 0 0 2px white, 0 0 0 3px ${themeColors[color].main}` : 'none',
+                        }}
+                        aria-label={`Màu ${color}`}
+                        aria-pressed={builderColor === color}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Device Toggle */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-2xl shadow-2xl border border-slate-700/50 flex items-center gap-1 z-20">
+              {/* Device Toggle — desktop only (centered bottom) */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-2xl shadow-2xl border border-slate-700/50 hidden md:flex items-center gap-1 z-20">
                 <button
                   onClick={() => setDeviceMode('pc')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 ${deviceMode === 'pc' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-white'}`}
                   aria-pressed={deviceMode === 'pc'}
                 >
-                  <Monitor size={14} aria-hidden="true" /> <span className="hidden md:block">Desktop</span>
+                  <Monitor size={14} aria-hidden="true" /> Desktop
                 </button>
                 <button
                   onClick={() => setDeviceMode('mobile')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 ${deviceMode === 'mobile' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-white'}`}
                   aria-pressed={deviceMode === 'mobile'}
                 >
-                  <Smartphone size={14} aria-hidden="true" /> <span className="hidden md:block">Mobile</span>
+                  <Smartphone size={14} aria-hidden="true" /> Mobile
                 </button>
               </div>
             </motion.div>
           )}
 
+          {/* Mobile controls toolbar */}
+          <div className="flex md:hidden items-center justify-between mt-4 px-1">
+            <div className="flex items-center gap-2.5" role="radiogroup" aria-label="Chọn màu chủ đạo">
+              {(['blue', 'emerald', 'rose', 'amber'] as const).map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setBuilderColor(color)}
+                  className={`w-7 h-7 rounded-full cursor-pointer transition-all duration-300 ${builderColor === color ? 'scale-110 shadow-md' : 'opacity-50'}`}
+                  style={{
+                    backgroundColor: themeColors[color].main,
+                    boxShadow: builderColor === color ? `0 0 0 2.5px white, 0 0 0 4px ${themeColors[color].main}` : 'none',
+                  }}
+                  aria-label={`Màu ${color}`}
+                  aria-pressed={builderColor === color}
+                />
+              ))}
+            </div>
+            <div className="bg-slate-100 p-1 rounded-xl flex items-center gap-0.5">
+              <button
+                onClick={() => setDeviceMode('pc')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-300 ${deviceMode === 'pc' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400'}`}
+                aria-pressed={deviceMode === 'pc'}
+              >
+                <Monitor size={14} aria-hidden="true" /> PC
+              </button>
+              <button
+                onClick={() => setDeviceMode('mobile')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-300 ${deviceMode === 'mobile' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400'}`}
+                aria-pressed={deviceMode === 'mobile'}
+              >
+                <Smartphone size={14} aria-hidden="true" /> Mobile
+              </button>
+            </div>
+          </div>
+          </div>
+
           {/* Right: Stepper */}
-          <div className="order-1 lg:order-2 lg:pl-8">
+          <div className="order-1 md:order-2 md:pl-8">
             {reduced ? (
-              <div className="mb-5 md:mb-12">
-                <h2 className="text-[20px] md:text-[48px] font-black text-slate-900 leading-[1.1] tracking-tight mb-3 md:mb-6">
-                  Sáng tạo không rào cản. <br />
+              <div className="mb-6 md:mb-12">
+                <div
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide mb-3 md:mb-4 transition-colors duration-500"
+                  style={{ backgroundColor: themeColors[builderColor].light, color: themeColors[builderColor].main }}
+                >
+                  <LayoutDashboard size={12} aria-hidden="true" /> TRÌNH KIẾN TẠO
+                </div>
+                <h2 className="text-[24px] md:text-[48px] font-black text-slate-900 leading-[1.15] tracking-tight mb-3 md:mb-6">
+                  Sáng tạo không rào cản.{' '}
+                  <span className="md:block" />
                   <span
                     className="text-transparent bg-clip-text transition-colors duration-500"
-                    style={{ backgroundImage: `linear-gradient(to right, ${themeColors[builderColor].main}, ${themeColors[builderColor].main}90)` }}
+                    style={{ backgroundImage: `linear-gradient(135deg, ${themeColors[builderColor].main}, ${themeColors[builderColor].main}80)` }}
                   >
                     Quản trị tinh gọn.
                   </span>
                 </h2>
-                <p className="text-slate-500 text-[12px] md:text-[18px] leading-relaxed max-w-lg">
+                <p className="text-slate-500 text-[13px] md:text-[18px] leading-[1.7] max-w-lg">
                   Nền tảng được thiết kế tập trung vào tính hiệu quả. Bạn chỉ cần tập trung kinh doanh, công nghệ để chúng tôi lo.
                 </p>
               </div>
@@ -420,24 +468,31 @@ export default function DashboardSection() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mb-5 md:mb-12"
+                className="mb-6 md:mb-12"
               >
-                <h2 className="text-[20px] md:text-[48px] font-black text-slate-900 leading-[1.1] tracking-tight mb-3 md:mb-6">
-                  Sáng tạo không rào cản. <br />
+                <motion.div
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide mb-3 md:mb-4 transition-colors duration-500"
+                  style={{ backgroundColor: themeColors[builderColor].light, color: themeColors[builderColor].main }}
+                >
+                  <LayoutDashboard size={12} aria-hidden="true" /> TRÌNH KIẾN TẠO
+                </motion.div>
+                <h2 className="text-[24px] md:text-[48px] font-black text-slate-900 leading-[1.15] tracking-tight mb-3 md:mb-6">
+                  Sáng tạo không rào cản.{' '}
+                  <span className="md:block" />
                   <motion.span
                     className="text-transparent bg-clip-text transition-colors duration-500"
-                    style={{ backgroundImage: `linear-gradient(to right, ${themeColors[builderColor].main}, ${themeColors[builderColor].main}90)` }}
+                    style={{ backgroundImage: `linear-gradient(135deg, ${themeColors[builderColor].main}, ${themeColors[builderColor].main}80)` }}
                   >
                     Quản trị tinh gọn.
                   </motion.span>
                 </h2>
-                <p className="text-slate-500 text-[13px] md:text-[18px] leading-relaxed max-w-lg">
+                <p className="text-slate-500 text-[13px] md:text-[18px] leading-[1.7] max-w-lg">
                   Nền tảng được thiết kế tập trung vào tính hiệu quả. Bạn chỉ cần tập trung kinh doanh, công nghệ để chúng tôi lo.
                 </p>
               </motion.div>
             )}
 
-            <div className="relative pl-4 md:pl-8 space-y-2 md:space-y-8 border-l-2 border-slate-100">
+            <div className="relative pl-5 md:pl-8 space-y-3 md:space-y-8 border-l-2 border-slate-200/60 md:border-slate-100">
               {reduced ? (
                 <div
                   className="absolute left-[-2px] w-[2px] rounded-full"
@@ -473,9 +528,17 @@ export default function DashboardSection() {
                       animate={{ backgroundColor: activeFeature === idx ? themeColors[builderColor].main : '#e2e8f0' }}
                     />
                   )}
-                  <h4 className={`text-base md:text-xl font-bold mb-2 transition-colors duration-500 ${activeFeature === idx ? 'text-slate-900' : 'text-slate-400 group-hover:text-slate-600'}`}>
-                    {feature.title}
-                  </h4>
+                  <div className="flex items-center gap-2 mb-1 md:mb-2">
+                    <div
+                      className="w-6 h-6 md:hidden rounded-lg flex items-center justify-center shrink-0 transition-colors duration-500"
+                      style={activeFeature === idx ? { backgroundColor: themeColors[builderColor].light, color: themeColors[builderColor].main } : { backgroundColor: '#f1f5f9', color: '#94a3b8' }}
+                    >
+                      <feature.icon size={13} strokeWidth={2.5} aria-hidden="true" />
+                    </div>
+                    <h4 className={`text-[15px] md:text-xl font-bold transition-colors duration-500 ${activeFeature === idx ? 'text-slate-900' : 'text-slate-400 group-hover:text-slate-600'}`}>
+                      {feature.title}
+                    </h4>
+                  </div>
                   {reduced ? (
                     <div className={`overflow-hidden ${activeFeature === idx ? 'block mt-2' : 'hidden'}`}>
                       <p className="text-[12px] md:text-[15px] leading-relaxed text-slate-500 max-w-md">{feature.desc}</p>
@@ -495,7 +558,7 @@ export default function DashboardSection() {
 
             {reduced ? (
               <button
-                className="mt-6 md:mt-12 text-white rounded-full px-5 md:px-8 py-2.5 md:py-4 font-bold text-[13px] md:text-[15px] shadow-lg transition-all duration-500 flex items-center gap-3"
+                className="mt-5 md:mt-12 w-full md:w-auto text-white rounded-2xl md:rounded-full px-5 md:px-8 py-3.5 md:py-4 font-bold text-[14px] md:text-[15px] shadow-lg transition-all duration-500 flex items-center justify-center gap-2"
                 style={{ backgroundColor: themeColors[builderColor].main, boxShadow: `0 10px 25px -5px ${themeColors[builderColor].main}60` }}
               >
                 Trải nghiệm miễn phí <ArrowRight size={18} aria-hidden="true" />
@@ -504,7 +567,7 @@ export default function DashboardSection() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="mt-6 md:mt-12 text-white rounded-full px-5 md:px-8 py-2.5 md:py-4 font-bold text-[13px] md:text-[15px] shadow-lg transition-all duration-500 flex items-center gap-3"
+                className="mt-5 md:mt-12 w-full md:w-auto text-white rounded-2xl md:rounded-full px-5 md:px-8 py-3.5 md:py-4 font-bold text-[14px] md:text-[15px] shadow-lg transition-all duration-500 flex items-center justify-center gap-2"
                 style={{ backgroundColor: themeColors[builderColor].main, boxShadow: `0 10px 25px -5px ${themeColors[builderColor].main}60` }}
               >
                 Trải nghiệm miễn phí <ArrowRight size={18} aria-hidden="true" />

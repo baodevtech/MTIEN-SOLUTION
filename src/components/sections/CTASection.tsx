@@ -4,14 +4,14 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function CTASection() {
   return (
-    <section className="py-8 md:py-20 bg-[#FBFBFD] relative overflow-hidden border-t border-slate-100" aria-label="Bắt đầu miễn phí">
+    <section className="py-12 md:py-20 bg-[#FBFBFD] relative overflow-hidden border-t border-slate-100" aria-label="Bắt đầu miễn phí">
       <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col items-center text-center">
           <div className="max-w-2xl">
-            <h2 className="text-[20px] md:text-[44px] font-semibold text-[#1D1D1F] tracking-tight leading-tight mb-2 md:mb-4">
+            <h2 className="text-[22px] md:text-[44px] font-semibold text-[#1D1D1F] tracking-tight leading-tight mb-3 md:mb-4">
               Khởi đầu mới. <span className="text-slate-400">Ngay hôm nay.</span>
             </h2>
-            <p className="text-[#86868B] text-[13px] md:text-[18px] mb-4 md:mb-10 tracking-tight font-medium">
+            <p className="text-[#86868B] text-[13px] md:text-[18px] mb-6 md:mb-10 tracking-tight font-medium">
               Dùng thử miễn phí <span className="text-[#0066FF]">7 ngày</span>. Thiết lập cửa hàng chỉ trong vài phút.
             </p>
           </div>
@@ -32,7 +32,7 @@ export default function CTASection() {
             </form>
           </div>
 
-          <div className="mt-3 md:mt-8 flex items-center gap-2 md:gap-5 text-[10px] md:text-[12px] font-bold text-slate-400 uppercase tracking-widest">
+          <div className="mt-4 md:mt-8 flex items-center gap-3 md:gap-5 text-[10px] md:text-[12px] font-bold text-slate-400 uppercase tracking-widest">
             <span className="flex items-center gap-1">
               <CheckCircle2 size={12} className="text-emerald-500" aria-hidden="true" /> No credit card
             </span>

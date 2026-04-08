@@ -24,17 +24,17 @@ export default function DesignHero() {
   const opacityHero = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <section ref={containerRef} className="relative min-h-[90vh] flex items-center pt-32 pb-20 px-6 overflow-hidden bg-[#FAFAFC]">
+    <section ref={containerRef} className="relative min-h-[70vh] md:min-h-[90vh] flex items-center pt-24 md:pt-32 pb-12 md:pb-20 px-4 md:px-6 overflow-hidden bg-[#FAFAFC]">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]"></div>
       
-      <div className="max-w-7xl mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      <div className="max-w-7xl mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center">
         {/* Left: Content */}
         <motion.div style={{ y: yHero, opacity: opacityHero }} className="flex flex-col items-start text-left">
           <motion.div variants={fadeUp} custom={0} initial="hidden" animate="visible" className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-neutral-200 shadow-sm mb-6 text-xs font-bold text-neutral-600 tracking-wide uppercase">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" /> Digital Design Agency
           </motion.div>
           
-          <motion.h1 variants={fadeUp} custom={1} initial="hidden" animate="visible" className="text-5xl lg:text-[70px] font-extrabold tracking-tight text-neutral-900 leading-[1.05] mb-6">
+          <motion.h1 variants={fadeUp} custom={1} initial="hidden" animate="visible" className="text-[32px] md:text-5xl lg:text-[70px] font-extrabold tracking-tight text-neutral-900 leading-[1.05] mb-4 md:mb-6">
             Giao diện Đẹp.<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 relative">
               Trải nghiệm 
@@ -43,21 +43,21 @@ export default function DesignHero() {
             Hoàn hảo.
           </motion.h1>
           
-          <motion.p variants={fadeUp} custom={2} initial="hidden" animate="visible" className="text-lg md:text-xl text-neutral-500 font-medium leading-relaxed mb-10 max-w-lg">
+          <motion.p variants={fadeUp} custom={2} initial="hidden" animate="visible" className="text-[15px] md:text-xl text-neutral-500 font-medium leading-relaxed mb-8 md:mb-10 max-w-lg">
             Biến ý tưởng thành những sản phẩm số tinh tế. Nâng tầm giá trị thương hiệu thông qua UI/UX sáng tạo và hệ thống nhận diện đồng bộ.
           </motion.p>
           
-          <motion.div variants={fadeUp} custom={3} initial="hidden" animate="visible" className="flex flex-wrap gap-4">
-             <Link href="#explore" className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold text-md hover:bg-blue-700 transition-all shadow-[0_10px_20px_rgba(37,99,235,0.2)] flex items-center gap-2">
+          <motion.div variants={fadeUp} custom={3} initial="hidden" animate="visible" className="flex flex-wrap gap-3 md:gap-4">
+             <Link href="#explore" className="px-6 md:px-8 py-3 md:py-4 rounded-xl bg-blue-600 text-white font-bold text-sm md:text-md hover:bg-blue-700 transition-all shadow-[0_10px_20px_rgba(37,99,235,0.2)] flex items-center gap-2">
                Bắt đầu ngay <ArrowRight size={18} />
              </Link>
-             <div className="flex items-center gap-4 ml-2">
+             <div className="flex items-center gap-3 md:gap-4 ml-1 md:ml-2">
                <div className="flex -space-x-3">
-                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User" className="w-10 h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-30" />
-                 <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User" className="w-10 h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-20" />
-                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User" className="w-10 h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-10" />
+                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-30" />
+                 <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-20" />
+                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-10" />
                </div>
-               <div className="text-sm font-medium text-neutral-600">Hơn 500+ dự án hoàn tất</div>
+               <div className="text-xs md:text-sm font-medium text-neutral-600">Hơn 500+ dự án</div>
              </div>
           </motion.div>
         </motion.div>

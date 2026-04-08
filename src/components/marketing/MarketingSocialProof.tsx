@@ -33,31 +33,31 @@ export default function MarketingSocialProof() {
   return (
     <>
       {/* SECTION 12: METRICS & IMPACT */}
-      <section className="py-24 px-6 bg-blue-50 border-y border-blue-100">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+      <section className="py-12 md:py-24 px-4 md:px-6 bg-blue-50 border-y border-blue-100">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 text-center">
            {metrics.map((m, i) => (
               <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
-                 <div className="text-4xl md:text-6xl font-black text-blue-700 mb-4">{m.num}</div>
-                 <div className="text-blue-900 font-bold uppercase tracking-wide text-sm">{m.lbl}</div>
+                 <div className="text-3xl md:text-6xl font-black text-blue-700 mb-2 md:mb-4">{m.num}</div>
+                 <div className="text-blue-900 font-bold uppercase tracking-wide text-xs md:text-sm">{m.lbl}</div>
               </motion.div>
            ))}
         </div>
       </section>
 
       {/* SECTION 13: TESTIMONIALS */}
-      <section className="py-32 px-6 bg-white overflow-hidden">
+      <section className="py-16 md:py-32 px-4 md:px-6 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-16">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-16">
             <div className="flex-1">
-               <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-900 mb-6">Lời nói từ<br/>Các Nhà Đầu Tư</motion.h2>
-               <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-lg text-neutral-500 mb-8">Một Agency tốt sẽ cam kết bằng chỉ số và doanh thu thực, không phải những lượt "Like" viển vông.</motion.p>
+               <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-[26px] md:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 mb-4 md:mb-6">Lời nói từ<br/>Các Nhà Đầu Tư</motion.h2>
+               <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-[15px] md:text-lg text-neutral-500 mb-6 md:mb-8">Một Agency tốt sẽ cam kết bằng chỉ số và doanh thu thực, không phải những lượt "Like" viển vông.</motion.p>
                <Link href="/projects" className="font-bold border-b-2 border-neutral-900 pb-1 hover:text-blue-700 hover:border-blue-700 transition-colors">Xem Báo cáo Case Studies</Link>
             </div>
             <div className="flex-1 space-y-6">
                {testimonials.map((t, i) => (
-                 <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i} className="bg-neutral-50 p-8 rounded-3xl border border-neutral-100 flex flex-col gap-6">
-                    <Quote className="text-blue-200 w-10 h-10" />
-                    <p className="text-neutral-700 font-medium italic text-lg">&quot;{t.q}&quot;</p>
+                 <motion.div key={i} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i} className="bg-neutral-50 p-5 md:p-8 rounded-2xl md:rounded-3xl border border-neutral-100 flex flex-col gap-4 md:gap-6">
+                    <Quote className="text-blue-200 w-8 h-8 md:w-10 md:h-10" />
+                    <p className="text-neutral-700 font-medium italic text-[15px] md:text-lg">&quot;{t.q}&quot;</p>
                     <div className="flex items-center justify-between">
                        <div className="flex items-center gap-4">
                           <img src={t.img} alt={t.a} className="w-12 h-12 rounded-full object-cover shadow-sm" />

@@ -27,21 +27,21 @@ const breadcrumbVariants = {
 
 export default function SoftwareBreadcrumb() {
   return (
-    <section className="relative bg-[#061153] pt-[150px] pb-[130px] overflow-hidden rounded-b-[40px] md:mx-5 mt-5 shadow-2xl shadow-blue-900/10 border border-blue-950/20">
+    <section className="relative bg-[#061153] pt-[100px] md:pt-[150px] pb-[80px] md:pb-[130px] overflow-hidden rounded-b-[24px] md:rounded-b-[40px] mx-3 md:mx-5 mt-5 shadow-2xl shadow-blue-900/10 border border-blue-950/20">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-700/15 via-transparent to-transparent z-10 pointer-events-none"></div>
       <div className="absolute inset-0 z-0 bg-[url('https://inotek.themevally.com/wp-content/uploads/2025/10/breadcrumb.webp')] bg-cover bg-center"></div>
 
-      <div className="container mx-auto px-6 relative z-30 flex flex-col items-start gap-10">
+      <div className="container mx-auto px-5 md:px-6 relative z-30 flex flex-col items-start gap-6 md:gap-10">
         <div className="w-full">
-          <motion.h1 initial="hidden" animate="visible" variants={titleVariants} className="text-4xl md:text-[62px] font-extrabold text-white mb-8 leading-[1.1] tracking-tighter drop-shadow-[0_2px_15px_rgba(16,83,243,0.3)]">
+          <motion.h1 initial="hidden" animate="visible" variants={titleVariants} className="text-[28px] md:text-[62px] font-extrabold text-white mb-5 md:mb-8 leading-[1.1] tracking-tighter drop-shadow-[0_2px_15px_rgba(16,83,243,0.3)]">
             Dịch Vụ Lập Trình & <br /> Giải Pháp <span className="text-blue-300">Công Nghệ</span>
           </motion.h1>
 
-          <motion.div initial="hidden" animate="visible" variants={breadcrumbVariants} className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-lg px-6 py-3 rounded-full border border-white/10 shadow-[0_8px_32px_0_rgba(16,83,243,0.1)]">
-            <ul className="flex items-center gap-3 text-white/80 font-medium text-sm md:text-base tracking-wide">
+          <motion.div initial="hidden" animate="visible" variants={breadcrumbVariants} className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-lg px-4 md:px-6 py-2.5 md:py-3 rounded-full border border-white/10 shadow-[0_8px_32px_0_rgba(16,83,243,0.1)]">
+            <ul className="flex items-center gap-2 md:gap-3 text-white/80 font-medium text-xs md:text-base tracking-wide">
               <li>
-                <a href="/" className="hover:text-blue-300 transition-colors flex items-center gap-2.5 group">
-                  <svg className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+                <a href="/" className="hover:text-blue-300 transition-colors flex items-center gap-1.5 md:gap-2.5 group">
+                  <svg className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
                   <span className="group-hover:-translate-y-0.5 transition-transform">Trang chủ</span>
                 </a>
               </li>

@@ -46,20 +46,41 @@ const bentoFeatures = [
 
 export default function BentoFeatures() {
   return (
-    <section className="py-24 relative z-20">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <section className="py-12 md:py-24 relative z-20">
+        <div className="max-w-[1260px] mx-auto px-5 md:px-6">
+          <div className="mb-8 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-8">
             <div className="max-w-2xl">
-              <h2 className="text-4xl md:text-[44px] font-bold text-slate-900 tracking-tighter mb-4 leading-tight">Mọi thông số. <br/><span className="text-slate-400">Đều được tối ưu hóa.</span></h2>
-              <p className="text-slate-500 font-medium text-[16px] leading-relaxed">Sự minh bạch tuyệt đối về cấu hình phần cứng giúp hệ thống của bạn luôn vận hành ở hiệu năng đỉnh cao nhất.</p>
+              <h2 className="text-[26px] md:text-[44px] font-bold text-slate-900 tracking-tighter mb-3 md:mb-4 leading-tight">Mọi thông số. <br/><span className="text-slate-400">Đều được tối ưu hóa.</span></h2>
+              <p className="text-slate-500 font-medium text-[14px] md:text-[16px] leading-relaxed">Sự minh bạch tuyệt đối về cấu hình phần cứng giúp hệ thống của bạn luôn vận hành ở hiệu năng đỉnh cao nhất.</p>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Mobile: compact horizontal cards */}
+          <div className="md:hidden space-y-3">
             {bentoFeatures.map((feat, idx) => (
-              <motion.div whileHover={{ y: -5 }} key={idx} className={`${feat.colSpan} bg-white/80 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-10 border border-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group ring-1 ring-slate-900/5`}>
+              <div key={idx} className="bg-white/80 backdrop-blur-2xl rounded-2xl p-4 border border-white shadow-[0_8px_30px_-10px_rgba(0,0,0,0.05)] ring-1 ring-slate-900/5 flex items-start gap-4">
+                <div className={`w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center text-white shadow-lg ring-2 ring-white/60`}><feat.icon size={18} strokeWidth={2} /></div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-[15px] font-bold text-slate-900 tracking-tight mb-0.5">{feat.title}</h3>
+                  <p className="text-slate-500 font-medium text-[12px] leading-relaxed mb-2">{feat.desc}</p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-1">
+                    {feat.specs.map((spec, sIdx) => (
+                      <span key={sIdx} className="flex items-center gap-1 text-[11px] font-bold text-slate-600 tracking-tight">
+                        <CheckCircle2 size={12} className="text-blue-500 shrink-0" /> {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: bento grid */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {bentoFeatures.map((feat, idx) => (
+              <motion.div whileHover={{ y: -5 }} key={idx} className={`${feat.colSpan} bg-white/80 backdrop-blur-2xl rounded-[2.5rem] p-8 lg:p-10 border border-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden group ring-1 ring-slate-900/5`}>
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className={`w-14 h-14 rounded-[1.2rem] bg-gradient-to-br ${feat.color} flex items-center justify-center text-white shadow-lg mb-6 ring-2 ring-white/60`}><feat.icon size={24} strokeWidth={2} /></div>
+                  <div className={`w-14 h-14 rounded-[1.2rem] bg-gradient-to-br ${feat.color} flex items-center justify-center text-white shadow-lg mb-6 ring-2 ring-white/60`}><feat.icon size={20} strokeWidth={2} /></div>
                   <div>
                     <h3 className="text-[22px] font-bold text-slate-900 tracking-tight mb-2">{feat.title}</h3>
                     <p className="text-slate-500 font-medium text-[14px] leading-relaxed mb-8">{feat.desc}</p>
