@@ -7,6 +7,7 @@ import {
   LayoutDashboard, TrendingUp, ArrowRight, MousePointerClick, Palette,
 } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const themeColors: Record<string, { main: string; light: string }> = {
   blue: { main: '#0066FF', light: '#eff6ff' },
@@ -160,16 +161,18 @@ export default function DashboardSection() {
   const [deviceMode, setDeviceMode] = useState('pc');
   const [activeFeature, setActiveFeature] = useState(0);
   const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
+  const skipAnim = reduced || isMobile;
 
   return (
     <section className="py-10 md:py-32 bg-white relative overflow-hidden" aria-label="Trình kiến tạo Dashboard">
-      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[800px] h-[800px] bg-slate-50 rounded-full blur-[120px] -z-10 pointer-events-none" aria-hidden="true"></div>
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[800px] h-[800px] bg-slate-50 rounded-full blur-[120px] -z-10 pointer-events-none hidden md:block" aria-hidden="true"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 lg:gap-24 items-start md:items-center">
           {/* Interactive Dashboard Visual */}
           <div className="order-2 md:order-1">
-          {reduced ? (
+          {skipAnim ? (
             <div className="relative h-[420px] md:h-[500px] lg:h-[650px] w-full bg-slate-50/80 md:bg-slate-50/50 rounded-2xl md:rounded-[2.5rem] md:border md:border-slate-100/80 flex items-center justify-center md:p-10 overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:shadow-[inset_0_0_80px_rgba(0,0,0,0.02)]">
               <div
                 className="bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-slate-200/80 overflow-hidden flex flex-col relative z-10"
@@ -441,7 +444,7 @@ export default function DashboardSection() {
 
           {/* Right: Stepper */}
           <div className="order-1 md:order-2 md:pl-8">
-            {reduced ? (
+            {skipAnim ? (
               <div className="mb-6 md:mb-12">
                 <div
                   className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide mb-3 md:mb-4 transition-colors duration-500"
@@ -493,7 +496,7 @@ export default function DashboardSection() {
             )}
 
             <div className="relative pl-5 md:pl-8 space-y-3 md:space-y-8 border-l-2 border-slate-200/60 md:border-slate-100">
-              {reduced ? (
+              {skipAnim ? (
                 <div
                   className="absolute left-[-2px] w-[2px] rounded-full"
                   style={{
@@ -517,7 +520,7 @@ export default function DashboardSection() {
                   onMouseEnter={() => setActiveFeature(idx)}
                   onClick={() => setActiveFeature(idx)}
                 >
-                  {reduced ? (
+                  {skipAnim ? (
                     <div
                       className="absolute -left-[29px] md:-left-[41px] top-1 w-4 h-4 rounded-full border-4 border-white shadow-sm"
                       style={{ backgroundColor: activeFeature === idx ? themeColors[builderColor].main : '#e2e8f0' }}
@@ -539,7 +542,7 @@ export default function DashboardSection() {
                       {feature.title}
                     </h4>
                   </div>
-                  {reduced ? (
+                  {skipAnim ? (
                     <div className={`overflow-hidden ${activeFeature === idx ? 'block mt-2' : 'hidden'}`}>
                       <p className="text-[12px] md:text-[15px] leading-relaxed text-slate-500 max-w-md">{feature.desc}</p>
                     </div>
@@ -556,7 +559,7 @@ export default function DashboardSection() {
               ))}
             </div>
 
-            {reduced ? (
+            {skipAnim ? (
               <button
                 className="mt-5 md:mt-12 w-full md:w-auto text-white rounded-2xl md:rounded-full px-5 md:px-8 py-3.5 md:py-4 font-bold text-[14px] md:text-[15px] shadow-lg transition-all duration-500 flex items-center justify-center gap-2"
                 style={{ backgroundColor: themeColors[builderColor].main, boxShadow: `0 10px 25px -5px ${themeColors[builderColor].main}60` }}

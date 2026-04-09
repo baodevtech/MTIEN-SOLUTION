@@ -41,7 +41,7 @@ export default function ControlPanel() {
                       <div className="w-6" />
                     </div>
                     <div className="relative aspect-[16/10] bg-slate-50/50">
-                      <Image src="https://picsum.photos/seed/mac_dashboard_pro/1200/900" alt="Control Panel" fill className="object-cover object-top" priority />
+                      <Image src="https://picsum.photos/seed/mac_dashboard_pro/1200/900" alt="Control Panel" fill className="object-cover object-top" loading="lazy" sizes="(max-width: 768px) 100vw, 50vw" />
                     </div>
                   </div>
                 </div>
@@ -103,7 +103,7 @@ export default function ControlPanel() {
                         <div className="w-10" />
                      </div>
                      <div className="flex-1 relative bg-slate-50/50">
-                        <Image src="https://picsum.photos/seed/mac_dashboard_pro/1200/900" alt="Control Panel" fill className="object-cover object-top opacity-95" priority />
+                        <Image src="https://picsum.photos/seed/mac_dashboard_pro/1200/900" alt="Control Panel" fill className="object-cover object-top opacity-95" loading="lazy" sizes="(max-width: 768px) 100vw, 60vw" />
                      </div>
                    </div>
                  </div>

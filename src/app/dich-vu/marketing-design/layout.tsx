@@ -7,6 +7,9 @@ export const metadata: Metadata = {
     title: 'Dịch vụ Marketing & Design | MTIEN SOLUTION',
     description: 'Nâng tầm diện mạo thương hiệu với giải pháp thiết kế UI/UX và Marketing chuẩn quốc tế.',
   },
+  alternates: {
+    canonical: '/dich-vu/marketing-design',
+  },
 };
 
 export default function MarketingDesignLayout({ children }: { children: React.ReactNode }) {

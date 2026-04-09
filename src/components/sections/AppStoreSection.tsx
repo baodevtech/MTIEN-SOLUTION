@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const apps = [
   { icon: MessageCircle, name: 'Messenger AI', tag: 'Hot', color: 'from-blue-500 to-cyan-400', size: 'large', desc: 'Tự động hóa CSKH 24/7 với trí tuệ nhân tạo.' },
@@ -22,16 +23,17 @@ const apps = [
 
 export default function AppStoreRedesign() {
   const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
+  const skipAnim = reduced || isMobile;
 
   return (
     <section className="bg-[#FBFBFC] pt-6 md:pt-45 pb-16 md:pb-16 relative mt-0 md:-mt-35 z-10 border-y border-slate-200/60 overflow-hidden font-sans md:min-h-[80vh] flex items-center" aria-label="Hệ sinh thái ứng dụng">
       
       {/* Background Cinematic Texture & Lights */}
-      {!reduced && (
+      {!skipAnim && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-blue-100/40 rounded-full blur-[120px]" />
           <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-indigo-100/30 rounded-full blur-[100px]" />
-          <div className="absolute inset-0 opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         </div>
       )}
 
@@ -114,7 +116,7 @@ export default function AppStoreRedesign() {
             </div>
 
             {/* Professional Floating Data */}
-            {!reduced && (
+            {!skipAnim && (
               <>
                 <motion.div 
                   animate={{ y: [0, -10, 0] }} 
@@ -165,8 +167,9 @@ export default function AppStoreRedesign() {
                         src="https://picsum.photos/seed/apple_bento_pro/1200/900" 
                         alt="App Interface" 
                         fill 
-                        className="object-cover object-top opacity-95 transition-all duration-[4s] hover:scale-105" 
-                        priority 
+                        className="object-cover object-top opacity-95" 
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        loading="lazy"
                        />
                        {/* Overlay Gradient for depth inside mockup */}
                        <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent pointer-events-none" />

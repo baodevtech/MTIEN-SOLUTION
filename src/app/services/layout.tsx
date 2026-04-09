@@ -7,6 +7,9 @@ export const metadata: Metadata = {
     title: 'Dịch vụ IT toàn diện | MTIEN SOLUTION',
     description: 'Dịch vụ phần mềm, cloud, marketing và thiết bị IT chuyên nghiệp.',
   },
+  alternates: {
+    canonical: '/services',
+  },
 };
 
 export default function ServicesLayout({ children }: { children: React.ReactNode }) {

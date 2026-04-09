@@ -1,5 +1,3 @@
-'use client';
-
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function CTASection() {
@@ -17,7 +15,7 @@ export default function CTASection() {
           </div>
 
           <div className="w-full max-w-lg">
-            <form className="relative bg-white p-1.5 md:p-1.5 rounded-full shadow-sm flex items-center border border-slate-200" onSubmit={(e) => e.preventDefault()}>
+            <form className="relative bg-white p-1.5 md:p-1.5 rounded-full shadow-sm flex items-center border border-slate-200" action="#">
               <label htmlFor="cta-website-name" className="sr-only">Tên website của bạn</label>
               <input
                 id="cta-website-name"

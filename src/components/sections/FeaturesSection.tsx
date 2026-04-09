@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const featuresData = [
   {
@@ -82,6 +83,8 @@ const featuresData = [
 
 export default function FeaturesSection() {
   const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
+  const skipAnim = reduced || isMobile;
   const [activeTab, setActiveTab] = useState(0);
 
   const activeData = featuresData[activeTab].content;
@@ -100,14 +103,14 @@ export default function FeaturesSection() {
       
       <div className="absolute top-0 left-0 right-0 h-0 md:h-64 bg-gradient-to-b from-[#F8FAFC] via-[#F8FAFC]/80 to-transparent z-10 pointer-events-none"></div>
 
-      {!reduced && (
+      {!skipAnim && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-80" aria-hidden="true">
           <motion.div variants={auroraVariants} animate="animate" className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-[#0066FF]/10 rounded-full blur-[140px] mix-blend-multiply"></motion.div>
           <motion.div variants={auroraVariants} animate="animate" className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-[#00D68F]/10 rounded-full blur-[140px] mix-blend-multiply animation-delay-2000"></motion.div>
         </div>
       )}
 
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none mix-blend-overlay z-0"></div>
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay z-0 hidden md:block"></div>
 
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         
@@ -197,7 +200,7 @@ export default function FeaturesSection() {
               <div className="md:col-span-7 relative w-full h-full min-h-[300px] md:min-h-[400px] lg:min-h-[500px] mt-4 md:mt-0">
                 
                 {/* Floating UI chỉ hiện trên PC */}
-                {!reduced && (
+                {!skipAnim && (
                   <>
                     <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} className="absolute -top-6 right-[10%] bg-white/90 backdrop-blur-xl p-3.5 rounded-2xl shadow-lg border border-slate-100 z-30 items-center gap-2.5 text-slate-800 text-sm font-semibold hidden md:flex">
                       <div className="w-7 h-7 rounded-full bg-[#00D68F]/10 flex items-center justify-center text-[#00D68F]"><TrendingUp size={14} /></div>
@@ -227,9 +230,9 @@ export default function FeaturesSection() {
                         src={`https://picsum.photos/seed/light_cinematic_${activeData.mockupType}/1000/700`}
                         alt={activeData.title}
                         fill
-                        className="object-cover object-left-top pt-2 md:pt-4 opacity-100 transition-transform duration-[1.5s] ease-out hover:scale-[1.04]"
-                        sizes="(max-width: 1024px) 100vw, 55vw"
-                        priority
+                        className="object-cover object-left-top pt-2 md:pt-4 opacity-100"
+                        sizes="(max-width: 768px) 100vw, 55vw"
+                        loading="lazy"
                       />
                     </div>
                   </div>

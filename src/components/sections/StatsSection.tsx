@@ -1,4 +1,3 @@
-'use client';
 import { User, LayoutTemplate, Briefcase, Heart, CheckCircle2, Star } from 'lucide-react';
 
 const stats = [

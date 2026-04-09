@@ -11,7 +11,7 @@ import { Cpu, Database, HardDrive, Network } from 'lucide-react';
 export default function HardwareSpecs() {
   return (
     <section className="py-12 md:py-24 bg-[#0A0D14] text-white relative z-20 overflow-hidden mx-3 lg:mx-8 my-6 md:my-10 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04]" />
+        <div className="absolute inset-0 opacity-[0.04] hidden md:block" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="max-w-[1200px] mx-auto px-4 md:px-6">

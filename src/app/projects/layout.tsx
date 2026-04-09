@@ -7,6 +7,9 @@ export const metadata: Metadata = {
     title: 'Dự án tiêu biểu | MTIEN SOLUTION',
     description: 'Các dự án tiêu biểu: ERP, E-commerce, Cloud, Branding.',
   },
+  alternates: {
+    canonical: '/projects',
+  },
 };
 
 export default function ProjectsLayout({ children }: { children: React.ReactNode }) {

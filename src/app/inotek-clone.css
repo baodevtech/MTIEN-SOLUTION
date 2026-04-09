@@ -53,23 +53,24 @@
 
 /* ==========================================================================
    TYPOGRAPHY & UTILITIES
+   Prefixed with 'ino-' to avoid conflicts with Tailwind CSS utilities
    ========================================================================== */
-.text-center { text-align: center; }
-.text-white { color: var(--white-color) !important; }
+.ino-text-center { text-align: center; }
+.ino-text-white { color: var(--white-color) !important; }
 .text-dark { color: var(--dark-color) !important; }
 .text-theme { color: var(--theme-color) !important; }
-.bg-light { background-color: var(--light-color) !important; }
+.ino-bg-light { background-color: var(--light-color) !important; }
 .bg-theme3 { background-color: var(--theme-color3) !important; }
-.bg-dark { background-color: var(--dark-color) !important; }
+.ino-bg-dark { background-color: var(--dark-color) !important; }
 .space { padding-top: 100px; padding-bottom: 100px; }
 .space-bottom { padding-bottom: 100px; }
 .mt--25 { margin-top: -25px; }
-.mt-20 { margin-top: 20px; }
-.mt-30 { margin-top: 30px; }
-.mt-40 { margin-top: 40px; }
-.mb-20 { margin-bottom: 20px; }
-.mb-40 { margin-bottom: 40px; }
-.w-100 { width: 100%; }
+.ino-mt-20 { margin-top: 20px; }
+.ino-mt-30 { margin-top: 30px; }
+.ino-mt-40 { margin-top: 40px; }
+.ino-mb-20 { margin-bottom: 20px; }
+.ino-mb-40 { margin-bottom: 40px; }
+.ino-w-100 { width: 100%; }
 
 /* ==========================================================================
    NÚT BẤM (BUTTONS)

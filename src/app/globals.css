@@ -8,13 +8,58 @@ html, body, * {
 }
 
 /* ==========================================================================
-   MOBILE PERFORMANCE — GPU & CPU optimizations only
-   Layout/spacing is handled by each component's Tailwind responsive classes.
+   MOBILE PERFORMANCE — Aggressive optimizations for weak devices
+   Target: PageSpeed 90+ on Moto G Power (slowest Lighthouse device)
    ========================================================================== */
 
 @media (max-width: 767px) {
-  /* Kill infinite animations — CPU killer */
-  .animate-ping { animation: none !important; }
+  /* Kill ALL infinite CSS animations — major CPU/battery drain */
+  .animate-ping,
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin {
+    animation: none !important;
+  }
+
+  /* Disable backdrop-blur on mobile — GPU killer on weak chipsets */
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl,
+  .backdrop-blur-md,
+  .backdrop-blur-sm {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Disable heavy box-shadows on mobile — compositing overhead */
+  .shadow-2xl {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* Reduce blur radius on decorative elements */
+  [class*="blur-[120px]"],
+  [class*="blur-[130px]"],
+  [class*="blur-[140px]"],
+  [class*="blur-[100px]"],
+  [class*="blur-[80px]"] {
+    display: none !important;
+  }
+
+  /* Force GPU compositing for scrolling elements */
+  main {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Reduce paint area for fixed navbar */
+  header[role="banner"] {
+    will-change: auto;
+    contain: layout style;
+  }
+
+  /* Contain paint for sections */
+  section {
+    contain: layout style paint;
+  }
 }
 
 /* --- Scrollbar utilities --- */

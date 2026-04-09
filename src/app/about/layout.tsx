@@ -7,6 +7,9 @@ export const metadata: Metadata = {
     title: 'Về chúng tôi | MTIEN SOLUTION',
     description: 'Tìm hiểu về MTIEN SOLUTION - Đội ngũ, tầm nhìn, sứ mệnh và hành trình phát triển.',
   },
+  alternates: {
+    canonical: '/about',
+  },
 };
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {

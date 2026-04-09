@@ -7,6 +7,9 @@ export const metadata: Metadata = {
     title: 'Blog & Tin tức | MTIEN SOLUTION',
     description: 'Cập nhật tin tức công nghệ, xu hướng thiết kế, giải pháp IT mới nhất.',
   },
+  alternates: {
+    canonical: '/blog',
+  },
 };
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {

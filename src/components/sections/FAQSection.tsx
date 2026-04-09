@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { HelpCircle, Search, Command, PhoneCall, Mail, MessageSquare, Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const faqs = [
   { question: 'Thiết kế web là gì?', answer: 'Thiết kế web là công việc tạo ra một trang web cho cá nhân, công ty, doanh nghiệp hoặc tổ chức. Có 2 phương thức chính để thiết kế web đó là thiết kế web tĩnh và thiết kế web động.' },
@@ -18,6 +19,8 @@ const faqs = [
 export default function FAQSection() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
+  const skipAnim = reduced || isMobile;
 
   return (
     <section className="py-12 md:py-32 bg-[#F8FAFC] relative overflow-hidden" aria-label="Câu hỏi thường gặp">
@@ -53,7 +56,7 @@ export default function FAQSection() {
                 <div className="flex -space-x-1.5 md:-space-x-3 shrink-0 md:mb-6">
                   {[1, 2, 3].map((avatar) => (
                     <div key={avatar} className="w-8 h-8 md:w-12 md:h-12 rounded-full border-2 border-white bg-slate-100 overflow-hidden relative shadow-sm">
-                      <Image src={`https://i.pravatar.cc/100?img=${avatar + 30}`} alt="Nhân viên hỗ trợ" fill className="object-cover" sizes="48px" />
+                      <Image src={`https://i.pravatar.cc/100?img=${avatar + 30}`} alt="Nhân viên hỗ trợ" fill className="object-cover" sizes="48px" loading="lazy" />
                     </div>
                   ))}
                   <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border-2 border-white bg-blue-50 text-[#0066FF] flex items-center justify-center shadow-sm z-10">
@@ -90,7 +93,7 @@ export default function FAQSection() {
                       {activeFaq === idx ? <Minus size={11} strokeWidth={2.5} /> : <Plus size={11} strokeWidth={2.5} />}
                     </div>
                   </button>
-                  {reduced ? (
+                  {skipAnim ? (
                     activeFaq === idx && (
                       <div id={`faq-answer-${idx}`} role="region">
                         <div className="px-4 md:px-8 pb-3 md:pb-8 pt-0">

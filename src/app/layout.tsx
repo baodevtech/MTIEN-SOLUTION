@@ -53,12 +53,21 @@ export const metadata: Metadata = {
     title: 'MTIEN SOLUTION - Giải pháp Công nghệ Toàn diện',
     description:
       'Cung cấp dịch vụ lập trình, thiết kế, cloud, và thiết bị IT chuyên nghiệp cho hơn 230.000 doanh nghiệp.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'MTIEN SOLUTION - Giải pháp Công nghệ Toàn diện',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MTIEN SOLUTION - Giải pháp Công nghệ Toàn diện',
     description:
       'Cung cấp dịch vụ lập trình, thiết kế, cloud, và thiết bị IT chuyên nghiệp.',
+    images: ['/og-image.png'],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: BASE_URL },

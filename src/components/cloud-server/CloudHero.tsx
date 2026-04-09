@@ -22,7 +22,7 @@ export default function CloudHero() {
       
       <motion.div animate={{ scale: [1, 1.05, 1], rotate: [0, 5, 0] }} transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }} className="absolute top-[-10%] left-[10%] w-[50vw] h-[50vw] bg-blue-400/20 rounded-full blur-[120px] mix-blend-multiply" />
       <motion.div animate={{ scale: [1, 1.1, 1], rotate: [0, -5, 0] }} transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }} className="absolute top-[10%] right-[5%] w-[40vw] h-[40vw] bg-indigo-300/20 rounded-full blur-[100px] mix-blend-multiply" />
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
+      <div className="absolute inset-0 opacity-[0.02] hidden md:block" />
       
       {/* Lớp gradient dưới cùng để mượt mà phần viền */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />

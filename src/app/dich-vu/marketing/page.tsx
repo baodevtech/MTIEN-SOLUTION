@@ -7,9 +7,6 @@ import MarketingTechProcess from '@/components/marketing/MarketingTechProcess';
 import MarketingSocialProof from '@/components/marketing/MarketingSocialProof';
 import MarketingPricing from '@/components/marketing/MarketingPricing';
 import MarketingCTA from '@/components/marketing/MarketingCTA';
-import { Manrope } from 'next/font/google';
-
-const manrope = Manrope({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700', '800'] });
 
 /**
  * Marketing Page - Trang dich vu Marketing so (Digital Marketing)
@@ -27,7 +24,7 @@ const manrope = Manrope({ subsets: ['latin'], weight: ['300', '400', '500', '600
  */
 export default function MarketingPage() {
   return (
-    <main className={`${manrope.className} bg-neutral-50 text-neutral-900 antialiased selection:bg-blue-600 selection:text-white min-h-screen overflow-hidden`}>
+    <main className="bg-neutral-50 text-neutral-900 antialiased selection:bg-blue-600 selection:text-white min-h-screen overflow-hidden">
 
       {/* 1. Hero Section */}
       <MarketingHero />

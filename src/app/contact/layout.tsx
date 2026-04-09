@@ -7,6 +7,9 @@ export const metadata: Metadata = {
     title: 'Liên hệ | MTIEN SOLUTION',
     description: 'Liên hệ để được tư vấn giải pháp công nghệ toàn diện.',
   },
+  alternates: {
+    canonical: '/contact',
+  },
 };
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {

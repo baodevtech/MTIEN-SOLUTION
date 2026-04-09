@@ -1,4 +1,3 @@
-import { Manrope } from 'next/font/google';
 import DesignHero from '@/components/design/DesignHero';
 import DesignVision from '@/components/design/DesignVision';
 import DesignCoreValues from '@/components/design/DesignCoreValues';
@@ -8,8 +7,6 @@ import DesignSystem from '@/components/design/DesignSystem';
 import DesignProcess from '@/components/design/DesignProcess';
 import DesignTestimonials from '@/components/design/DesignTestimonials';
 import DesignPricing from '@/components/design/DesignPricing';
-
-const manrope = Manrope({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700', '800'] });
 
 /**
  * Marketing Design Page - Trang dich vu Thiet ke & UX/UI
@@ -27,7 +24,7 @@ const manrope = Manrope({ subsets: ['latin'], weight: ['300', '400', '500', '600
  */
 export default function MarketingDesignPage() {
   return (
-    <main className={`${manrope.className} bg-[#FAFAFC] text-[#111] antialiased selection:bg-indigo-500 selection:text-white min-h-screen overflow-hidden`}>
+    <main className="bg-[#FAFAFC] text-[#111] antialiased selection:bg-indigo-500 selection:text-white min-h-screen overflow-hidden">
       {/* 1. Hero Section */}
       <DesignHero />
 

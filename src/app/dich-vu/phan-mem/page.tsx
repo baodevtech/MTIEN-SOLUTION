@@ -5,12 +5,6 @@ import SoftwareMarquee from '@/components/phan-mem/SoftwareMarquee';
 import SoftwareProcess from '@/components/phan-mem/SoftwareProcess';
 import SoftwarePricing from '@/components/phan-mem/SoftwarePricing';
 import SoftwareFAQ from '@/components/phan-mem/SoftwareFAQ';
-import { Manrope } from 'next/font/google';
-
-const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800']
-});
 
 /**
  * Phan Mem Page - Trang dich vu Phat trien phan mem (Inotek-style)
@@ -26,7 +20,7 @@ const manrope = Manrope({
  */
 export default function PhanMemPage() {
   return (
-    <main className={`${manrope.className} bg-white text-[#616161]`}>
+    <main className="bg-white text-[#616161]">
       {/* 1. Breadcrumb Navigation */}
       <SoftwareBreadcrumb />
 
