@@ -125,31 +125,60 @@ function RelatedCard({ product }: { product: Product }) {
   return (
     <Link
       href={`/shop/${product.slug}`}
-      className="group flex flex-col overflow-hidden rounded-[1.5rem] bg-white p-3 ring-1 ring-slate-900/5 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.15)] hover:ring-blue-500/20 hover:-translate-y-0.5"
+      className="group flex flex-col overflow-hidden rounded-[14px] md:rounded-[1.5rem] bg-white p-2 md:p-3 ring-1 ring-slate-900/5 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(37,99,235,0.15)] hover:ring-blue-500/20 hover:-translate-y-0.5 relative"
     >
-      <div className="relative aspect-square overflow-hidden rounded-[1.25rem] bg-slate-50/50 mb-3 transition-colors group-hover:bg-slate-50">
+      <div className="relative aspect-[4/3] md:aspect-square overflow-hidden rounded-xl md:rounded-[1.25rem] bg-slate-50/50 mb-1.5 md:mb-3 transition-colors group-hover:bg-slate-50">
         <Image
           src={product.image}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 50vw, 200px"
-          className="object-contain p-3 transition-transform duration-700 ease-out group-hover:scale-110"
+          className="object-contain p-2 md:p-3 transition-transform duration-700 ease-out group-hover:scale-110 mix-blend-multiply"
         />
+        {/* Floating Actions on Mobile */}
+        <div className="absolute right-1.5 md:right-2 top-1.5 md:top-2 flex flex-col gap-1.5 opacity-100 md:opacity-0 md:translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 z-20">
+          <button className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/80 md:bg-white backdrop-blur text-slate-700 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors shadow-sm md:shadow border border-slate-100">
+            <ShoppingCart className="w-3 h-3 md:w-3.5 md:h-3.5" />
+          </button>
+        </div>
+
         {product.discount && (
-          <span className="absolute left-2.5 top-2.5 rounded-full bg-rose-500 px-2 py-0.5 text-[9px] font-black tracking-wider text-white shadow-sm">
+          <span className="absolute left-1.5 md:left-2 top-1.5 md:top-2 rounded-full bg-red-500 px-1.5 md:px-2 py-[1px] md:py-0.5 text-[8px] md:text-[9px] font-bold tracking-wider text-white shadow-sm">
             {product.discount}
           </span>
         )}
       </div>
-      <div className="flex flex-1 flex-col px-1.5 pb-1">
-        <p className="line-clamp-2 text-[13px] font-semibold text-slate-700 leading-snug group-hover:text-blue-600 transition-colors mb-1">
+      <div className="flex flex-1 flex-col px-0.5 pb-0.5">
+        <div className="flex flex-wrap items-center gap-1 md:gap-1.5 mb-1 md:mb-1.5">
+           <div className="text-[8px] md:text-[10px] font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-1 md:px-1.5 py-0.5 rounded border border-blue-100">{product.brand}</div>
+           <div className="flex items-center gap-0.5 text-slate-500 text-[9px] md:text-[10px] font-medium">
+              <Star className="w-2.5 h-2.5 md:w-2.5 md:h-2.5 text-amber-400 fill-amber-400" /> {product.rating}
+           </div>
+        </div>
+
+        <p className="line-clamp-2 text-xs md:text-[14px] font-bold text-slate-800 leading-tight group-hover:text-blue-600 transition-colors mb-1 md:mb-2">
           {product.name}
         </p>
-        <div className="mt-auto">
-          <p className="text-[15px] font-black text-blue-600">{product.priceDisplay}</p>
-          {product.oldPriceDisplay && (
-            <p className="text-[11px] font-medium text-slate-400 line-through mt-0.5">{product.oldPriceDisplay}</p>
-          )}
+
+        {/* Specs on Mobile - Full content, smaller size */}
+        <div className="flex flex-wrap items-center gap-1 mb-1.5 md:mb-2.5">
+          {product.specs?.slice(0, 2).map((s, idx) => (
+            <span key={idx} className="text-[8px] md:text-[10px] font-medium text-slate-500 bg-slate-50 px-1 md:px-1.5 py-0.5 rounded border border-slate-100 whitespace-nowrap leading-none">{s.value}</span>
+          ))}
+        </div>
+
+        <div className="mt-auto flex flex-col sm:flex-row sm:items-end justify-between pt-1.5 md:pt-2 border-t border-slate-50 md:border-transparent gap-1 sm:gap-0">
+          <div>
+            {product.oldPriceDisplay && (
+              <p className="text-[9px] md:text-[11px] font-medium text-slate-400 line-through mb-0 md:mb-0.5 leading-none">{product.oldPriceDisplay}</p>
+            )}
+            <p className="text-xs md:text-[15px] font-black text-blue-600 tracking-tight leading-none mt-0.5">{product.priceDisplay}</p>
+          </div>
+          
+          <button className="w-full sm:w-8 h-6 sm:h-8 rounded md:rounded-lg bg-blue-50 sm:bg-slate-50 border border-blue-100 sm:border-slate-200 text-blue-600 sm:text-slate-600 flex items-center justify-center gap-1 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm">
+            <ShoppingCart className="w-3 h-3 hidden sm:block" />
+            <span className="text-[9px] font-bold sm:hidden">Mua ngay</span>
+          </button>
         </div>
       </div>
     </Link>
@@ -208,7 +237,22 @@ export default function ProductDetail({ product, related, categoryName }: Produc
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight tracking-tight">
             {product.name}
           </h1>
-          <StarRating rating={product.rating} count={product.reviewCount} />
+          <div className="flex items-center gap-3">
+            <StarRating rating={product.rating} count={product.reviewCount} />
+            {product.inStock ? (
+              <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-emerald-600 bg-emerald-50/80 px-2 py-1 rounded shadow-sm">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                </span>
+                CÒN HÀNG
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-red-500 bg-red-50/80 px-2 py-1 rounded shadow-sm">
+                <AlertCircle className="h-3 w-3" /> HẾT HÀNG
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
@@ -238,7 +282,22 @@ export default function ProductDetail({ product, related, categoryName }: Produc
               <h1 className="text-[1.75rem] font-black text-slate-900 leading-[1.2] tracking-tight">
                 {product.name}
               </h1>
-              <StarRating rating={product.rating} count={product.reviewCount} />
+              <div className="flex items-center gap-3">
+                <StarRating rating={product.rating} count={product.reviewCount} />
+                {product.inStock ? (
+                  <span className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600 bg-emerald-50/80 px-2 py-1 rounded shadow-sm">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                    </span>
+                    CÒN HÀNG
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 text-[11px] font-bold text-red-500 bg-red-50/80 px-2 py-1 rounded shadow-sm">
+                    <AlertCircle className="h-3 w-3" /> HẾT HÀNG
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Premium Soft Pricing Box */}
@@ -318,23 +377,6 @@ export default function ProductDetail({ product, related, categoryName }: Produc
 
             {/* Soft Action Box - Smaller Height */}
             <div className="rounded-[1.5rem] bg-white p-5 ring-1 ring-slate-900/5 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.05)] space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Trạng thái</span>
-                {product.inStock ? (
-                  <span className="flex items-center gap-1.5 text-[11px] font-black text-emerald-600 bg-emerald-50/80 px-3 py-1.5 rounded-xl shadow-sm">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    Còn hàng
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 text-[11px] font-black text-red-500 bg-red-50/80 px-3 py-1.5 rounded-xl shadow-sm">
-                    <AlertCircle className="h-3 w-3" /> Hết hàng
-                  </span>
-                )}
-              </div>
-              
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Số lượng</span>
                 <div className="flex h-10 w-28 items-center justify-between rounded-xl bg-slate-50 ring-1 ring-slate-200/50 p-1">
@@ -382,45 +424,45 @@ export default function ProductDetail({ product, related, categoryName }: Produc
           {/* Right Column: Policies & Trust (Span 3) */}
           <div className="lg:col-span-3 space-y-4 sm:space-y-5">
             {/* Glassy Policies Box */}
-            <div className="rounded-[1.5rem] bg-white/80 backdrop-blur-md p-5 sm:p-6 ring-1 ring-slate-900/5 shadow-sm">
-              <h3 className="font-black text-slate-900 mb-4 flex items-center gap-2 uppercase tracking-widest text-[11px]">
+            <div className="rounded-[1.5rem] bg-white/80 backdrop-blur-md p-4 sm:p-6 ring-1 ring-slate-900/5 shadow-sm">
+              <h3 className="font-black text-slate-900 mb-3 sm:mb-4 flex items-center gap-2 uppercase tracking-widest text-[11px]">
                 <Shield className="h-4 w-4 text-emerald-500" /> An tâm mua sắm
               </h3>
-              <ul className="space-y-4">
-                <li className="flex gap-3 items-start group">
-                  <div className="h-8 w-8 rounded-xl bg-emerald-50/80 text-emerald-500 flex items-center justify-center shrink-0 ring-1 ring-emerald-100 group-hover:bg-emerald-100 transition-colors">
-                    <BadgeCheck className="h-4 w-4" />
+              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-4">
+                <li className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start group bg-slate-50/50 sm:bg-transparent p-2.5 sm:p-0 rounded-[12px] sm:rounded-none ring-1 ring-slate-100 sm:ring-0">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg sm:rounded-xl bg-emerald-50/80 text-emerald-500 flex items-center justify-center shrink-0 ring-1 ring-emerald-100 group-hover:bg-emerald-100 transition-colors">
+                    <BadgeCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
-                  <div className="pt-0.5">
-                    <span className="block text-[12px] font-bold text-slate-800">100% Chính hãng</span>
-                    <span className="text-[11px] text-slate-500 mt-0.5 block leading-snug">Cam kết CO/CQ đầy đủ</span>
-                  </div>
-                </li>
-                <li className="flex gap-3 items-start group">
-                  <div className="h-8 w-8 rounded-xl bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0 ring-1 ring-blue-100 group-hover:bg-blue-100 transition-colors">
-                    <Wrench className="h-4 w-4" />
-                  </div>
-                  <div className="pt-0.5">
-                    <span className="block text-[12px] font-bold text-slate-800">Bảo hành {product.warranty}</span>
-                    <span className="text-[11px] text-slate-500 mt-0.5 block leading-snug">Đổi mới linh kiện dễ dàng</span>
+                  <div className="pt-0 sm:pt-0.5">
+                    <span className="block text-[10px] sm:text-[12px] font-bold text-slate-800 leading-tight mb-0.5 sm:mb-0">100% Chính hãng</span>
+                    <span className="text-[9px] sm:text-[11px] text-slate-500 block leading-snug">Cam kết CO/CQ</span>
                   </div>
                 </li>
-                <li className="flex gap-3 items-start group">
-                  <div className="h-8 w-8 rounded-xl bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0 ring-1 ring-orange-100 group-hover:bg-orange-100 transition-colors">
-                    <Truck className="h-4 w-4" />
+                <li className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start group bg-slate-50/50 sm:bg-transparent p-2.5 sm:p-0 rounded-[12px] sm:rounded-none ring-1 ring-slate-100 sm:ring-0">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg sm:rounded-xl bg-blue-50/80 text-blue-500 flex items-center justify-center shrink-0 ring-1 ring-blue-100 group-hover:bg-blue-100 transition-colors">
+                    <Wrench className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
-                  <div className="pt-0.5">
-                    <span className="block text-[12px] font-bold text-slate-800">Giao nhanh 24h</span>
-                    <span className="text-[11px] text-slate-500 mt-0.5 block leading-snug">Freeship nội thành & dự án</span>
+                  <div className="pt-0 sm:pt-0.5">
+                    <span className="block text-[10px] sm:text-[12px] font-bold text-slate-800 leading-tight mb-0.5 sm:mb-0">Bảo hành {product.warranty}</span>
+                    <span className="text-[9px] sm:text-[11px] text-slate-500 block leading-snug">Đổi mới dễ dàng</span>
                   </div>
                 </li>
-                <li className="flex gap-3 items-start group">
-                  <div className="h-8 w-8 rounded-xl bg-purple-50/80 text-purple-500 flex items-center justify-center shrink-0 ring-1 ring-purple-100 group-hover:bg-purple-100 transition-colors">
-                    <RefreshCw className="h-4 w-4" />
+                <li className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start group bg-slate-50/50 sm:bg-transparent p-2.5 sm:p-0 rounded-[12px] sm:rounded-none ring-1 ring-slate-100 sm:ring-0">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg sm:rounded-xl bg-orange-50/80 text-orange-500 flex items-center justify-center shrink-0 ring-1 ring-orange-100 group-hover:bg-orange-100 transition-colors">
+                    <Truck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
-                  <div className="pt-0.5">
-                    <span className="block text-[12px] font-bold text-slate-800">Đổi trả 15 ngày</span>
-                    <span className="text-[11px] text-slate-500 mt-0.5 block leading-snug">Lỗi NSX hỗ trợ thu đổi tốc độ</span>
+                  <div className="pt-0 sm:pt-0.5">
+                    <span className="block text-[10px] sm:text-[12px] font-bold text-slate-800 leading-tight mb-0.5 sm:mb-0">Giao nhanh 24h</span>
+                    <span className="text-[9px] sm:text-[11px] text-slate-500 block leading-snug">Freeship dự án</span>
+                  </div>
+                </li>
+                <li className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start group bg-slate-50/50 sm:bg-transparent p-2.5 sm:p-0 rounded-[12px] sm:rounded-none ring-1 ring-slate-100 sm:ring-0">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg sm:rounded-xl bg-purple-50/80 text-purple-500 flex items-center justify-center shrink-0 ring-1 ring-purple-100 group-hover:bg-purple-100 transition-colors">
+                    <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  </div>
+                  <div className="pt-0 sm:pt-0.5">
+                    <span className="block text-[10px] sm:text-[12px] font-bold text-slate-800 leading-tight mb-0.5 sm:mb-0">Đổi trả 15 ngày</span>
+                    <span className="text-[9px] sm:text-[11px] text-slate-500 block leading-snug">Lỗi NSX hỗ trợ</span>
                   </div>
                 </li>
               </ul>
