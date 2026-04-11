@@ -1,15 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Save, Globe, Building2, Phone, Mail, MapPin, Hash,
   Facebook, Youtube, Instagram, Linkedin, FileText, Send,
   Image as ImageIcon, Upload, Palette, Settings as SettingsIcon,
-  ChevronRight, Eye, Shield, Database, Bell,
+  ChevronRight, Eye, Shield, Database, Bell, Link2, Key,
+  RefreshCw, CheckCircle2, XCircle, Copy, Zap,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const tabs = [
+  { key: 'connection', label: 'Kết nối Frontend', icon: Link2 },
   { key: 'general', label: 'Tổng quan', icon: Globe },
   { key: 'company', label: 'Công ty', icon: Building2 },
   { key: 'social', label: 'Mạng xã hội', icon: Facebook },
@@ -21,7 +23,100 @@ const tabs = [
 ]
 
 export default function SettingsPage() {
-  const [tab, setTab] = useState('general')
+  const [tab, setTab] = useState('connection')
+
+  // Connection settings state
+  const [connection, setConnection] = useState({
+    frontendUrl: '',
+    secretKey: '',
+    lastConnected: null as string | null,
+  })
+  const [connStatus, setConnStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [connMessage, setConnMessage] = useState('')
+  const [connSaving, setConnSaving] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  // Load connection settings on mount
+  useEffect(() => {
+    fetch('/api/settings/connection')
+      .then(r => r.json())
+      .then(data => {
+        if (data.frontendUrl || data.secretKey) {
+          setConnection(data)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const generateKey = useCallback(async () => {
+    try {
+      const res = await fetch('/api/settings/connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'generate-key' }),
+      })
+      const data = await res.json()
+      if (data.secretKey) {
+        setConnection(prev => ({ ...prev, secretKey: data.secretKey }))
+      }
+    } catch {}
+  }, [])
+
+  const saveConnection = useCallback(async () => {
+    setConnSaving(true)
+    try {
+      const res = await fetch('/api/settings/connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'save', ...connection }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setConnMessage('Đã lưu cấu hình kết nối!')
+        setConnStatus('success')
+      } else {
+        setConnMessage(data.error || 'Lỗi lưu cấu hình')
+        setConnStatus('error')
+      }
+    } catch {
+      setConnMessage('Lỗi kết nối server')
+      setConnStatus('error')
+    } finally {
+      setConnSaving(false)
+      setTimeout(() => setConnStatus('idle'), 3000)
+    }
+  }, [connection])
+
+  const testConnection = useCallback(async () => {
+    setConnStatus('loading')
+    setConnMessage('Đang kiểm tra kết nối...')
+    try {
+      const res = await fetch('/api/settings/connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'test' }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setConnStatus('success')
+        setConnMessage(data.message)
+        setConnection(prev => ({ ...prev, lastConnected: new Date().toISOString() }))
+      } else {
+        setConnStatus('error')
+        setConnMessage(data.error || 'Kết nối thất bại')
+      }
+    } catch {
+      setConnStatus('error')
+      setConnMessage('Không thể kết nối đến server')
+    }
+  }, [])
+
+  const copyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }, [])
 
   const [general, setGeneral] = useState({
     siteName: 'MTIEN Solution',
@@ -95,6 +190,155 @@ export default function SettingsPage() {
 
         {/* Content */}
         <div className="lg:col-span-4">
+          {/* Connection */}
+          {tab === 'connection' && (
+            <div className="space-y-5 animate-fade-in">
+              <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Link2 size={18} /> Kết nối Frontend</h2>
+                <p className="text-sm text-slate-500">Cấu hình kết nối giữa Admin CMS và website Frontend. Khi xuất bản theme, admin sẽ tự động gửi tín hiệu xoá cache để website cập nhật ngay lập tức.</p>
+
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <h3 className="text-sm font-semibold text-blue-800 mb-2 flex items-center gap-1.5"><Zap size={14} /> Cách hoạt động</h3>
+                  <ol className="text-xs text-blue-700 space-y-1 list-decimal list-inside">
+                    <li>Nhập <strong>Frontend URL</strong> (domain website chính)</li>
+                    <li>Tạo <strong>Secret Key</strong> rồi copy sang file <code className="bg-blue-100 px-1 rounded">.env.local</code> của Frontend</li>
+                    <li>Frontend cần 2 biến môi trường: <code className="bg-blue-100 px-1 rounded">ADMIN_API_URL</code> và <code className="bg-blue-100 px-1 rounded">REVALIDATION_SECRET</code></li>
+                    <li>Nhấn <strong>Test kết nối</strong> để xác nhận hoạt động</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Frontend URL *</label>
+                  <input
+                    type="url"
+                    value={connection.frontendUrl}
+                    onChange={(e) => setConnection({ ...connection, frontendUrl: e.target.value })}
+                    placeholder="https://mtiensolution.vn"
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none font-mono focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  <p className="text-xs text-slate-400 mt-1">Domain chính của website (không có dấu / ở cuối)</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Secret Key *</label>
+                  <div className="flex gap-2">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={connection.secretKey}
+                        onChange={(e) => setConnection({ ...connection, secretKey: e.target.value })}
+                        placeholder="Nhấn 'Tạo key' để tạo tự động"
+                        className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none font-mono focus:ring-2 focus:ring-blue-500/20 pr-10"
+                      />
+                      {connection.secretKey && (
+                        <button
+                          onClick={() => copyToClipboard(connection.secretKey)}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
+                          title="Copy"
+                        >
+                          {copied ? <CheckCircle2 size={16} className="text-green-500" /> : <Copy size={16} />}
+                        </button>
+                      )}
+                    </div>
+                    <button
+                      onClick={generateKey}
+                      className="px-3 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 whitespace-nowrap flex items-center gap-1.5"
+                    >
+                      <Key size={14} /> Tạo key
+                    </button>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-1">Key này phải giống với <code className="bg-slate-100 px-1 rounded">REVALIDATION_SECRET</code> trong .env.local của Frontend</p>
+                </div>
+
+                {/* Env example box */}
+                {connection.secretKey && (
+                  <div className="relative">
+                    <label className="block text-xs font-medium text-slate-600 mb-1">Copy vào file .env.local của Frontend:</label>
+                    <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto">
+{`# Frontend .env.local
+ADMIN_API_URL=${typeof window !== 'undefined' ? window.location.origin : 'https://admin.yourdomain.com'}
+REVALIDATION_SECRET=${connection.secretKey}`}
+                    </pre>
+                    <button
+                      onClick={() => copyToClipboard(`ADMIN_API_URL=${typeof window !== 'undefined' ? window.location.origin : 'https://admin.yourdomain.com'}\nREVALIDATION_SECRET=${connection.secretKey}`)}
+                      className="absolute top-7 right-3 text-slate-400 hover:text-white text-xs flex items-center gap-1"
+                    >
+                      <Copy size={12} /> Copy
+                    </button>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3 pt-2">
+                  <button
+                    onClick={saveConnection}
+                    disabled={connSaving}
+                    className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm disabled:opacity-60"
+                  >
+                    <Save size={14} /> {connSaving ? 'Đang lưu...' : 'Lưu cấu hình'}
+                  </button>
+                  <button
+                    onClick={testConnection}
+                    disabled={connStatus === 'loading' || !connection.frontendUrl || !connection.secretKey}
+                    className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm disabled:opacity-60"
+                  >
+                    <RefreshCw size={14} className={connStatus === 'loading' ? 'animate-spin' : ''} />
+                    {connStatus === 'loading' ? 'Đang test...' : 'Test kết nối'}
+                  </button>
+                </div>
+
+                {/* Status message */}
+                {connStatus !== 'idle' && connStatus !== 'loading' && (
+                  <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm', connStatus === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+                    {connStatus === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+                    {connMessage}
+                  </div>
+                )}
+
+                {connection.lastConnected && (
+                  <p className="text-xs text-slate-400">
+                    Lần kết nối thành công gần nhất: {new Date(connection.lastConnected).toLocaleString('vi-VN')}
+                  </p>
+                )}
+              </div>
+
+              {/* Architecture diagram */}
+              <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <h3 className="text-sm font-bold text-slate-700 mb-3">Kiến trúc hệ thống</h3>
+                <div className="flex items-center justify-center gap-4 py-4">
+                  <div className="text-center">
+                    <div className="w-28 h-20 bg-blue-50 border-2 border-blue-300 rounded-xl flex items-center justify-center">
+                      <div>
+                        <Shield size={20} className="mx-auto text-blue-600" />
+                        <p className="text-xs font-bold text-blue-700 mt-1">Admin CMS</p>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-slate-400 mt-1">Theme Editor + API</p>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="text-xs text-slate-500">1. Xuất bản</div>
+                    <div className="w-20 h-0.5 bg-blue-300 relative">
+                      <div className="absolute -right-1 -top-1 w-0 h-0 border-l-[6px] border-l-blue-400 border-y-4 border-y-transparent" />
+                    </div>
+                    <div className="text-xs text-emerald-600 font-mono">revalidateTag</div>
+                    <div className="w-20 h-0.5 bg-emerald-300 relative">
+                      <div className="absolute -right-1 -top-1 w-0 h-0 border-l-[6px] border-l-emerald-400 border-y-4 border-y-transparent" />
+                    </div>
+                    <div className="text-xs text-slate-500">2. Xoá cache</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-28 h-20 bg-emerald-50 border-2 border-emerald-300 rounded-xl flex items-center justify-center">
+                      <div>
+                        <Globe size={20} className="mx-auto text-emerald-600" />
+                        <p className="text-xs font-bold text-emerald-700 mt-1">Frontend</p>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-slate-400 mt-1">Website khách hàng</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* General */}
           {tab === 'general' && (
             <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5 animate-fade-in">

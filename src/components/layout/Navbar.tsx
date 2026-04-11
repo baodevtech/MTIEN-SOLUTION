@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, ChevronDown, ArrowRight, Phone, Mail, Sparkles, Smartphone, Cloud, PenTool, Megaphone, Store, Users, CreditCard, Newspaper, MonitorPlay, Search, ShoppingCart } from 'lucide-react';
+import { useGlobal } from '@/lib/theme-context';
 
 const mainLinks = [
   { href: '/', label: 'Trang chủ', icon: Store, hasDropdown: false, isHot: false },
@@ -28,6 +29,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  // Theme values with fallbacks
+  const logoText = useGlobal('navbar', 'logoText', 'MTIEN') as string;
+  const logoSubtext = useGlobal('navbar', 'logoSubtext', 'Solution') as string;
+  const ctaButton = useGlobal('navbar', 'ctaButton', 'Nhận báo giá') as string;
+  const ctaButtonLink = useGlobal('navbar', 'ctaButtonLink', '#') as string;
+  const showTopBanner = useGlobal('navbar', 'showTopBanner', true) as boolean;
+
   const toggleMenu = useCallback(() => setIsOpen((prev) => !prev), []);
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
@@ -43,6 +51,7 @@ export default function Navbar() {
     <>
       <header className={`w-full z-50 flex flex-col fixed top-0 left-0 right-0 transition-all duration-500 ease-out ${scrolled ? 'shadow-[0_8px_30px_rgb(0,0,0,0.06)] backdrop-blur-xl bg-white/80' : 'bg-white'}`} role="banner">
         {/* Top Banner — Refined & Softer */}
+        {showTopBanner && (
         <div className={`transition-all duration-500 overflow-hidden ${scrolled ? 'h-0 opacity-0' : 'h-10 opacity-100'}`}>
           <div className="bg-gradient-to-r from-[#001440] via-[#002f90] to-[#001440] text-blue-50 text-[12px] h-full flex justify-center items-center px-4 relative">
             <div className="flex items-center gap-4 max-w-7xl mx-auto w-full justify-between lg:justify-center">
@@ -71,6 +80,7 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Main Navbar */}
         <nav className={`border-b border-gray-100/50 transition-all duration-500 ${scrolled ? 'py-1 min-h-[64px]' : 'py-2 md:py-3'}`} aria-label="Điều hướng chính">
@@ -87,7 +97,7 @@ export default function Navbar() {
                   </div>
                   <div className="flex flex-col justify-center hidden sm:flex">
                     <span className="font-extrabold text-xl text-gray-900 tracking-tight leading-none">
-                      MTIEN<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0066FF] to-[#0052CC]">SOLUTION</span>
+                      {logoText}<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0066FF] to-[#0052CC]">{logoSubtext.toUpperCase()}</span>
                     </span>
                     <span className="text-[10px] text-gray-500 font-medium tracking-widest uppercase mt-0.5">Technology Group</span>
                   </div>
@@ -163,9 +173,9 @@ export default function Navbar() {
               <div className="hidden lg:flex items-center gap-4">
                 <Link href="#" className="text-[14px] font-bold text-gray-600 hover:text-[#0066FF] transition-colors px-3 py-2 rounded-xl hover:bg-gray-50/80">Khách hàng</Link>
                 <div className="w-px h-6 bg-gray-200"></div>
-                <Link href="#" className="relative group overflow-hidden bg-gray-900 text-white px-6 py-2.5 rounded-[14px] font-bold transition-all shadow-[0_4px_14px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,102,255,0.3)] hover:-translate-y-0.5 hover:bg-[#0066FF]">
+                <Link href={ctaButtonLink} className="relative group overflow-hidden bg-gray-900 text-white px-6 py-2.5 rounded-[14px] font-bold transition-all shadow-[0_4px_14px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,102,255,0.3)] hover:-translate-y-0.5 hover:bg-[#0066FF]">
                   <span className="relative z-10 flex items-center gap-2">
-                    Nhận báo giá <Sparkles size={14} />
+                    {ctaButton} <Sparkles size={14} />
                   </span>
                   <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-out"></div>
                 </Link>

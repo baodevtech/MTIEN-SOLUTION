@@ -16,16 +16,16 @@ const stats = [
     value: formatCurrency(mockDashboard.totalRevenue),
     change: mockDashboard.revenueChange,
     icon: <DollarSign size={20} />,
-    color: 'from-blue-500 to-blue-600',
-    bgLight: 'bg-blue-50',
+    color: 'from-[#0066cc] to-[#0071e3]',
+    bgLight: 'bg-[#0066cc]/5',
   },
   {
     label: 'Đơn hàng',
     value: formatNumber(mockDashboard.totalOrders),
     change: mockDashboard.ordersChange,
     icon: <ShoppingCart size={20} />,
-    color: 'from-emerald-500 to-emerald-600',
-    bgLight: 'bg-emerald-50',
+    color: 'from-[#34c759] to-[#30b753]',
+    bgLight: 'bg-[#34c759]/10',
   },
   {
     label: 'Lượt truy cập',
@@ -53,11 +53,11 @@ export default function DashboardPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Dashboard</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Tổng quan hoạt động hệ thống</p>
+          <h1 className="text-2xl font-bold text-[#1d1d1f]">Dashboard</h1>
+          <p className="text-sm text-[#86868b] mt-0.5">Tổng quan hoạt động hệ thống</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-600">
+          <div className="flex items-center gap-2 apple-card rounded-[12px] text-[#1d1d1f] px-3 py-2 text-sm text-[#424245]">
             <Calendar size={16} />
             <span>Hôm nay, 10/04/2026</span>
           </div>
@@ -69,12 +69,12 @@ export default function DashboardPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-all duration-200"
+            className="apple-card text-[#1d1d1f] p-5 hover:shadow-md transition-all duration-200"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
-                <p className="text-2xl font-bold text-slate-800 mt-1">{stat.value}</p>
+                <p className="text-sm text-[#86868b] font-medium">{stat.label}</p>
+                <p className="text-2xl font-bold text-[#1d1d1f] mt-1">{stat.value}</p>
               </div>
               <div className={cn('w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center text-white', stat.color)}>
                 {stat.icon}
@@ -82,7 +82,7 @@ export default function DashboardPage() {
             </div>
             <div className="flex items-center gap-1.5 mt-3">
               {stat.change > 0 ? (
-                <div className="flex items-center gap-0.5 text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full text-xs font-semibold">
+                <div className="flex items-center gap-0.5 text-[#34c759] bg-[#34c759]/10 px-1.5 py-0.5 rounded-full text-xs font-semibold">
                   <ArrowUpRight size={12} />
                   {stat.change}%
                 </div>
@@ -92,7 +92,7 @@ export default function DashboardPage() {
                   {Math.abs(stat.change)}%
                 </div>
               )}
-              <span className="text-xs text-slate-400">so với tháng trước</span>
+              <span className="text-xs text-[#86868b]">so với tháng trước</span>
             </div>
           </div>
         ))}
@@ -101,13 +101,13 @@ export default function DashboardPage() {
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue chart */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6">
+        <div className="lg:col-span-2 apple-card text-[#1d1d1f] p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-semibold text-slate-800">Doanh thu & Đơn hàng</h3>
-              <p className="text-sm text-slate-500 mt-0.5">Biểu đồ theo thời gian</p>
+              <h3 className="font-semibold text-[#1d1d1f]">Doanh thu & Đơn hàng</h3>
+              <p className="text-sm text-[#86868b] mt-0.5">Biểu đồ theo thời gian</p>
             </div>
-            <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
+            <div className="flex items-center bg-black/5 rounded-lg p-0.5">
               {(['7d', '30d', '90d'] as const).map((period) => (
                 <button
                   key={period}
@@ -115,8 +115,8 @@ export default function DashboardPage() {
                   className={cn(
                     'px-3 py-1.5 text-xs font-medium rounded-md transition-all',
                     chartPeriod === period
-                      ? 'bg-white text-slate-800 shadow-sm'
-                      : 'text-slate-500 hover:text-slate-700'
+                      ? 'bg-white text-[#1d1d1f] shadow-sm'
+                      : 'text-[#86868b] hover:text-[#1d1d1f]'
                   )}
                 >
                   {period === '7d' ? '7 ngày' : period === '30d' ? '30 ngày' : '90 ngày'}
@@ -130,7 +130,7 @@ export default function DashboardPage() {
               <div key={i} className="flex-1 flex flex-col items-center gap-1">
                 <div className="w-full flex flex-col items-center gap-0.5">
                   <div
-                    className="w-full bg-blue-500 rounded-t-md transition-all duration-500 hover:bg-blue-600 cursor-pointer relative group"
+                    className="w-full bg-[#0066cc] rounded-t-md transition-all duration-500 hover:bg-[#0071e3] cursor-pointer relative group"
                     style={{ height: `${(item.revenue / 140000000) * 200}px` }}
                   >
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -138,42 +138,42 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div
-                    className="w-3/4 bg-emerald-400 rounded-t-sm"
+                    className="w-3/4 bg-[#34c759] rounded-t-sm"
                     style={{ height: `${(item.orders / 70) * 40}px` }}
                   />
                 </div>
-                <span className="text-[10px] text-slate-400 mt-1">{item.date}</span>
+                <span className="text-[10px] text-[#86868b] mt-1">{item.date}</span>
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-black/5">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-blue-500" />
-              <span className="text-xs text-slate-500">Doanh thu</span>
+              <div className="w-3 h-3 rounded-sm bg-[#0066cc]" />
+              <span className="text-xs text-[#86868b]">Doanh thu</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-emerald-400" />
-              <span className="text-xs text-slate-500">Đơn hàng</span>
+              <div className="w-3 h-3 rounded-sm bg-[#34c759]" />
+              <span className="text-xs text-[#86868b]">Đơn hàng</span>
             </div>
           </div>
         </div>
 
         {/* Traffic sources */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
+        <div className="apple-card text-[#1d1d1f] p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="font-semibold text-slate-800">Nguồn truy cập</h3>
-              <p className="text-sm text-slate-500 mt-0.5">Phân bổ traffic</p>
+              <h3 className="font-semibold text-[#1d1d1f]">Nguồn truy cập</h3>
+              <p className="text-sm text-[#86868b] mt-0.5">Phân bổ traffic</p>
             </div>
           </div>
           <div className="space-y-4">
             {mockDashboard.trafficSources.map((source) => (
               <div key={source.source}>
                 <div className="flex items-center justify-between text-sm mb-1.5">
-                  <span className="text-slate-600 font-medium">{source.source}</span>
-                  <span className="text-slate-500">{formatNumber(source.visitors)}</span>
+                  <span className="text-[#424245] font-medium">{source.source}</span>
+                  <span className="text-[#86868b]">{formatNumber(source.visitors)}</span>
                 </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-black/5 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full transition-all duration-700"
                     style={{ width: `${source.percentage}%` }}
@@ -182,9 +182,9 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100 text-center">
-            <span className="text-2xl font-bold text-slate-800">{formatNumber(mockDashboard.totalVisitors)}</span>
-            <p className="text-xs text-slate-500 mt-1">Tổng lượt truy cập tháng này</p>
+          <div className="mt-6 pt-4 border-t border-black/5 text-center">
+            <span className="text-2xl font-bold text-[#1d1d1f]">{formatNumber(mockDashboard.totalVisitors)}</span>
+            <p className="text-xs text-[#86868b] mt-1">Tổng lượt truy cập tháng này</p>
           </div>
         </div>
       </div>
@@ -192,13 +192,13 @@ export default function DashboardPage() {
       {/* Bottom row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent orders */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200">
-          <div className="flex items-center justify-between p-5 border-b border-slate-100">
+        <div className="lg:col-span-2 apple-card text-[#1d1d1f]">
+          <div className="flex items-center justify-between p-5 border-b border-black/5">
             <div>
-              <h3 className="font-semibold text-slate-800">Đơn hàng gần đây</h3>
-              <p className="text-sm text-slate-500 mt-0.5">{mockOrders.length} đơn hàng mới nhất</p>
+              <h3 className="font-semibold text-[#1d1d1f]">Đơn hàng gần đây</h3>
+              <p className="text-sm text-[#86868b] mt-0.5">{mockOrders.length} đơn hàng mới nhất</p>
             </div>
-            <Link href="/orders" className="text-sm text-blue-500 hover:text-blue-700 font-medium flex items-center gap-1">
+            <Link href="/orders" className="text-sm text-[#0066cc] hover:text-[#0071e3] font-medium flex items-center gap-1">
               Xem tất cả <ArrowRight size={14} />
             </Link>
           </div>
@@ -221,12 +221,12 @@ export default function DashboardPage() {
                   return (
                     <tr key={order.id} className="cursor-pointer">
                       <td>
-                        <span className="font-semibold text-blue-600 text-sm">{order.orderNumber}</span>
+                        <span className="font-semibold text-[#0066cc] text-sm">{order.orderNumber}</span>
                       </td>
                       <td>
                         <div>
-                          <div className="font-medium text-slate-700 text-sm">{order.customer.name}</div>
-                          <div className="text-xs text-slate-400">{order.customer.phone}</div>
+                          <div className="font-medium text-[#1d1d1f] text-sm">{order.customer.name}</div>
+                          <div className="text-xs text-[#86868b]">{order.customer.phone}</div>
                         </div>
                       </td>
                       <td className="text-right font-semibold text-sm">{formatCurrency(order.total)}</td>
@@ -241,7 +241,7 @@ export default function DashboardPage() {
                           {getStatusLabel(order.paymentStatus)}
                         </span>
                       </td>
-                      <td className="text-right text-xs text-slate-400">{formatRelativeTime(order.createdAt)}</td>
+                      <td className="text-right text-xs text-[#86868b]">{formatRelativeTime(order.createdAt)}</td>
                     </tr>
                   )
                 })}
@@ -253,10 +253,10 @@ export default function DashboardPage() {
         {/* Right column: Quick stats + Recent contacts */}
         <div className="space-y-6">
           {/* Top Products */}
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="apple-card text-[#1d1d1f] p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-slate-800">Sản phẩm bán chạy</h3>
-              <Link href="/products" className="text-xs text-blue-500 hover:text-blue-700 font-medium">Xem tất cả</Link>
+              <h3 className="font-semibold text-[#1d1d1f]">Sản phẩm bán chạy</h3>
+              <Link href="/products" className="text-xs text-[#0066cc] hover:text-[#0071e3] font-medium">Xem tất cả</Link>
             </div>
             <div className="space-y-3">
               {mockDashboard.topProducts.map((product, i) => (
@@ -264,48 +264,48 @@ export default function DashboardPage() {
                   <span className={cn(
                     'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold',
                     i === 0 ? 'bg-amber-100 text-amber-700' :
-                    i === 1 ? 'bg-slate-100 text-slate-600' :
+                    i === 1 ? 'bg-black/5 text-[#424245]' :
                     i === 2 ? 'bg-orange-100 text-orange-700' :
-                    'bg-slate-50 text-slate-400'
+                    'bg-black/[0.02] text-[#86868b]'
                   )}>
                     {i + 1}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-700 truncate">{product.name}</p>
-                    <p className="text-xs text-slate-400">{formatNumber(product.sold)} đã bán</p>
+                    <p className="text-sm font-medium text-[#1d1d1f] truncate">{product.name}</p>
+                    <p className="text-xs text-[#86868b]">{formatNumber(product.sold)} đã bán</p>
                   </div>
-                  <span className="text-sm font-semibold text-slate-700">{formatCurrency(product.revenue)}</span>
+                  <span className="text-sm font-semibold text-[#1d1d1f]">{formatCurrency(product.revenue)}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Recent contacts */}
-          <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <div className="apple-card text-[#1d1d1f] p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-slate-800">Liên hệ mới</h3>
+                <h3 className="font-semibold text-[#1d1d1f]">Liên hệ mới</h3>
                 <span className="bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
                   {mockContacts.filter(c => c.status === 'new').length}
                 </span>
               </div>
-              <Link href="/contacts" className="text-xs text-blue-500 hover:text-blue-700 font-medium">Xem tất cả</Link>
+              <Link href="/contacts" className="text-xs text-[#0066cc] hover:text-[#0071e3] font-medium">Xem tất cả</Link>
             </div>
             <div className="space-y-3">
               {mockContacts.slice(0, 4).map((contact) => {
                 const statusColor = getStatusColor(contact.status)
                 return (
-                  <div key={contact.id} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
+                  <div key={contact.id} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-black/[0.02] transition-colors cursor-pointer">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-xs font-bold text-[#424245] shrink-0">
                       {contact.name.split(' ').slice(-1)[0][0]}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-slate-700 truncate">{contact.name}</p>
+                        <p className="text-sm font-medium text-[#1d1d1f] truncate">{contact.name}</p>
                         <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', statusColor.dot, contact.status === 'new' && 'status-pulse')} />
                       </div>
-                      <p className="text-xs text-slate-500 truncate">{contact.subject}</p>
-                      <p className="text-[10px] text-slate-400 mt-0.5">{formatRelativeTime(contact.createdAt)}</p>
+                      <p className="text-xs text-[#86868b] truncate">{contact.subject}</p>
+                      <p className="text-[10px] text-[#86868b] mt-0.5">{formatRelativeTime(contact.createdAt)}</p>
                     </div>
                   </div>
                 )
@@ -314,7 +314,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick actions */}
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 text-white">
+          <div className="bg-gradient-to-br from-[#0066cc] to-[#0071e3] rounded-xl p-5 text-white">
             <h3 className="font-semibold mb-3">Thao tác nhanh</h3>
             <div className="grid grid-cols-2 gap-2">
               {[

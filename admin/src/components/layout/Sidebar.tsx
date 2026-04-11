@@ -60,6 +60,12 @@ const navigation: NavGroup[] = [
     ],
   },
   {
+    title: 'GIAO DIỆN',
+    items: [
+      { label: 'Theme Builder', href: '/theme-editor', icon: <Palette size={20} /> },
+    ],
+  },
+  {
     title: 'HỆ THỐNG',
     items: [
       { label: 'Người dùng', href: '/users', icon: <Users size={20} /> },
@@ -94,32 +100,32 @@ export default function AdminSidebar({
   return (
     <aside
       className={cn(
-        'fixed top-0 left-0 h-screen z-40 flex flex-col sidebar-transition',
-        collapsed ? 'w-[72px]' : 'w-[260px]'
+        'fixed top-0 left-0 h-screen z-40 flex flex-col sidebar-transition border-r backdrop-blur-3xl',
+        collapsed ? 'w-[72px]' : 'w-[260px]',
+        'bg-[#fbfbfd]/70 border-black/5'
       )}
-      style={{ background: 'var(--sidebar-bg)' }}
     >
       {/* Logo */}
-      <div className="flex items-center h-16 px-4 border-b border-white/10 shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shrink-0">
-            <span className="text-white font-bold text-sm">M</span>
+      <div className="flex items-center h-16 px-4 border-b border-black/5 shrink-0">
+        <div className="flex items-center gap-3 min-w-0 px-1">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0066cc] to-[#3694f4] flex items-center justify-center shrink-0 shadow-sm">
+            <span className="text-white font-semibold text-sm">M</span>
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <div className="text-white font-bold text-sm leading-tight truncate">MTIEN ADMIN</div>
-              <div className="text-slate-400 text-[10px] leading-tight">Content Management</div>
+              <div className="text-[#1d1d1f] font-semibold text-[15px] leading-tight truncate tracking-tight">MTIEN</div>
+              <div className="text-[#86868b] text-[11px] leading-tight mt-0.5">Admin Workspace</div>
             </div>
           )}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-6">
+      <nav className="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-4">
         {navigation.map((group) => (
           <div key={group.title}>
             {!collapsed && (
-              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
+              <div className="text-[11px] font-semibold text-[#86868b] px-3 mb-1.5 tracking-tight">
                 {group.title}
               </div>
             )}
@@ -135,10 +141,10 @@ export default function AdminSidebar({
                       href={hasChildren ? '#' : item.href}
                       onClick={hasChildren ? (e) => { e.preventDefault(); toggleExpand(item.label) } : undefined}
                       className={cn(
-                        'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150 group relative',
+                        'flex items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-medium transition-all duration-200 group relative',
                         active
-                          ? 'bg-blue-500/15 text-blue-400'
-                          : 'text-slate-400 hover:bg-white/5 hover:text-slate-200',
+                          ? 'bg-black/5 text-[#1d1d1f]'
+                          : 'text-[#424245] hover:bg-black/[0.03]',
                         collapsed && 'justify-center px-0'
                       )}
                       title={collapsed ? item.label : undefined}
@@ -148,7 +154,7 @@ export default function AdminSidebar({
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-blue-500 rounded-r-full" />
                       )}
 
-                      <span className={cn('shrink-0', active && 'text-blue-400')}>
+                      <span className={cn('shrink-0', active ? 'text-[#0066cc]' : 'text-[#86868b]')}>
                         {item.icon}
                       </span>
 
@@ -159,8 +165,8 @@ export default function AdminSidebar({
                             <span className={cn(
                               'text-[10px] font-semibold px-1.5 py-0.5 rounded-full',
                               active
-                                ? 'bg-blue-500/20 text-blue-300'
-                                : 'bg-white/10 text-slate-400'
+                                ? 'bg-[#0066cc]/10 text-[#0066cc]'
+                                : 'bg-black/5 text-[#86868b]'
                             )}>
                               {item.badge}
                             </span>
@@ -186,10 +192,10 @@ export default function AdminSidebar({
                             key={child.href}
                             href={child.href}
                             className={cn(
-                              'block px-3 py-2 text-sm rounded-lg transition-colors',
+                              'block px-3 py-2 text-[13px] rounded-lg transition-colors font-medium',
                               isActive(child.href)
-                                ? 'text-blue-400 bg-blue-500/10'
-                                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                                ? 'text-[#0066cc] bg-[#0066cc]/5'
+                                : 'text-[#86868b] hover:text-[#1d1d1f] hover:bg-black/[0.03]'
                             )}
                           >
                             {child.label}
@@ -206,18 +212,18 @@ export default function AdminSidebar({
       </nav>
 
       {/* Bottom section */}
-      <div className="border-t border-white/10 p-3 space-y-1 shrink-0">
+      <div className="border-t border-black/5 p-3 space-y-1 shrink-0">
         <a
           href="http://localhost:3000"
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-200 transition-colors',
+            'flex items-center justify-start gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-[#86868b] hover:bg-black/[0.03] hover:text-[#1d1d1f] transition-colors',
             collapsed && 'justify-center px-0'
           )}
           title="Xem website"
         >
-          <ExternalLink size={18} />
+          <ExternalLink size={18} className="shrink-0" />
           {!collapsed && <span>Xem website</span>}
         </a>
 
@@ -225,11 +231,11 @@ export default function AdminSidebar({
         <button
           onClick={onToggle}
           className={cn(
-            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-200 transition-colors w-full',
+            'flex items-center justify-start gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-[#86868b] hover:bg-black/[0.03] hover:text-[#1d1d1f] transition-colors w-full',
             collapsed && 'justify-center px-0'
           )}
         >
-          {collapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
+          {collapsed ? <PanelLeft size={18} className="shrink-0" /> : <PanelLeftClose size={18} className="shrink-0" />}
           {!collapsed && <span>Thu gọn</span>}
         </button>
       </div>

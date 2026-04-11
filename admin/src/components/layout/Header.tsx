@@ -51,17 +51,17 @@ export default function AdminHeader() {
   const unreadCount = notifications.filter((n) => !n.read).length
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+    <header className="h-[64px] bg-[rgba(251,251,253,0.8)] backdrop-blur-2xl border-b border-black/5 flex items-center justify-between px-6 sticky top-0 z-30 transition-all">
       {/* Left: Breadcrumb */}
       <div className="flex items-center gap-2 min-w-0">
-        <nav className="flex items-center gap-1 text-sm">
+        <nav className="flex items-center gap-1.5 text-[14px]">
           {breadcrumbs.map((item, i) => (
-            <div key={item.href} className="flex items-center gap-1">
-              {i > 0 && <ChevronRight size={14} className="text-slate-300" />}
+            <div key={item.href} className="flex items-center gap-1.5">
+              {i > 0 && <ChevronRight size={14} className="text-[#86868b]" />}
               {i === breadcrumbs.length - 1 ? (
-                <span className="font-semibold text-slate-800 truncate">{item.label}</span>
+                <span className="font-semibold text-[#1d1d1f] truncate tracking-tight">{item.label}</span>
               ) : (
-                <a href={item.href} className="text-slate-400 hover:text-slate-600 transition-colors truncate">
+                <a href={item.href} className="text-[#86868b] hover:text-[#1d1d1f] font-medium transition-colors truncate tracking-tight">
                   {item.label}
                 </a>
               )}
@@ -71,17 +71,17 @@ export default function AdminHeader() {
       </div>
 
       {/* Right: Actions */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         {/* Search */}
         <button
           onClick={() => setShowSearch(!showSearch)}
-          className="p-2.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+          className="p-2 rounded-xl text-[#86868b] hover:bg-black/5 hover:text-[#1d1d1f] transition-colors"
         >
           <Search size={18} />
         </button>
 
         {/* Refresh */}
-        <button className="p-2.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+        <button className="p-2 rounded-xl text-[#86868b] hover:bg-black/5 hover:text-[#1d1d1f] transition-colors">
           <RefreshCw size={18} />
         </button>
 
@@ -89,12 +89,11 @@ export default function AdminHeader() {
         <div className="relative">
           <button
             onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false) }}
-            className="p-2.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors relative"
+            className="p-2 rounded-xl text-[#86868b] hover:bg-black/5 hover:text-[#1d1d1f] transition-colors relative"
           >
             <Bell size={18} />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                {unreadCount}
+              <span className="absolute top-1 right-1.5 w-2 h-2 bg-[#ff3b30] shadow-[0_0_0_2px_rgba(251,251,253,1)] rounded-full">
               </span>
             )}
           </button>
@@ -102,33 +101,33 @@ export default function AdminHeader() {
           {showNotifications && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowNotifications(false)} />
-              <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden animate-fade-in">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-                  <h3 className="font-semibold text-sm">Thông báo</h3>
-                  <button className="text-xs text-blue-500 hover:text-blue-700 font-medium">Đánh dấu đã đọc</button>
+              <div className="absolute right-0 top-full mt-3 w-96 bg-[rgba(255,255,255,0.85)] backdrop-blur-3xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-black/5 z-50 overflow-hidden animate-fade-in">
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-black/5 bg-white/50">
+                  <h3 className="font-semibold text-[15px] tracking-tight text-[#1d1d1f]">Thông báo</h3>
+                  <button className="text-[12px] text-[#0066cc] hover:text-[#0071e3] font-medium transition-colors">Đánh dấu đã đọc</button>
                 </div>
-                <div className="max-h-80 overflow-y-auto">
+                <div className="max-h-[360px] overflow-y-auto custom-scrollbar">
                   {notifications.map((n) => (
                     <div
                       key={n.id}
                       className={cn(
-                        'px-4 py-3 border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition-colors',
-                        !n.read && 'bg-blue-50/50'
+                        'px-5 py-3.5 border-b border-black/[0.03] hover:bg-black/[0.02] cursor-pointer transition-colors',
+                        !n.read && 'bg-[#0066cc]/[0.03] hover:bg-[#0066cc]/[0.05]'
                       )}
                     >
                       <div className="flex items-start gap-3">
-                        {!n.read && <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />}
+                        {!n.read && <div className="w-2 h-2 rounded-full bg-[#0066cc] mt-1.5 shrink-0 shadow-[0_0_8px_rgba(0,102,204,0.4)]" />}
                         <div className={cn('min-w-0', n.read && 'ml-5')}>
-                          <p className="text-sm font-medium text-slate-700 truncate">{n.title}</p>
-                          <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{n.message}</p>
-                          <p className="text-[10px] text-slate-400 mt-1">{formatRelativeTime(n.time)}</p>
+                          <p className="text-[14px] font-semibold text-[#1d1d1f] truncate tracking-tight">{n.title}</p>
+                          <p className="text-[13px] text-[#424245] mt-0.5 line-clamp-2 leading-relaxed">{n.message}</p>
+                          <p className="text-[11px] text-[#86868b] mt-1.5 font-medium">{formatRelativeTime(n.time)}</p>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-2.5 border-t border-slate-100 text-center">
-                  <a href="#" className="text-xs text-blue-500 hover:text-blue-700 font-medium">Xem tất cả thông báo</a>
+                <div className="px-5 py-3 border-t border-black/5 text-center bg-white/50 hover:bg-white/80 transition-colors cursor-pointer">
+                  <a href="#" className="text-[13px] text-[#0066cc] font-medium tracking-tight">Xem tất cả thông báo</a>
                 </div>
               </div>
             </>
@@ -136,15 +135,15 @@ export default function AdminHeader() {
         </div>
 
         {/* Separator */}
-        <div className="w-px h-8 bg-slate-200 mx-2" />
+        <div className="w-px h-5 bg-black/10 mx-2" />
 
         {/* Profile */}
         <div className="relative">
           <button
             onClick={() => { setShowProfile(!showProfile); setShowNotifications(false) }}
-            className="flex items-center gap-2.5 p-1.5 pr-3 rounded-lg hover:bg-slate-100 transition-colors"
+            className="flex items-center gap-2.5 p-1.5 pr-3 rounded-2xl hover:bg-black/5 transition-colors cursor-pointer border border-transparent hover:border-black/5"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0066cc] to-[#3694f4] flex items-center justify-center text-white text-[13px] font-semibold shadow-sm">
               MT
             </div>
             <div className="hidden sm:block text-left">
@@ -157,26 +156,26 @@ export default function AdminHeader() {
           {showProfile && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowProfile(false)} />
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden animate-fade-in">
-                <div className="px-4 py-3 border-b border-slate-100">
-                  <div className="font-semibold text-sm">Nguyễn Minh Tiến</div>
-                  <div className="text-xs text-slate-400">tien@mtiensolution.vn</div>
+              <div className="absolute right-0 top-full mt-3 w-[220px] bg-[rgba(255,255,255,0.85)] backdrop-blur-3xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-black/5 z-50 overflow-hidden animate-fade-in p-1.5">
+                <div className="px-3.5 py-3 mb-1.5 border-b border-black/5">
+                  <div className="font-semibold text-[14px] text-[#1d1d1f] tracking-tight">Nguyễn Minh Tiến</div>
+                  <div className="text-[12px] text-[#86868b] mt-0.5">tien@mtiensolution.vn</div>
                 </div>
-                <div className="p-1.5">
-                  <a href="/settings" className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
-                    <User size={16} />
+                <div className="space-y-0.5 mb-1.5">
+                  <a href="/settings" className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-[#424245] rounded-xl hover:bg-black/5 hover:text-[#1d1d1f] transition-colors">
+                    <User size={16} className="text-[#86868b]" />
                     Hồ sơ cá nhân
                   </a>
-                  <a href="/settings" className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
-                    <Settings size={16} />
+                  <a href="/settings" className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-[#424245] rounded-xl hover:bg-black/5 hover:text-[#1d1d1f] transition-colors">
+                    <Settings size={16} className="text-[#86868b]" />
                     Cài đặt
                   </a>
-                  <a href="#" className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
-                    <HelpCircle size={16} />
+                  <a href="#" className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-[#424245] rounded-xl hover:bg-black/5 hover:text-[#1d1d1f] transition-colors">
+                    <HelpCircle size={16} className="text-[#86868b]" />
                     Trợ giúp
                   </a>
                 </div>
-                <div className="p-1.5 border-t border-slate-100">
+                <div className="border-t border-black/5 pt-1.5">
                   <button
                     onClick={() => {
                       document.cookie = 'admin_token=; path=/; max-age=0'
@@ -184,7 +183,7 @@ export default function AdminHeader() {
                       localStorage.removeItem('admin_user')
                       window.location.href = '/login'
                     }}
-                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50 transition-colors w-full"
+                    className="flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-[#ff3b30] rounded-xl hover:bg-[#ff3b30]/10 transition-colors w-full"
                   >
                     <LogOut size={16} />
                     Đăng xuất
@@ -199,21 +198,21 @@ export default function AdminHeader() {
       {/* Global Search Modal */}
       {showSearch && (
         <>
-          <div className="fixed inset-0 bg-black/30 z-50" onClick={() => setShowSearch(false)} />
-          <div className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-xl z-50 animate-fade-in">
-            <div className="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
-                <Search size={18} className="text-slate-400" />
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 transition-opacity" onClick={() => setShowSearch(false)} />
+          <div className="fixed top-32 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 animate-fade-in">
+            <div className="bg-[rgba(255,255,255,0.85)] backdrop-blur-3xl rounded-3xl shadow-[0_16px_64px_rgba(0,0,0,0.12)] border border-black/[0.05] overflow-hidden">
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-black/[0.05]">
+                <Search size={22} className="text-[#86868b]" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm bài viết, sản phẩm, đơn hàng..."
-                  className="flex-1 text-sm outline-none placeholder:text-slate-400"
+                  className="flex-1 text-[17px] bg-transparent outline-none placeholder:text-[#86868b] text-[#1d1d1f] font-medium"
                   autoFocus
                 />
-                <kbd className="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded font-mono">ESC</kbd>
+                <kbd className="text-[12px] text-[#86868b] bg-black/5 px-2 py-1 rounded-md font-mono font-medium shadow-sm">ESC</kbd>
               </div>
-              <div className="p-4 text-center text-sm text-slate-400">
-                Nhập từ khoá để tìm kiếm...
+              <div className="p-8 text-center text-[14px] text-[#86868b] font-medium tracking-tight">
+                Nhập từ khoá để tìm kiếm kết quả trên toàn hệ thống...
               </div>
             </div>
           </div>

@@ -5,3 +5,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Data files (contain secrets + runtime data)
+data/connection.json
+data/theme-draft.json
+data/theme-history/

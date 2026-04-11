@@ -6,10 +6,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function HeroSection() {
   const reduced = useReducedMotion();
   const isMobile = useIsMobile();
+  const t = useTheme('home', 'hero');
 
   // Disable all JS animations on mobile for LCP & battery
   const skipAnim = reduced || isMobile;
@@ -50,29 +52,29 @@ export default function HeroSection() {
               <div className="w-full relative">
                 <div className="inline-flex items-center gap-2 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 text-[#0066FF] text-xs md:text-sm font-semibold mb-4 md:mb-6">
                   <Sparkles size={14} className="text-[#0066FF]" aria-hidden="true" />
-                  <span>Giải pháp chuyển đổi số #1 Việt Nam</span>
+                  <span>{t('badge', 'Giải pháp chuyển đổi số #1 Việt Nam')}</span>
                 </div>
                 
                 <h1 className="text-[26px] sm:text-[48px] lg:text-[60px] font-extrabold text-[#0F172A] leading-[1.1] mb-3 md:mb-6 tracking-tight">
-                  Tạo website{' '}
+                  {t('title', 'Tạo website')}{' '}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0066FF] to-cyan-500">
-                    đột phá doanh thu
+                    {t('titleHighlight', 'đột phá doanh thu')}
                   </span>
                 </h1>
                 
                 <p className="text-[13px] md:text-[20px] text-slate-600 mb-5 md:mb-10 leading-relaxed max-w-lg">
-                  Nền tảng thương mại điện tử trọn bộ kết hợp tự động hoá Marketing. Thiết kế đẳng cấp, chuẩn SEO, giúp bạn vượt mặt đối thủ.
+                  {t('description', 'Nền tảng thương mại điện tử trọn bộ kết hợp tự động hoá Marketing. Thiết kế đẳng cấp, chuẩn SEO, giúp bạn vượt mặt đối thủ.')}
                 </p>
 
                 <div className="flex flex-row items-center justify-center md:justify-start gap-3 md:gap-4 mb-0 md:mb-10">
-                  <Link href="/contact" className="bg-[#0066FF] hover:bg-blue-700 text-white rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-xl shadow-[#0066FF]/30 transition-all">
-                    <span className="font-semibold text-[13px] md:text-[16px]">Bắt đầu dùng thử</span>
+                  <Link href={t('ctaPrimaryLink', '/contact')} className="bg-[#0066FF] hover:bg-blue-700 text-white rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-xl shadow-[#0066FF]/30 transition-all">
+                    <span className="font-semibold text-[13px] md:text-[16px]">{t('ctaPrimary', 'Bắt đầu dùng thử')}</span>
                     <ArrowRight size={15} strokeWidth={2.5} aria-hidden="true" />
                   </Link>
                   
-                  <Link href="/services" className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-sm transition-all">
+                  <Link href={t('ctaSecondaryLink', '/services')} className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-sm transition-all">
                     <Play size={15} className="fill-slate-700" aria-hidden="true" />
-                    <span className="font-semibold text-[13px] md:text-[16px]">Xem demo</span>
+                    <span className="font-semibold text-[13px] md:text-[16px]">{t('ctaSecondary', 'Xem demo')}</span>
                   </Link>
                 </div>
               </div>
@@ -85,29 +87,29 @@ export default function HeroSection() {
             >
               <div className="inline-flex items-center gap-2 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-[#0066FF]/10 border border-[#0066FF]/20 text-[#0066FF] text-xs md:text-sm font-semibold mb-4 md:mb-6">
                 <Sparkles size={16} className="text-[#0066FF]" aria-hidden="true" />
-                <span>Giải pháp chuyển đổi số #1 Việt Nam</span>
+                <span>{t('badge', 'Giải pháp chuyển đổi số #1 Việt Nam')}</span>
               </div>
               
               <h1 className="text-[26px] sm:text-[48px] lg:text-[60px] font-extrabold text-[#0F172A] leading-[1.1] mb-3 md:mb-6 tracking-tight">
-                Tạo website{' '}
+                {t('title', 'Tạo website')}{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0066FF] to-cyan-500">
-                  đột phá doanh thu
+                  {t('titleHighlight', 'đột phá doanh thu')}
                 </span>
               </h1>
               
               <p className="text-[13px] md:text-[20px] text-slate-600 mb-5 md:mb-10 leading-relaxed max-w-lg">
-                Nền tảng thương mại điện tử trọn bộ kết hợp tự động hoá Marketing. Thiết kế đẳng cấp, chuẩn SEO, giúp bạn vượt mặt đối thủ.
+                {t('description', 'Nền tảng thương mại điện tử trọn bộ kết hợp tự động hoá Marketing. Thiết kế đẳng cấp, chuẩn SEO, giúp bạn vượt mặt đối thủ.')}
               </p>
 
               <div className="flex flex-row items-center justify-center md:justify-start gap-3 md:gap-4 mb-0 md:mb-10">
-                <Link href="/contact" className="bg-[#0066FF] hover:bg-blue-700 text-white rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-xl shadow-[#0066FF]/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
-                  <span className="font-semibold text-[13px] md:text-[16px]">Bắt đầu dùng thử</span>
+                <Link href={t('ctaPrimaryLink', '/contact')} className="bg-[#0066FF] hover:bg-blue-700 text-white rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-xl shadow-[#0066FF]/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                  <span className="font-semibold text-[13px] md:text-[16px]">{t('ctaPrimary', 'Bắt đầu dùng thử')}</span>
                   <ArrowRight size={15} strokeWidth={2.5} aria-hidden="true" />
                 </Link>
                 
-                <Link href="/services" className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-sm transition-all shadow-black/5 hover:shadow-black/10">
+                <Link href={t('ctaSecondaryLink', '/services')} className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-full px-5 md:px-8 py-2.5 md:py-3.5 flex items-center justify-center gap-2 md:gap-3 shadow-sm transition-all shadow-black/5 hover:shadow-black/10">
                   <Play size={15} className="fill-slate-700" aria-hidden="true" />
-                  <span className="font-semibold text-[13px] md:text-[16px]">Xem demo</span>
+                  <span className="font-semibold text-[13px] md:text-[16px]">{t('ctaSecondary', 'Xem demo')}</span>
                 </Link>
               </div>
 

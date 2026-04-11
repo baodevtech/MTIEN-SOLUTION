@@ -1,26 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { corsResponse, corsOptions } from '@/lib/cors'
+import { compareSync } from 'bcryptjs'
+import { createHmac } from 'crypto'
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': process.env.ADMIN_ORIGIN || 'http://localhost:3001',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Credentials': 'true',
+export const dynamic = 'force-dynamic'
+
+// Generate a simple JWT-like token (replace with jose/jsonwebtoken in prod if needed)
+function generateToken(userId: string): string {
+  const payload = Buffer.from(JSON.stringify({ sub: userId, iat: Date.now() })).toString('base64url')
+  const secret = process.env.JWT_SECRET || 'mtien-secret-change-me'
+  const sig = createHmac('sha256', secret).update(payload).digest('base64url')
+  return `${payload}.${sig}`
 }
 
-function corsResponse(data: unknown, status = 200) {
-  return NextResponse.json(data, { status, headers: CORS_HEADERS })
+function verifyToken(token: string): string | null {
+  try {
+    const [payload, sig] = token.split('.')
+    const secret = process.env.JWT_SECRET || 'mtien-secret-change-me'
+    const expectedSig = createHmac('sha256', secret).update(payload).digest('base64url')
+    if (sig !== expectedSig) return null
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString())
+    return data.sub || null
+  } catch {
+    return null
+  }
 }
 
-function corsOptions() {
-  return new NextResponse(null, { status: 204, headers: CORS_HEADERS })
-}
-
-// Simple JWT-like verification (replace with proper JWT in production)
-function verifyToken(request: NextRequest): boolean {
+function getAuthUserId(request: NextRequest): string | null {
   const auth = request.headers.get('authorization')
-  if (!auth?.startsWith('Bearer ')) return false
-  const token = auth.slice(7)
-  return token === 'demo_jwt_token_xxx' // Replace with real JWT verification
+  if (!auth?.startsWith('Bearer ')) return null
+  return verifyToken(auth.slice(7))
 }
 
 export async function OPTIONS() {
@@ -33,24 +43,30 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { email, password } = body
 
-    // Demo auth (replace with database lookup + bcrypt)
-    if (email === 'admin@mtiensolution.vn' && password === 'admin123') {
-      return corsResponse({
-        success: true,
-        data: {
-          token: 'demo_jwt_token_xxx',
-          user: {
-            id: '1',
-            name: 'Nguyễn Minh Tiến',
-            email: 'admin@mtiensolution.vn',
-            role: 'admin',
-            avatar: 'https://i.pravatar.cc/150?img=11',
-          },
-        },
-      })
+    if (!email || !password) {
+      return corsResponse({ success: false, message: 'Email và mật khẩu là bắt buộc' }, 400)
     }
 
-    return corsResponse({ success: false, message: 'Email hoặc mật khẩu không đúng' }, 401)
+    const user = await prisma.user.findUnique({ where: { email } })
+    if (!user || !compareSync(password, user.password)) {
+      return corsResponse({ success: false, message: 'Email hoặc mật khẩu không đúng' }, 401)
+    }
+
+    const token = generateToken(user.id)
+
+    return corsResponse({
+      success: true,
+      data: {
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          avatar: user.avatar,
+        },
+      },
+    })
   } catch {
     return corsResponse({ success: false, message: 'Invalid request' }, 400)
   }
@@ -58,18 +74,19 @@ export async function POST(request: NextRequest) {
 
 // GET /api/admin/auth - Get current user profile
 export async function GET(request: NextRequest) {
-  if (!verifyToken(request)) {
+  const userId = getAuthUserId(request)
+  if (!userId) {
     return corsResponse({ success: false, message: 'Unauthorized' }, 401)
   }
 
-  return corsResponse({
-    success: true,
-    data: {
-      id: '1',
-      name: 'Nguyễn Minh Tiến',
-      email: 'admin@mtiensolution.vn',
-      role: 'admin',
-      avatar: 'https://i.pravatar.cc/150?img=11',
-    },
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { id: true, name: true, email: true, role: true, avatar: true },
   })
+
+  if (!user) {
+    return corsResponse({ success: false, message: 'User not found' }, 404)
+  }
+
+  return corsResponse({ success: true, data: user })
 }

@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/sections/HeroSection';
 import StatsSection from '@/components/sections/StatsSection';
+import { ThemedPage } from '@/components/theme/ThemedPage';
 
 // Lazy load below-fold sections to reduce initial JS bundle → faster LCP on mobile
 const FeaturesSection = dynamic(() => import('@/components/sections/FeaturesSection'));
@@ -16,17 +17,22 @@ const CTASection = dynamic(() => import('@/components/sections/CTASection'));
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <HeroSection />
-      <StatsSection />
-      <AppStoreSection />
-      <DashboardSection />
-      <FeaturesSection />
-      <TemplatesSection />
-      <PricingSection />
-      <IndustrySection />
-      <TrustSection />
-      <FAQSection />
-      <CTASection />
+      <ThemedPage
+        pageId="home"
+        sections={{
+          hero: <HeroSection />,
+          stats: <StatsSection />,
+          appstore: <AppStoreSection />,
+          dashboard: <DashboardSection />,
+          features: <FeaturesSection />,
+          templates: <TemplatesSection />,
+          pricing: <PricingSection />,
+          industry: <IndustrySection />,
+          trust: <TrustSection />,
+          faq: <FAQSection />,
+          cta: <CTASection />,
+        }}
+      />
     </div>
   );
 }

@@ -96,7 +96,7 @@ export default function ServicesPage() {
                           <div key={i} className="bg-white rounded-lg border border-slate-200 p-3">
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-sm font-semibold text-slate-800">{tier.name}</span>
-                              <span className="text-sm font-bold text-blue-600">{formatCurrency(tier.price)}/tháng</span>
+                              <span className="text-sm font-bold text-blue-600">{formatCurrency(Number(tier.price))}/tháng</span>
                             </div>
                             <div className="flex flex-wrap gap-1">
                               {tier.features.map((f, j) => (

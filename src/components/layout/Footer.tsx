@@ -1,7 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 import { Facebook, Youtube, Instagram, MapPin, Mail, Phone, ArrowRight, ShieldCheck, Globe, ChevronRight } from 'lucide-react';
+import { useGlobal } from '@/lib/theme-context';
 
 export default function Footer() {
+  const ctaTitle = useGlobal('footer', 'ctaTitle', 'Sẵn sàng bứt phá doanh thu?') as string;
+  const ctaDesc = useGlobal('footer', 'ctaDescription', 'Tham gia cùng hàng ngàn doanh nghiệp chuyển đổi số thành công. Bắt đầu trải nghiệm nền tảng ngay hôm nay.') as string;
+  const ctaBtnPrimary = useGlobal('footer', 'ctaButtonPrimary', 'Dùng thử miễn phí') as string;
+  const ctaBtnSecondary = useGlobal('footer', 'ctaButtonSecondary', 'Nhận tư vấn') as string;
+  const companyDesc = useGlobal('footer', 'companyDesc', 'Giải pháp công nghệ toàn diện giúp doanh nghiệp tối ưu hóa vận hành, gia tăng điểm chạm khách hàng và phát triển vượt bậc.') as string;
+  const copyrightText = useGlobal('footer', 'copyrightText', '© 2025 MTIEN Solution. Bảo lưu mọi quyền.') as string;
+  const showCTA = useGlobal('footer', 'showCTA', true) as boolean;
   return (
     <footer className="bg-[#0B1121] text-slate-400 border-t border-white/5 relative overflow-hidden font-sans" role="contentinfo">
       {/* Nền đổ màu nhẹ nhàng (Soft Dark Wash) */}
@@ -13,6 +23,7 @@ export default function Footer() {
       <div className="absolute bottom-[10%] left-[5%] w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
       {/* Top CTA Section — Elegant Dark Card */}
+      {showCTA && (
       <div className="relative z-10 -mt-8 mb-12">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-10">
           <div className="group relative bg-gradient-to-br from-[#111A31] to-[#0A101D] rounded-[32px] p-8 md:p-12 shadow-2xl shadow-black/40 border border-white/10 overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 transition-all duration-500">
@@ -21,23 +32,24 @@ export default function Footer() {
             <div className="absolute -bottom-24 -left-20 w-64 h-64 bg-teal-500/10 rounded-full blur-[40px] pointer-events-none"></div>
             
             <div className="z-10 text-center md:text-left">
-              <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-3 tracking-tight">Sẵn sàng bứt phá doanh thu?</h2>
+              <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-3 tracking-tight">{ctaTitle}</h2>
               <p className="text-blue-100/70 text-[15px] font-medium max-w-xl leading-relaxed">
-                Tham gia cùng hàng ngàn doanh nghiệp chuyển đổi số thành công. Bắt đầu trải nghiệm nền tảng ngay hôm nay.
+                {ctaDesc}
               </p>
             </div>
             
             <div className="z-10 w-full md:w-auto flex flex-col sm:flex-row gap-3">
               <Link href="#" className="flex-1 md:flex-none justify-center bg-blue-600 text-white hover:bg-blue-500 px-7 py-3.5 rounded-2xl font-bold transition-all shadow-lg shadow-blue-900/30 flex items-center gap-2 hover:scale-[1.02]">
-                Dùng thử miễn phí <ArrowRight size={18} />
+                {ctaBtnPrimary} <ArrowRight size={18} />
               </Link>
               <Link href="tel:18006750" className="flex-1 md:flex-none justify-center bg-white/5 text-white hover:bg-white/10 border border-white/10 px-7 py-3.5 rounded-2xl font-bold transition-all flex items-center gap-2">
-                <Phone size={18} /> Nhận tư vấn
+                <Phone size={18} /> {ctaBtnSecondary}
               </Link>
             </div>
           </div>
         </div>
       </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pb-12 relative z-10">
         {/* Main Footer Grid */}
@@ -60,7 +72,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-[14px] text-slate-400 mb-8 leading-relaxed font-medium">
-              Giải pháp công nghệ toàn diện giúp doanh nghiệp tối ưu hóa vận hành, gia tăng điểm chạm khách hàng và phát triển vượt bậc.
+              {companyDesc}
             </p>
             <div className="flex space-x-3" role="list" aria-label="Mạng xã hội">
               <a href="#" className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 shadow-sm flex items-center justify-center text-slate-400 hover:text-[#0066FF] hover:border-[#0066FF]/30 hover:bg-[#0066FF]/10 transition-all duration-300" aria-label="Facebook">
@@ -178,7 +190,7 @@ export default function Footer() {
           </div>
           
           <div className="flex flex-col md:flex-row items-center gap-4 text-[13px] text-slate-500 font-bold">
-            <p>© {new Date().getFullYear()} MTIENSOLUTION.vn</p>
+            <p>{copyrightText || `© ${new Date().getFullYear()} MTIENSOLUTION.vn`}</p>
             <div className="hidden md:block w-1 h-1 rounded-full bg-slate-700"></div>
             <div className="flex gap-5">
               <Link href="#" className="hover:text-white transition-colors">Điều khoản</Link>

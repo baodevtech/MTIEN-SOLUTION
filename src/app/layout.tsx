@@ -4,6 +4,8 @@ import './globals.css';
 import './inotek-clone.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ThemeProvider } from '@/lib/theme-context';
+import { getTheme } from '@/lib/theme-fetcher';
 
 const BASE_URL = process.env.APP_URL || 'https://mtiensolution.vn';
 
@@ -106,7 +108,9 @@ function JsonLd() {
   );
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const theme = await getTheme()
+
   return (
     <html
       lang="vi"
@@ -127,11 +131,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Bỏ qua điều hướng
         </a>
-        <Navbar />
-        <main id="main-content" className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <ThemeProvider initialTheme={theme}>
+          <Navbar />
+          <main id="main-content" className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

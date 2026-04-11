@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: mtien
+      POSTGRES_PASSWORD: mtien_secret
+      POSTGRES_DB: mtien_solution
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mtien -d mtien_solution"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://mtien:mtien_secret@postgres:5432/mtien_solution?schema=public
+      - ADMIN_API_URL=http://admin:3001
+      - ADMIN_ORIGIN=http://admin:3001
+      - REVALIDATION_SECRET=${REVALIDATION_SECRET}
+      - APP_URL=${APP_URL:-https://mtiensolution.vn}
+      - JWT_SECRET=${JWT_SECRET:-mtien-jwt-secret-change-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      admin:
+        condition: service_started
+    restart: unless-stopped
+
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - admin-data:/app/data
+    environment:
+      - DATA_DIR=/app/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+    driver: local
+  admin-data:
+    driver: local
