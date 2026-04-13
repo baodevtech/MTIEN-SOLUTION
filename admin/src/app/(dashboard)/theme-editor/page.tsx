@@ -283,58 +283,58 @@ export default function ThemeEditorPage() {
       {/* ===== Header ===== */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-            <Palette className="text-blue-500" size={28} />
+          <h1 className="text-[22px] font-semibold text-[#1d1d1f] tracking-tight flex items-center gap-3">
+            <Palette className="text-[#0066cc]" size={24} />
             Theme Builder
           </h1>
-          <p className="text-slate-500 text-sm mt-1">Chỉnh sửa giao diện từng chi tiết cho website</p>
+          <p className="text-[#86868b] text-[14px] mt-1 font-medium tracking-tight">Tùy chỉnh giao diện hiển thị cho website của bạn</p>
           {isDirty && (
-            <span className="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 bg-amber-50 text-amber-600 text-xs font-medium rounded-full border border-amber-200">
-              <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 bg-[#ff9500]/10 text-[#ff9500] text-[12px] font-semibold rounded-full border border-[#ff9500]/20">
+              <span className="w-1.5 h-1.5 bg-[#ff9500] rounded-full animate-pulse" />
               Có thay đổi chưa xuất bản
             </span>
           )}
         </div>
         <div className="flex items-center gap-2">
           <button onClick={undo} disabled={historyIndex < 0}
-            className="p-2 rounded-lg border bg-white text-slate-400 hover:text-slate-600 disabled:opacity-30 transition-colors" title="Hoàn tác">
+            className="p-2 rounded-xl apple-card text-[#86868b] hover:text-[#1d1d1f] disabled:opacity-30 transition-colors" title="Hoàn tác">
             <Undo2 size={18} />
           </button>
           <button onClick={redo} disabled={historyIndex >= history.length - 1}
-            className="p-2 rounded-lg border bg-white text-slate-400 hover:text-slate-600 disabled:opacity-30 transition-colors" title="Làm lại">
+            className="p-2 rounded-xl apple-card text-[#86868b] hover:text-[#1d1d1f] disabled:opacity-30 transition-colors" title="Làm lại">
             <Redo2 size={18} />
           </button>
-          <div className="w-px h-6 bg-slate-200 mx-1" />
+          <div className="w-px h-5 bg-black/10 mx-1.5" />
           <button onClick={importTheme}
-            className="p-2 rounded-lg border bg-white text-slate-400 hover:text-slate-600 transition-colors" title="Import">
+            className="p-2 rounded-xl apple-card text-[#86868b] hover:text-[#1d1d1f] transition-colors" title="Nhập File Config">
             <Upload size={18} />
           </button>
           <button onClick={exportTheme}
-            className="p-2 rounded-lg border bg-white text-slate-400 hover:text-slate-600 transition-colors" title="Export">
+            className="p-2 rounded-xl apple-card text-[#86868b] hover:text-[#1d1d1f] transition-colors" title="Export">
             <Save size={18} />
           </button>
-          <div className="w-px h-6 bg-slate-200 mx-1" />
+          <div className="w-px h-5 bg-black/10 mx-1.5" />
           <button onClick={save} disabled={saving || !editor.unsavedChanges}
             className={cn(
-              'flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all',
+              'apple-btn-secondary h-9 px-4 text-[13px] font-semibold transition-all',
               editor.unsavedChanges
-                ? 'bg-slate-700 text-white hover:bg-slate-800 shadow-md'
-                : saved ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                ? 'bg-[#1d1d1f] text-white hover:bg-[#333336]'
+                : saved ? 'bg-[#34c759] text-white' : 'bg-black/5 text-[#86868b] cursor-not-allowed'
             )}>
-            {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            {saving ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               : saved ? <Check size={16} /> : <Save size={16} />}
             {saving ? 'Lưu...' : saved ? 'Đã lưu!' : 'Lưu nháp'}
           </button>
           <button onClick={publish} disabled={publishing}
             className={cn(
-              'flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all',
+              'apple-btn-primary h-9 px-5 text-[13px] font-semibold transition-all gap-2',
               published
-                ? 'bg-emerald-500 text-white'
+                ? 'bg-[#34c759] hover:bg-[#34c759]'
                 : isDirty || editor.unsavedChanges
-                  ? 'bg-blue-500 text-white hover:bg-blue-600 shadow-md shadow-blue-500/25'
-                  : 'bg-blue-500 text-white hover:bg-blue-600 shadow-md shadow-blue-500/25'
+                  ? 'bg-[#0066cc] hover:bg-[#0071e3] shadow-[0_4px_12px_rgba(0,102,204,0.3)]'
+                  : 'bg-[#0066cc] hover:bg-[#0071e3]'
             )}>
-            {publishing ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            {publishing ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               : published ? <Check size={16} /> : <Globe size={16} />}
             {publishing ? 'Đang xuất bản...' : published ? 'Đã xuất bản!' : 'Xuất bản'}
           </button>
@@ -345,35 +345,35 @@ export default function ThemeEditorPage() {
       <div className="grid grid-cols-12 gap-6 min-h-[calc(100vh-220px)]">
 
         {/* ---- Left: Page & Section Navigator ---- */}
-        <div className="col-span-3 bg-white rounded-xl border shadow-sm overflow-hidden flex flex-col">
+        <div className="col-span-3 apple-card overflow-hidden flex flex-col">
           {/* Tabs */}
-          <div className="flex border-b shrink-0">
+          <div className="flex border-b border-black/5 shrink-0 bg-transparent p-1.5 gap-1">
             <button onClick={() => { setTab('page'); setEditor(prev => ({ ...prev, activePage: activePage?.id || allPageSchemas[0]?.id || 'home', activeSection: null })) }}
-              className={cn('flex-1 py-3 text-xs font-bold tracking-wider transition-colors',
-                tab === 'page' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50/50' : 'text-slate-400 hover:text-slate-600')}>
-              TRANG
+              className={cn('flex-1 py-2 text-[12px] font-semibold tracking-tight transition-all rounded-[10px]',
+                tab === 'page' ? 'text-[#1d1d1f] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)]' : 'text-[#86868b] hover:text-[#424245] hover:bg-black/5')}>
+              TRANG GIAO DIỆN
             </button>
             <button onClick={() => { setTab('global'); setEditor(prev => ({ ...prev, activePage: 'global', activeSection: null })) }}
-              className={cn('flex-1 py-3 text-xs font-bold tracking-wider transition-colors',
-                tab === 'global' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50/50' : 'text-slate-400 hover:text-slate-600')}>
-              GLOBAL
+              className={cn('flex-1 py-2 text-[12px] font-semibold tracking-tight transition-all rounded-[10px]',
+                tab === 'global' ? 'text-[#1d1d1f] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)]' : 'text-[#86868b] hover:text-[#424245] hover:bg-black/5')}>
+              THIẾT LẬP CHUNG
             </button>
           </div>
 
           {/* Search */}
-          <div className="px-3 pt-3 pb-1 shrink-0">
+          <div className="px-3 pt-3 pb-2 shrink-0 border-b border-black/5">
             <div className="relative">
-              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-300" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#86868b]" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Tìm trang, section..."
-                className="w-full pl-8 pr-3 py-2 text-xs bg-slate-50 border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:bg-white transition-all"
+                placeholder="Tìm trang, module..."
+                className="w-full pl-8 pr-3 py-1.5 text-[13px] bg-black/[0.04] rounded-lg border-transparent focus:bg-white focus:ring-2 focus:ring-[#0066cc]/20 transition-all font-medium placeholder:text-[#86868b] placeholder:font-normal outline-none"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500">
-                  <X size={12} />
+                <button onClick={() => setSearchQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#86868b] hover:text-[#1d1d1f]">
+                  <X size={14} />
                 </button>
               )}
             </div>
@@ -395,13 +395,13 @@ export default function ThemeEditorPage() {
                   <div key={page.id}>
                     <button onClick={() => setEditor(prev => ({ ...prev, activePage: page.id, activeSection: isActive ? prev.activeSection : null }))}
                       className={cn('w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all text-sm',
-                        isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-50')}>
+                        isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-[#424245] hover:bg-black/[0.02]')}>
                       <DynIcon name={page.icon} size={18} />
                       <span className="flex-1 truncate">{page.name}</span>
-                      {isActive ? <ChevronDown size={14} /> : <ChevronRight size={14} className="text-slate-300" />}
+                      {isActive ? <ChevronDown size={14} className="text-[#86868b]" /> : <ChevronRight size={14} className="text-[#86868b]" />}
                     </button>
                     {isActive && (
-                      <div className="ml-5 mt-1 mb-2 space-y-0.5 border-l-2 border-blue-100 pl-3">
+                      <div className="ml-5 mt-1.5 mb-2.5 space-y-0.5 border-l-[1.5px] border-black/5 pl-2.5">
                         {page.sections
                           .map(s => ({ schema: s, data: activePageData?.[s.id] }))
                           .sort((a, b) => ((a.data?.order ?? 0) - (b.data?.order ?? 0)))
@@ -411,19 +411,21 @@ export default function ThemeEditorPage() {
                             return (
                               <div key={section.id} className="group relative">
                                 <button onClick={() => setEditor(prev => ({ ...prev, activeSection: section.id }))}
-                                  className={cn('w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-left transition-all text-xs',
-                                    isSectionActive ? 'bg-blue-100 text-blue-800 font-semibold' : 'text-slate-500 hover:bg-slate-50',
-                                    !isVisible && 'opacity-40')}>
-                                  <GripVertical size={12} className="text-slate-300 shrink-0 cursor-grab" />
-                                  <span className="flex-1 truncate">{section.name}</span>
-                                  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  className={cn('w-full flex items-center justify-between gap-2.5 px-3 py-2 rounded-[10px] text-left transition-all text-[13px] font-medium',
+                                    isSectionActive ? 'bg-[#0066cc]/10 text-[#0066cc]' : 'text-[#86868b] hover:text-[#1d1d1f] hover:bg-black/[0.03]',
+                                    !isVisible && 'opacity-50 grayscale')}>
+                                  <div className="flex items-center gap-2.5 truncate">
+                                    <GripVertical size={13} className="text-[#86868b] shrink-0 opacity-50 cursor-grab hover:opacity-100 transition-opacity" />
+                                    <span className="truncate">{section.name}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button onClick={e => { e.stopPropagation(); moveSectionOrder(page.id, section.id, 'up') }}
-                                      className="p-0.5 rounded hover:bg-blue-50" title="Lên"><ArrowUp size={10} /></button>
+                                      className="p-1 rounded-md hover:bg-black/5 text-[#86868b] hover:text-[#1d1d1f] transition-colors" title="Lên"><ArrowUp size={12} /></button>
                                     <button onClick={e => { e.stopPropagation(); moveSectionOrder(page.id, section.id, 'down') }}
-                                      className="p-0.5 rounded hover:bg-blue-50" title="Xuống"><ArrowDown size={10} /></button>
+                                      className="p-1 rounded-md hover:bg-black/5 text-[#86868b] hover:text-[#1d1d1f] transition-colors" title="Xuống"><ArrowDown size={12} /></button>
                                     <button onClick={e => { e.stopPropagation(); toggleSectionVisibility(page.id, section.id) }}
-                                      className="p-0.5 rounded hover:bg-blue-50" title={isVisible ? 'Ẩn' : 'Hiện'}>
-                                      {isVisible ? <Eye size={10} /> : <EyeOff size={10} />}
+                                      className="p-1 rounded-md hover:bg-black/5 text-[#86868b] hover:text-[#1d1d1f] transition-colors" title={isVisible ? 'Ẩn' : 'Hiện'}>
+                                      {isVisible ? <Eye size={12} /> : <EyeOff size={12} />}
                                     </button>
                                   </div>
                                 </button>
@@ -439,7 +441,7 @@ export default function ThemeEditorPage() {
               Object.entries(globalThemeSchema).map(([key, schema]) => (
                 <button key={key} onClick={() => setEditor(prev => ({ ...prev, activeSection: key }))}
                   className={cn('w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all text-sm',
-                    editor.activeSection === key ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-50')}>
+                    editor.activeSection === key ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-[#424245] hover:bg-black/[0.02]')}>
                   <DynIcon name={schema.icon} size={18} />
                   <span>{schema.name}</span>
                 </button>
@@ -449,28 +451,28 @@ export default function ThemeEditorPage() {
         </div>
 
         {/* ---- Right: Field Editor ---- */}
-        <div className="col-span-9 bg-white rounded-xl border shadow-sm overflow-hidden flex flex-col">
+        <div className="col-span-9 apple-card overflow-hidden flex flex-col">
           {currentFields.length > 0 ? (
             <>
               {/* Section Header */}
-              <div className="px-6 py-4 border-b bg-gradient-to-r from-slate-50 to-white flex items-center justify-between shrink-0">
+              <div className="px-6 py-5 border-b border-black/5 bg-white/50 backdrop-blur-md flex items-center justify-between shrink-0">
                 <div>
-                  <h2 className="text-base font-bold text-slate-800">
+                  <h2 className="text-[17px] font-semibold tracking-tight text-[#1d1d1f]">
                     {activeGlobalSection?.name || activePageSection?.name}
                   </h2>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {editor.activePage === 'global' ? 'Cài đặt toàn cục' : `Trang: ${activePage?.name}`}
-                    {' · '}{currentFields.length} trường
+                  <p className="text-[13px] text-[#86868b] mt-0.5 font-medium tracking-tight">
+                    {editor.activePage === 'global' ? 'Thiết lập toàn cục' : `Tùy chỉnh: ${activePage?.name}`}
+                    {' · '}{currentFields.length} thuộc tính
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={resetSection} className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-slate-500 hover:text-orange-600 border rounded-lg hover:border-orange-200 hover:bg-orange-50 transition-all"
+                <div className="flex items-center gap-2.5">
+                  <button onClick={resetSection} className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-[#86868b] hover:text-[#ff3b30] bg-[#f5f5f7] rounded-[10px] hover:bg-[#ff3b30]/10 transition-all border border-transparent hover:border-[#ff3b30]/20"
                     title="Khôi phục mặc định">
-                    <RotateCcw size={13} /> Reset
+                    <RotateCcw size={14} /> Khôi phục
                   </button>
                   <button onClick={() => setEditor(prev => ({ ...prev, activeSection: null }))}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
-                    <X size={16} className="text-slate-400" />
+                    className="p-2 rounded-full hover:bg-black/5 transition-colors bg-[#f5f5f7]">
+                    <X size={16} className="text-[#86868b] hover:text-[#1d1d1f]" />
                   </button>
                 </div>
               </div>
@@ -508,14 +510,13 @@ export default function ThemeEditorPage() {
           ) : (
             /* Empty state */
             <div className="flex-1 flex items-center justify-center">
-              <div className="text-center max-w-sm">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center mx-auto mb-5">
-                  <Palette size={36} className="text-blue-300" />
+              <div className="text-center max-w-[340px]">
+                <div className="w-24 h-24 rounded-[28px] bg-gradient-to-tr from-[#0066cc]/10 to-[#3694f4]/20 flex items-center justify-center mx-auto mb-6 shadow-sm border border-white">
+                  <Palette size={42} className="text-[#0066cc]/70 drop-shadow-sm" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-700 mb-2">Chọn một section để chỉnh sửa</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
-                  Nhấn vào trang ở bên trái, sau đó chọn section bạn muốn tùy chỉnh. 
-                  Mọi thay đổi sẽ được áp dụng ngay khi lưu.
+                <h3 className="text-[20px] font-semibold text-[#1d1d1f] mb-2.5 tracking-tight">Cá nhân hóa giao diện</h3>
+                <p className="text-[14px] text-[#86868b] leading-relaxed font-medium">
+                  Lựa chọn một module cấu hình từ thanh bên trái để bắt đầu thiết kế và tùy chỉnh các thành phần trên website.
                 </p>
               </div>
             </div>
@@ -537,60 +538,60 @@ function FieldEditor({ field, value, onChange }: { field: FieldSchema; value: un
     case 'text':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="block text-xs font-semibold text-[#424245] mb-1.5">{field.label}</label>
           <input type="text" value={String(v)} onChange={e => onChange(e.target.value)} placeholder={field.placeholder}
-            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
-          {field.description && <p className="text-[10px] text-slate-400 mt-1">{field.description}</p>}
+            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-0 focus:border-blue-500 outline-none transition-all bg-black/[0.02] focus:bg-white" />
+          {field.description && <p className="text-[10px] text-[#86868b] mt-1">{field.description}</p>}
         </div>
       )
     case 'textarea':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="block text-xs font-semibold text-[#424245] mb-1.5">{field.label}</label>
           <textarea value={String(v)} onChange={e => onChange(e.target.value)} rows={3}
-            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none resize-y transition-all bg-slate-50 focus:bg-white" />
+            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-0 focus:border-blue-500 outline-none resize-y transition-all bg-black/[0.02] focus:bg-white" />
         </div>
       )
     case 'number':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="block text-xs font-semibold text-[#424245] mb-1.5">{field.label}</label>
           <input type="number" value={Number(v)} onChange={e => onChange(Number(e.target.value))} min={field.min} max={field.max} step={field.step || 1}
-            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-0 focus:border-blue-500 outline-none transition-all bg-black/[0.02] focus:bg-white" />
         </div>
       )
     case 'color':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
-          <div className="flex items-center gap-2">
+          <label className="block text-[13px] font-semibold text-[#86868b] mb-2">{field.label}</label>
+          <div className="flex items-center gap-3">
             <input type="color" value={String(v)} onChange={e => onChange(e.target.value)}
-              className="w-10 h-10 rounded-lg border-2 cursor-pointer p-0.5 shrink-0" />
+              className="w-10 h-10 rounded-[10px] border-2 border-transparent cursor-pointer p-0.5 shrink-0 shadow-[0_2px_4px_rgba(0,0,0,0.05)] bg-white" />
             <input type="text" value={String(v)} onChange={e => onChange(e.target.value)}
-              className="flex-1 px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none font-mono bg-slate-50 focus:bg-white" />
+              className="flex-1 apple-input font-mono" />
           </div>
         </div>
       )
     case 'image':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="block text-[13px] font-semibold text-[#86868b] mb-2">{field.label}</label>
           {v ? (
             <div className="relative group">
-              <img src={String(v)} alt="" className="w-full h-32 object-cover rounded-lg border" />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-                <button onClick={() => onChange('')} className="p-2 bg-white rounded-lg hover:bg-red-50 transition-colors">
-                  <Trash2 size={14} className="text-red-500" />
+              <img src={String(v)} alt="" className="w-full h-36 object-cover rounded-[14px] border border-black/5 shadow-sm" />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] transition-all rounded-[14px] flex items-center justify-center gap-2">
+                <button onClick={() => onChange('')} className="p-2.5 bg-white/90 rounded-xl hover:bg-[#ff3b30] hover:text-white transition-colors text-[#ff3b30] shadow-lg">
+                  <Trash2 size={16} />
                 </button>
               </div>
             </div>
           ) : (
             <div>
               <input type="text" value="" onChange={e => onChange(e.target.value)} placeholder="Nhập URL hình ảnh..."
-                className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none bg-slate-50 focus:bg-white mb-2" />
-              <label className="flex items-center justify-center gap-2 px-3 py-4 border-2 border-dashed rounded-lg cursor-pointer hover:border-blue-300 hover:bg-blue-50/50 transition-all">
-                <Upload size={16} className="text-slate-400" />
-                <span className="text-xs text-slate-400">Hoặc tải ảnh lên</span>
+                className="apple-input mb-2.5" />
+              <label className="flex items-center justify-center gap-2.5 px-3 py-5 border-2 border-dashed border-black/10 rounded-[14px] cursor-pointer hover:border-[#0066cc]/40 hover:bg-[#0066cc]/5 transition-all">
+                <Upload size={18} className="text-[#86868b]" />
+                <span className="text-[13px] font-medium text-[#86868b]">Hoặc tải ảnh lên (Max 5MB)</span>
                 <input type="file" accept="image/*" className="hidden" onChange={e => {
                   const file = e.target.files?.[0]
                   if (file) { const r = new FileReader(); r.onload = ev => onChange(ev.target?.result); r.readAsDataURL(file) }
@@ -603,7 +604,7 @@ function FieldEditor({ field, value, onChange }: { field: FieldSchema; value: un
     case 'toggle':
       return (
         <div className="flex items-center justify-between py-1">
-          <label className="text-xs font-semibold text-slate-600">{field.label}</label>
+          <label className="text-xs font-semibold text-[#424245]">{field.label}</label>
           <button onClick={() => onChange(!v)}
             className={cn('relative w-11 h-6 rounded-full transition-colors', v ? 'bg-blue-500' : 'bg-slate-200')}>
             <span className={cn('absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform', v ? 'left-5.5' : 'left-0.5')} />
@@ -613,22 +614,23 @@ function FieldEditor({ field, value, onChange }: { field: FieldSchema; value: un
     case 'select':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="apple-label mb-2">{field.label}</label>
           <select value={String(v)} onChange={e => onChange(e.target.value)}
-            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none bg-slate-50 focus:bg-white">
+            className="apple-select font-medium text-[14px]">
             {field.options?.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
           </select>
         </div>
       )
     case 'slider':
       return (
-        <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">
-            {field.label} <span className="ml-2 text-blue-500 font-mono text-xs">{String(v)}{field.unit || ''}</span>
+        <div className="bg-[#fbfbfd] p-3 rounded-[12px] border border-black/5">
+          <label className="flex items-center justify-between apple-label mb-3">
+            <span>{field.label}</span>
+            <span className="text-[#0066cc] font-mono text-[13px] bg-[#0066cc]/5 px-2 py-0.5 rounded-md font-medium">{String(v)}{field.unit || ''}</span>
           </label>
           <input type="range" value={Number(v)} onChange={e => onChange(Number(e.target.value))}
-            min={field.min || 0} max={field.max || 100} step={field.step || 1} className="w-full accent-blue-500" />
-          <div className="flex justify-between text-[10px] text-slate-300 mt-0.5">
+            min={field.min || 0} max={field.max || 100} step={field.step || 1} className="w-full accent-[#0066cc] h-1.5 bg-black/10 rounded-full appearance-none outline-none cursor-pointer" />
+          <div className="flex justify-between text-[11px] font-medium text-[#86868b] mt-2">
             <span>{field.min || 0}</span><span>{field.max || 100}</span>
           </div>
         </div>
@@ -636,37 +638,36 @@ function FieldEditor({ field, value, onChange }: { field: FieldSchema; value: un
     case 'link':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
-          <div className="flex items-center gap-2">
-            <Globe size={14} className="text-slate-400 shrink-0" />
+          <label className="apple-label mb-2">{field.label}</label>
+          <div className="flex items-center gap-2.5 bg-black/[0.03] border border-transparent focus-within:border-[#0066cc] focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,102,204,0.15)] rounded-[10px] px-3 transition-all">
+            <Globe size={16} className="text-[#86868b] shrink-0" />
             <input type="url" value={String(v)} onChange={e => onChange(e.target.value)} placeholder="https://..."
-              className="flex-1 px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none bg-slate-50 focus:bg-white" />
+              className="flex-1 py-2.5 text-[14px] bg-transparent outline-none text-[#1d1d1f]" />
           </div>
         </div>
       )
     case 'icon':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="block text-xs font-semibold text-[#424245] mb-1.5">{field.label}</label>
           <input type="text" value={String(v)} onChange={e => onChange(e.target.value)} placeholder="Tên Lucide icon (vd: Star, Users...)"
-            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none bg-slate-50 focus:bg-white" />
-          <p className="text-[10px] text-slate-400 mt-1">Xem tại lucide.dev/icons</p>
+            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-0 focus:border-blue-500 outline-none bg-black/[0.02] focus:bg-white" />
+          <p className="text-[10px] text-[#86868b] mt-1">Xem tại lucide.dev/icons</p>
         </div>
       )
     case 'gradient':
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="apple-label mb-2">{field.label}</label>
           <div className="flex gap-3 items-end">
             <div className="text-center">
-              <span className="text-[10px] text-slate-400 block mb-1">Từ</span>
-              <input type="color" value={String((v as { from?: string })?.from || '#000')} onChange={e => onChange({ ...(v as object), from: e.target.value })} className="w-10 h-10 rounded border-2 cursor-pointer" />
+              <span className="text-[11px] font-semibold text-[#86868b] block mb-1.5 uppercase">Từ màu</span>
+              <input type="color" value={String((v as { from?: string })?.from || '#000')} onChange={e => onChange({ ...(v as object), from: e.target.value })} className="w-11 h-11 rounded-[10px] border-2 border-transparent p-0.5 cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.05)] bg-white" />
             </div>
             <div className="text-center">
-              <span className="text-[10px] text-slate-400 block mb-1">Đến</span>
-              <input type="color" value={String((v as { to?: string })?.to || '#fff')} onChange={e => onChange({ ...(v as object), to: e.target.value })} className="w-10 h-10 rounded border-2 cursor-pointer" />
+              <span className="text-[11px] font-semibold text-[#86868b] block mb-1.5 uppercase">Đến màu</span>              <input type="color" value={String((v as { to?: string })?.to || '#fff')} onChange={e => onChange({ ...(v as object), to: e.target.value })} className="w-11 h-11 rounded-[10px] border-2 border-transparent p-0.5 cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.05)] bg-white" />
             </div>
-            <div className="flex-1 h-10 rounded-lg border" style={{ background: `linear-gradient(to right, ${(v as { from?: string })?.from || '#000'}, ${(v as { to?: string })?.to || '#fff'})` }} />
+            <div className="flex-1 h-11 rounded-[12px] border border-black/5 shadow-sm ml-2" style={{ background: `linear-gradient(to right, ${(v as { from?: string })?.from || '#000'}, ${(v as { to?: string })?.to || '#fff'})` }} />
           </div>
         </div>
       )
@@ -675,9 +676,9 @@ function FieldEditor({ field, value, onChange }: { field: FieldSchema; value: un
     default:
       return (
         <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1.5">{field.label}</label>
+          <label className="block text-xs font-semibold text-[#424245] mb-1.5">{field.label}</label>
           <input type="text" value={String(v)} onChange={e => onChange(e.target.value)}
-            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none bg-slate-50 focus:bg-white" />
+            className="w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-0 focus:border-blue-500 outline-none bg-black/[0.02] focus:bg-white" />
         </div>
       )
   }
@@ -709,8 +710,8 @@ function RepeaterEditor({ field, value, onChange }: { field: FieldSchema; value:
 
   return (
     <div>
-      <label className="block text-xs font-semibold text-slate-600 mb-2">
-        {field.label} <span className="text-slate-400 font-normal">({items.length} mục)</span>
+      <label className="apple-label mb-3 mt-1 inline-flex items-center gap-2">
+        {field.label} <span className="text-[11px] font-normal text-[#86868b] bg-[#f5f5f7] px-1.5 py-0.5 rounded-full">{items.length} mục</span>
       </label>
       <div className="space-y-2">
         {items.map((item, idx) => {
@@ -718,20 +719,31 @@ function RepeaterEditor({ field, value, onChange }: { field: FieldSchema; value:
           const isExpanded = expandedIdx === idx
           const preview = record[subFields[0]?.key] || `Mục ${idx + 1}`
           return (
-            <div key={idx} className="border rounded-lg overflow-hidden">
-              <div className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors"
-                onClick={() => setExpandedIdx(isExpanded ? null : idx)}>
-                <GripVertical size={12} className="text-slate-300" />
-                <span className="flex-1 text-xs font-medium text-slate-600 truncate">{String(preview)}</span>
-                <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-                  <button onClick={() => moveItem(idx, 'up')} disabled={idx === 0} className="p-1 hover:bg-white rounded disabled:opacity-20"><ArrowUp size={11} /></button>
-                  <button onClick={() => moveItem(idx, 'down')} disabled={idx === items.length - 1} className="p-1 hover:bg-white rounded disabled:opacity-20"><ArrowDown size={11} /></button>
-                  <button onClick={() => removeItem(idx)} className="p-1 hover:bg-red-50 rounded text-red-400"><Trash2 size={11} /></button>
+            <div key={idx} className={cn(
+              "border border-black/5 rounded-[12px] overflow-hidden bg-white shadow-sm transition-all duration-300 group",
+              isExpanded ? "ring-1 ring-black/5" : ""
+            )}>
+              <div className={cn(
+                "flex items-center gap-3 px-3 py-3 cursor-pointer transition-colors",
+                isExpanded ? "bg-[#f5f5f7]/50" : "hover:bg-[#fbfbfd]"
+              )} onClick={() => setExpandedIdx(isExpanded ? null : idx)}>
+                <GripVertical size={14} className="text-[#86868b]/50" />
+                <span className="flex-1 text-[13px] font-medium text-[#1d1d1f] truncate">{String(preview)}</span>
+                
+                <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity gap-1" onClick={e => e.stopPropagation()}>
+                  <button onClick={() => moveItem(idx, 'up')} disabled={idx === 0} className="w-6 h-6 flex items-center justify-center hover:bg-white rounded-[6px] hover:shadow-sm disabled:opacity-30 disabled:hover:shadow-none transition-all"><ArrowUp size={12} className="text-[#424245]" /></button>
+                  <button onClick={() => moveItem(idx, 'down')} disabled={idx === items.length - 1} className="w-6 h-6 flex items-center justify-center hover:bg-white rounded-[6px] hover:shadow-sm disabled:opacity-30 disabled:hover:shadow-none transition-all"><ArrowDown size={12} className="text-[#424245]" /></button>
+                  <div className="w-[1px] h-3 bg-black/10 mx-1"></div>
+                  <button onClick={() => removeItem(idx)} className="w-6 h-6 flex items-center justify-center hover:bg-[#fff0f0] rounded-[6px] text-[#ff3b30] transition-all"><Trash2 size={12} /></button>
                 </div>
-                <ChevronDown size={12} className={cn('transition-transform text-slate-400', isExpanded && 'rotate-180')} />
+                
+                <div className="w-6 h-6 flex items-center justify-center ml-2">
+                  <ChevronDown size={14} className={cn('transition-transform duration-300 text-[#86868b]', isExpanded && 'rotate-180')} />
+                </div>
               </div>
+              
               {isExpanded && (
-                <div className="p-4 space-y-4 bg-white border-t">
+                <div className="p-4 space-y-5 bg-[#fbfbfd] border-t border-black/5">
                   {subFields.map(sf => (
                     <FieldEditor key={sf.key} field={sf} value={record[sf.key]} onChange={val => updateItem(idx, sf.key, val)} />
                   ))}
@@ -742,7 +754,7 @@ function RepeaterEditor({ field, value, onChange }: { field: FieldSchema; value:
         })}
       </div>
       <button onClick={addItem}
-        className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-2.5 border-2 border-dashed rounded-lg text-xs font-medium text-slate-400 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50/30 transition-all">
+        className="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-3 border border-dashed border-black/15 rounded-[12px] text-[13px] font-medium text-[#424245] hover:text-[#0066cc] hover:border-[#0066cc]/30 hover:bg-[#0066cc]/5 transition-all">
         <Plus size={14} /> Thêm mới
       </button>
     </div>

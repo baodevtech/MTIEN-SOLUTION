@@ -2,8 +2,7 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  // Ensure Node.js APIs work in API routes
-  serverExternalPackages: [],
+  serverExternalPackages: ['@prisma/adapter-pg', 'pg'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'picsum.photos' },
@@ -11,7 +10,6 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
-  // Allow fs operations in API routes
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',

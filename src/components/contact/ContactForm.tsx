@@ -2,20 +2,47 @@
 
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Send, CheckCircle2 } from 'lucide-react';
+import { Send, CheckCircle2, Loader2 } from 'lucide-react';
 
-/**
- * ContactForm - Form liên hệ với validation và trạng thái gửi thành công
- * Bao gồm: Họ tên, SĐT, Email, Dịch vụ quan tâm, Nội dung tin nhắn
- */
+const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:3001';
+
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setTimeout(() => {
-      setIsSubmitted(true);
-    }, 1000);
+    setIsLoading(true);
+    setError('');
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch(`${ADMIN_API}/api/public/contacts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          phone: formData.get('phone'),
+          subject: formData.get('service'),
+          message: formData.get('message'),
+        }),
+      });
+
+      if (res.ok) {
+        setIsSubmitted(true);
+      } else {
+        const data = await res.json().catch(() => null);
+        setError(data?.message || 'Gửi thất bại, vui lòng thử lại.');
+      }
+    } catch {
+      setError('Không thể kết nối server, vui lòng thử lại sau.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -62,6 +89,7 @@ export default function ContactForm() {
               <input
                 type="text"
                 id="name"
+                name="name"
                 required
                 className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 placeholder="Nguyễn Văn A"
@@ -74,6 +102,7 @@ export default function ContactForm() {
               <input
                 type="tel"
                 id="phone"
+                name="phone"
                 required
                 className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
                 placeholder="09xx xxx xxx"
@@ -88,6 +117,7 @@ export default function ContactForm() {
             <input
               type="email"
               id="email"
+              name="email"
               required
               className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
               placeholder="email@domain.com"
@@ -100,6 +130,7 @@ export default function ContactForm() {
             </label>
             <select
               id="service"
+              name="service"
               className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all text-slate-700"
             >
               <option value="">-- Chọn dịch vụ --</option>
@@ -118,6 +149,7 @@ export default function ContactForm() {
             </label>
             <textarea
               id="message"
+              name="message"
               required
               rows={4}
               className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
@@ -125,11 +157,20 @@ export default function ContactForm() {
             ></textarea>
           </div>
 
+          {error && (
+            <p className="text-red-500 text-sm text-center">{error}</p>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-200 transform hover:-translate-y-0.5"
+            disabled={isLoading}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 disabled:transform-none"
           >
-            Gửi Yêu Cầu <Send className="w-5 h-5" />
+            {isLoading ? (
+              <><Loader2 className="w-5 h-5 animate-spin" /> Đang gửi...</>
+            ) : (
+              <>Gửi Yêu Cầu <Send className="w-5 h-5" /></>
+            )}
           </button>
           <p className="text-xs text-slate-400 text-center mt-4">
             Bằng việc gửi thông tin, bạn đồng ý với Chính sách bảo mật của chúng tôi.
