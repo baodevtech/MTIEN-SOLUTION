@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Search, Plus, Shield, Pencil, Trash2, MoreHorizontal,
   Mail, Clock, ShieldCheck, ShieldAlert, User as UserIcon,
   Eye, CheckCircle2, XCircle, X,
 } from 'lucide-react'
 import { cn, formatDate, formatRelativeTime, getStatusColor, getStatusLabel } from '@/lib/utils'
-import { mockUsers } from '@/lib/mock-data'
 import type { UserRole, UserStatus } from '@/types'
 
 const roleLabels: Record<UserRole, { label: string; color: string; icon: typeof ShieldCheck }> = {
@@ -17,37 +16,81 @@ const roleLabels: Record<UserRole, { label: string; color: string; icon: typeof 
   viewer: { label: 'Người xem', color: 'bg-slate-100 text-slate-600', icon: Eye },
 }
 
+interface UserData {
+  id: string; name: string; email: string; role: UserRole; avatar?: string | null
+  createdAt: string; updatedAt: string
+}
+
 export default function UsersPage() {
+  const [users, setUsers] = useState<UserData[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all')
   const [showModal, setShowModal] = useState(false)
-  const [editUser, setEditUser] = useState<typeof mockUsers[0] | null>(null)
-  const [form, setForm] = useState({ name: '', email: '', role: 'editor' as UserRole, status: 'active' as UserStatus })
+  const [editUser, setEditUser] = useState<UserData | null>(null)
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'editor' as UserRole, status: 'active' as UserStatus })
 
-  const filtered = mockUsers.filter((u) => {
-    if (roleFilter !== 'all' && u.role !== roleFilter) return false
-    if (search && !u.name.toLowerCase().includes(search.toLowerCase()) && !u.email.toLowerCase().includes(search.toLowerCase())) return false
-    return true
-  })
+  const fetchUsers = useCallback(async () => {
+    try {
+      const params = new URLSearchParams()
+      if (roleFilter !== 'all') params.set('role', roleFilter)
+      if (search) params.set('search', search)
+      const res = await fetch(`/api/admin/users?${params}`)
+      const json = await res.json()
+      setUsers(json.data || [])
+    } catch { /* ignore */ } finally { setLoading(false) }
+  }, [roleFilter, search])
+
+  useEffect(() => { fetchUsers() }, [fetchUsers])
+
+  const filtered = users
+
+  const handleSave = async () => {
+    try {
+      const method = editUser ? 'PUT' : 'POST'
+      const body = editUser
+        ? { id: editUser.id, name: form.name, email: form.email, role: form.role, ...(form.password ? { password: form.password } : {}) }
+        : { name: form.name, email: form.email, password: form.password, role: form.role }
+      await fetch('/api/admin/users', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      setShowModal(false)
+      fetchUsers()
+    } catch { /* ignore */ }
+  }
+
+  const filtered = users
+
+  const handleSave = async () => {
+    try {
+      const method = editUser ? 'PUT' : 'POST'
+      const body = editUser
+        ? { id: editUser.id, name: form.name, email: form.email, role: form.role, ...(form.password ? { password: form.password } : {}) }
+        : { name: form.name, email: form.email, password: form.password, role: form.role }
+      await fetch('/api/admin/users', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      setShowModal(false)
+      fetchUsers()
+    } catch { /* ignore */ }
+  }
 
   const openNew = () => {
     setEditUser(null)
-    setForm({ name: '', email: '', role: 'editor', status: 'active' })
+    setForm({ name: '', email: '', password: '', role: 'editor', status: 'active' })
     setShowModal(true)
   }
 
-  const openEdit = (u: typeof mockUsers[0]) => {
+  const openEdit = (u: UserData) => {
     setEditUser(u)
-    setForm({ name: u.name, email: u.email, role: u.role, status: u.status })
+    setForm({ name: u.name, email: u.email, password: '', role: u.role as UserRole, status: 'active' })
     setShowModal(true)
   }
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" /></div>
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Người dùng</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{mockUsers.length} tài khoản</p>
+          <p className="text-sm text-slate-500 mt-0.5">{users.length} tài khoản</p>
         </div>
         <button onClick={openNew} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
           <Plus size={16} /> Thêm người dùng
@@ -57,7 +100,7 @@ export default function UsersPage() {
       {/* Role Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {(Object.keys(roleLabels) as UserRole[]).map((role) => {
-          const count = mockUsers.filter(u => u.role === role).length
+          const count = users.filter(u => u.role === role).length
           const conf = roleLabels[role]
           const Icon = conf.icon
           return (
@@ -93,14 +136,13 @@ export default function UsersPage() {
               <th>Email</th>
               <th>Vai trò</th>
               <th>Trạng thái</th>
-              <th>Đăng nhập lần cuối</th>
               <th>Ngày tạo</th>
               <th className="text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((user) => {
-              const roleConf = roleLabels[user.role]
+              const roleConf = roleLabels[user.role as UserRole]
               const statusColor = getStatusColor(user.status)
               return (
                 <tr key={user.id}>
@@ -126,7 +168,6 @@ export default function UsersPage() {
                       {getStatusLabel(user.status)}
                     </span>
                   </td>
-                  <td className="text-xs text-slate-400">{user.lastLogin ? formatRelativeTime(user.lastLogin) : '—'}</td>
                   <td className="text-xs text-slate-400">{formatDate(user.createdAt)}</td>
                   <td>
                     <div className="flex items-center justify-end gap-1">
@@ -186,7 +227,7 @@ export default function UsersPage() {
             </div>
             <div className="flex items-center justify-end gap-3 p-5 bg-slate-50 rounded-b-2xl">
               <button onClick={() => setShowModal(false)} className="px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Huỷ</button>
-              <button className="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg">{editUser ? 'Cập nhật' : 'Tạo tài khoản'}</button>
+              <button onClick={handleSave} className="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg">{editUser ? 'Cập nhật' : 'Tạo tài khoản'}</button>
             </div>
           </div>
         </div>

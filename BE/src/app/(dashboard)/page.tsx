@@ -1,52 +1,117 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import {
   DollarSign, ShoppingCart, Eye, Package, TrendingUp, TrendingDown,
   ArrowRight, MoreHorizontal, FileText, Mail, Users, Clock,
-  ArrowUpRight, ArrowDownRight, Plus, Filter, Calendar,
+  ArrowUpRight, ArrowDownRight, Plus, Filter, Calendar, Loader2,
 } from 'lucide-react'
 import { cn, formatCurrency, formatNumber, formatRelativeTime, getStatusColor, getStatusLabel } from '@/lib/utils'
-import { mockDashboard, mockOrders, mockPosts, mockContacts } from '@/lib/mock-data'
 
-const stats = [
-  {
-    label: 'Tổng doanh thu',
-    value: formatCurrency(mockDashboard.totalRevenue),
-    change: mockDashboard.revenueChange,
-    icon: <DollarSign size={20} />,
-    color: 'from-[#0066cc] to-[#0071e3]',
-    bgLight: 'bg-[#0066cc]/5',
-  },
-  {
-    label: 'Đơn hàng',
-    value: formatNumber(mockDashboard.totalOrders),
-    change: mockDashboard.ordersChange,
-    icon: <ShoppingCart size={20} />,
-    color: 'from-[#34c759] to-[#30b753]',
-    bgLight: 'bg-[#34c759]/10',
-  },
-  {
-    label: 'Lượt truy cập',
-    value: formatNumber(mockDashboard.totalVisitors),
-    change: mockDashboard.visitorsChange,
-    icon: <Eye size={20} />,
-    color: 'from-violet-500 to-violet-600',
-    bgLight: 'bg-violet-50',
-  },
-  {
-    label: 'Sản phẩm',
-    value: formatNumber(mockDashboard.totalProducts),
-    change: mockDashboard.productsChange,
-    icon: <Package size={20} />,
-    color: 'from-amber-500 to-amber-600',
-    bgLight: 'bg-amber-50',
-  },
-]
+interface DashboardData {
+  totalRevenue: number
+  revenueChange: number
+  totalOrders: number
+  ordersChange: number
+  totalVisitors: number
+  visitorsChange: number
+  totalProducts: number
+  productsChange: number
+  revenueChart: { date: string; revenue: number; orders: number }[]
+  topProducts: { name: string; sold: number; revenue: number }[]
+  trafficSources: { source: string; visitors: number; percentage: number }[]
+}
+
+interface OrderData {
+  id: string
+  orderNumber: string
+  customer: { name: string; email: string; phone: string }
+  total: number
+  status: string
+  paymentStatus: string
+  createdAt: string
+}
+
+interface ContactData {
+  id: string
+  name: string
+  subject: string
+  status: string
+  createdAt: string
+}
 
 export default function DashboardPage() {
   const [chartPeriod, setChartPeriod] = useState<'7d' | '30d' | '90d'>('7d')
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null)
+  const [orders, setOrders] = useState<OrderData[]>([])
+  const [contacts, setContacts] = useState<ContactData[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [dashRes, ordersRes, contactsRes] = await Promise.all([
+        fetch('/api/admin/dashboard'),
+        fetch('/api/admin/orders'),
+        fetch('/api/admin/contacts'),
+      ])
+      const dashJson = await dashRes.json()
+      const ordersJson = await ordersRes.json()
+      const contactsJson = await contactsRes.json()
+      if (dashJson.success) setDashboard(dashJson.data)
+      if (ordersJson.success) setOrders((ordersJson.data as OrderData[]).slice(0, 5))
+      if (contactsJson.success) setContacts(contactsJson.data as ContactData[])
+    } catch (e) {
+      console.error('Dashboard fetch error:', e)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { fetchData() }, [fetchData])
+
+  const stats = dashboard ? [
+    {
+      label: 'Tổng doanh thu',
+      value: formatCurrency(dashboard.totalRevenue),
+      change: dashboard.revenueChange,
+      icon: <DollarSign size={20} />,
+      color: 'from-[#0066cc] to-[#0071e3]',
+      bgLight: 'bg-[#0066cc]/5',
+    },
+    {
+      label: 'Đơn hàng',
+      value: formatNumber(dashboard.totalOrders),
+      change: dashboard.ordersChange,
+      icon: <ShoppingCart size={20} />,
+      color: 'from-[#34c759] to-[#30b753]',
+      bgLight: 'bg-[#34c759]/10',
+    },
+    {
+      label: 'Lượt truy cập',
+      value: formatNumber(dashboard.totalVisitors),
+      change: dashboard.visitorsChange,
+      icon: <Eye size={20} />,
+      color: 'from-violet-500 to-violet-600',
+      bgLight: 'bg-violet-50',
+    },
+    {
+      label: 'Sản phẩm',
+      value: formatNumber(dashboard.totalProducts),
+      change: dashboard.productsChange,
+      icon: <Package size={20} />,
+      color: 'from-amber-500 to-amber-600',
+      bgLight: 'bg-amber-50',
+    },
+  ] : []
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="w-8 h-8 animate-spin text-[#0066cc]" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -126,7 +191,7 @@ export default function DashboardPage() {
           </div>
           {/* Chart placeholder - using bars */}
           <div className="h-64 flex items-end gap-2 px-2">
-            {mockDashboard.revenueChart.map((item, i) => (
+            {(dashboard?.revenueChart || []).map((item, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-1">
                 <div className="w-full flex flex-col items-center gap-0.5">
                   <div
@@ -167,7 +232,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="space-y-4">
-            {mockDashboard.trafficSources.map((source) => (
+            {(dashboard?.trafficSources || []).map((source) => (
               <div key={source.source}>
                 <div className="flex items-center justify-between text-sm mb-1.5">
                   <span className="text-[#424245] font-medium">{source.source}</span>
@@ -183,7 +248,7 @@ export default function DashboardPage() {
             ))}
           </div>
           <div className="mt-6 pt-4 border-t border-black/5 text-center">
-            <span className="text-2xl font-bold text-[#1d1d1f]">{formatNumber(mockDashboard.totalVisitors)}</span>
+            <span className="text-2xl font-bold text-[#1d1d1f]">{formatNumber(dashboard?.totalVisitors || 0)}</span>
             <p className="text-xs text-[#86868b] mt-1">Tổng lượt truy cập tháng này</p>
           </div>
         </div>
@@ -196,7 +261,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between p-5 border-b border-black/5">
             <div>
               <h3 className="font-semibold text-[#1d1d1f]">Đơn hàng gần đây</h3>
-              <p className="text-sm text-[#86868b] mt-0.5">{mockOrders.length} đơn hàng mới nhất</p>
+              <p className="text-sm text-[#86868b] mt-0.5">{orders.length} đơn hàng mới nhất</p>
             </div>
             <Link href="/orders" className="text-sm text-[#0066cc] hover:text-[#0071e3] font-medium flex items-center gap-1">
               Xem tất cả <ArrowRight size={14} />
@@ -215,7 +280,7 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {mockOrders.map((order) => {
+                {orders.map((order) => {
                   const statusColor = getStatusColor(order.status)
                   const paymentColor = getStatusColor(order.paymentStatus)
                   return (
@@ -259,7 +324,7 @@ export default function DashboardPage() {
               <Link href="/products" className="text-xs text-[#0066cc] hover:text-[#0071e3] font-medium">Xem tất cả</Link>
             </div>
             <div className="space-y-3">
-              {mockDashboard.topProducts.map((product, i) => (
+              {(dashboard?.topProducts || []).map((product, i) => (
                 <div key={product.name} className="flex items-center gap-3">
                   <span className={cn(
                     'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold',
@@ -286,13 +351,13 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-[#1d1d1f]">Liên hệ mới</h3>
                 <span className="bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
-                  {mockContacts.filter(c => c.status === 'new').length}
+                  {contacts.filter(c => c.status === 'new').length}
                 </span>
               </div>
               <Link href="/contacts" className="text-xs text-[#0066cc] hover:text-[#0071e3] font-medium">Xem tất cả</Link>
             </div>
             <div className="space-y-3">
-              {mockContacts.slice(0, 4).map((contact) => {
+              {contacts.slice(0, 4).map((contact) => {
                 const statusColor = getStatusColor(contact.status)
                 return (
                   <div key={contact.id} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-black/[0.02] transition-colors cursor-pointer">

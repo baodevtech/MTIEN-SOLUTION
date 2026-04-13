@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -9,7 +9,6 @@ import {
   Download, Archive, Copy,
 } from 'lucide-react'
 import { cn, formatDate, formatNumber, getStatusColor, getStatusLabel, truncate } from '@/lib/utils'
-import { mockPosts } from '@/lib/mock-data'
 import type { PostStatus } from '@/types'
 
 const statusFilters: { label: string; value: PostStatus | 'all' }[] = [
@@ -23,16 +22,30 @@ const statusFilters: { label: string; value: PostStatus | 'all' }[] = [
 const categoryFilters = ['Tất cả', 'Thiết kế', 'Cloud', 'Marketing', 'E-commerce', 'AI', 'Bảo mật', 'Chuyển đổi số']
 
 export default function PostsPage() {
+  const [posts, setPosts] = useState<Array<{ id: string; title: string; slug: string; excerpt?: string | null; content?: string | null; coverImage?: string | null; category?: string | null; tags: string[]; author?: string | null; status: string; views: number; publishedAt?: string | null; createdAt: string; updatedAt: string }>>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<PostStatus | 'all'>('all')
   const [categoryFilter, setCategoryFilter] = useState('Tất cả')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
 
-  const filtered = mockPosts.filter((post) => {
-    if (statusFilter !== 'all' && post.status !== statusFilter) return false
+  const fetchPosts = useCallback(async () => {
+    try {
+      const params = new URLSearchParams()
+      if (statusFilter !== 'all') params.set('status', statusFilter)
+      if (search) params.set('search', search)
+      params.set('limit', '50')
+      const res = await fetch(`/api/admin/posts?${params}`)
+      const json = await res.json()
+      setPosts(json.data || [])
+    } catch { /* ignore */ } finally { setLoading(false) }
+  }, [statusFilter, search])
+
+  useEffect(() => { fetchPosts() }, [fetchPosts])
+
+  const filtered = posts.filter((post) => {
     if (categoryFilter !== 'Tất cả' && post.category !== categoryFilter) return false
-    if (search && !post.title.toLowerCase().includes(search.toLowerCase())) return false
     return true
   })
 
@@ -45,12 +58,14 @@ export default function PostsPage() {
   }
 
   const statusCounts = {
-    all: mockPosts.length,
-    published: mockPosts.filter((p) => p.status === 'published').length,
-    draft: mockPosts.filter((p) => p.status === 'draft').length,
-    scheduled: mockPosts.filter((p) => p.status === 'scheduled').length,
-    archived: mockPosts.filter((p) => p.status === 'archived').length,
+    all: posts.length,
+    published: posts.filter((p) => p.status === 'published').length,
+    draft: posts.filter((p) => p.status === 'draft').length,
+    scheduled: posts.filter((p) => p.status === 'scheduled').length,
+    archived: posts.filter((p) => p.status === 'archived').length,
   }
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" /></div>
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -176,10 +191,10 @@ export default function PostsPage() {
                     </td>
                     <td>
                       <div className="flex items-center gap-3">
-                        {post.featuredImage ? (
+                        {post.coverImage ? (
                           <div className="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0">
                             <Image
-                              src={post.featuredImage}
+                              src={post.coverImage}
                               alt={post.title}
                               width={48}
                               height={48}
@@ -201,7 +216,7 @@ export default function PostsPage() {
                     </td>
                     <td>
                       <span className="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded-md">
-                        {post.category}
+                        {post.category || 'Chưa phân loại'}
                       </span>
                     </td>
                     <td className="text-center">
@@ -211,14 +226,7 @@ export default function PostsPage() {
                       </span>
                     </td>
                     <td>
-                      <div className="flex items-center gap-2">
-                        {post.author.avatar ? (
-                          <Image src={post.author.avatar} alt="" width={24} height={24} className="w-6 h-6 rounded-full" />
-                        ) : (
-                          <div className="w-6 h-6 rounded-full bg-slate-200" />
-                        )}
-                        <span className="text-sm text-slate-600">{post.author.name}</span>
-                      </div>
+                      <span className="text-sm text-slate-600">{post.author || '—'}</span>
                     </td>
                     <td className="text-right text-sm text-slate-500">{formatNumber(post.views)}</td>
                     <td className="text-right text-sm text-slate-400">{formatDate(post.createdAt)}</td>
@@ -245,7 +253,7 @@ export default function PostsPage() {
         {/* Pagination */}
         <div className="flex items-center justify-between px-5 py-4 border-t border-slate-100">
           <p className="text-sm text-slate-500">
-            Hiển thị <span className="font-medium text-slate-700">{filtered.length}</span> / {mockPosts.length} bài viết
+            Hiển thị <span className="font-medium text-slate-700">{filtered.length}</span> / {posts.length} bài viết
           </p>
           <div className="flex items-center gap-1">
             <button className="p-2 rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors disabled:opacity-50" disabled>

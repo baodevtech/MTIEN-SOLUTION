@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Search, Mail, Phone, Building2, Clock, Eye, Reply, Archive,
-  Trash2, ChevronDown, X, User, Send,
+  Trash2, ChevronDown, X, User, Send, Loader2,
 } from 'lucide-react'
 import { cn, formatRelativeTime, getStatusColor, getStatusLabel } from '@/lib/utils'
-import { mockContacts } from '@/lib/mock-data'
 import type { ContactStatus } from '@/types'
 
 const statusFilters: { label: string; value: ContactStatus | 'all' }[] = [
@@ -20,10 +19,42 @@ const statusFilters: { label: string; value: ContactStatus | 'all' }[] = [
 export default function ContactsPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<ContactStatus | 'all'>('all')
-  const [selected, setSelected] = useState<typeof mockContacts[0] | null>(null)
+  const [selected, setSelected] = useState<any | null>(null)
   const [replyText, setReplyText] = useState('')
+  const [contacts, setContacts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filtered = mockContacts.filter((c) => {
+  const fetchContacts = useCallback(async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (search) params.set('search', search)
+      if (statusFilter !== 'all') params.set('status', statusFilter)
+      const res = await fetch(`/api/admin/contacts?${params.toString()}`)
+      const json = await res.json()
+      if (json.success) {
+        setContacts(json.data)
+      }
+    } catch (err) {
+      console.error('Failed to fetch contacts:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [search, statusFilter])
+
+  useEffect(() => {
+    fetchContacts()
+  }, [fetchContacts])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="w-8 h-8 animate-spin text-[#0066cc]" />
+      </div>
+    )
+  }
+
+  const filtered = contacts.filter((c) => {
     if (statusFilter !== 'all' && c.status !== statusFilter) return false
     if (search && !c.name.toLowerCase().includes(search.toLowerCase()) && !c.subject.toLowerCase().includes(search.toLowerCase())) return false
     return true
@@ -34,7 +65,7 @@ export default function ContactsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Liên hệ</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{mockContacts.filter(c => c.status === 'new').length} tin nhắn mới chưa đọc</p>
+          <p className="text-sm text-slate-500 mt-0.5">{contacts.filter(c => c.status === 'new').length} tin nhắn mới chưa đọc</p>
         </div>
       </div>
 

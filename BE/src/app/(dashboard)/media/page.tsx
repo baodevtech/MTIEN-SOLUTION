@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Upload, Search, Grid3X3, List, Image as ImageIcon, FileText, Film,
-  Trash2, Download, Eye, X, Check, Folder, Filter,
+  Trash2, Download, Eye, X, Check, Folder, Filter, Loader2,
 } from 'lucide-react'
 import { cn, formatFileSize, formatDate } from '@/lib/utils'
-import { mockMedia } from '@/lib/mock-data'
 
 const typeFilters = [
   { label: 'Tất cả', value: 'all', icon: <Folder size={14} /> },
@@ -24,9 +23,28 @@ export default function MediaPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [showUpload, setShowUpload] = useState(false)
-  const [previewItem, setPreviewItem] = useState<typeof mockMedia[0] | null>(null)
+  const [previewItem, setPreviewItem] = useState<any | null>(null)
+  const [media, setMedia] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filtered = mockMedia.filter((m) => {
+  const fetchMedia = useCallback(async () => {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/admin/media')
+      const json = await res.json()
+      if (json.success) setMedia(json.data)
+    } catch (err) {
+      console.error('Failed to fetch media:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchMedia()
+  }, [fetchMedia])
+
+  const filtered = media.filter((m) => {
     if (typeFilter !== 'all' && m.type !== typeFilter) return false
     if (folderFilter !== 'Tất cả' && m.folder !== folderFilter) return false
     if (search && !m.filename.toLowerCase().includes(search.toLowerCase())) return false
@@ -37,13 +55,15 @@ export default function MediaPage() {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id])
   }
 
+  if (loading) return <div className="flex items-center justify-center h-96"><Loader2 className="w-8 h-8 animate-spin text-[#0066cc]" /></div>
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Thư viện Media</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{mockMedia.length} tệp tin · {formatFileSize(mockMedia.reduce((sum, m) => sum + m.size, 0))} dung lượng</p>
+          <p className="text-sm text-slate-500 mt-0.5">{media.length} tệp tin · {formatFileSize(media.reduce((sum, m) => sum + m.size, 0))} dung lượng</p>
         </div>
         <button onClick={() => setShowUpload(true)} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
           <Upload size={16} /> Tải lên
@@ -94,7 +114,7 @@ export default function MediaPage() {
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center gap-2">
                       <FileText size={32} className="text-slate-300" />
-                      <span className="text-xs text-slate-400 uppercase font-bold">{item.mimeType.split('/')[1]}</span>
+                      <span className="text-xs text-slate-400 uppercase font-bold">{item.filename.split('.').pop()}</span>
                     </div>
                   )}
                 </div>
@@ -141,9 +161,9 @@ export default function MediaPage() {
                     </div>
                   </td>
                   <td><span className="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded">{item.folder}</span></td>
-                  <td className="text-xs text-slate-500 uppercase">{item.mimeType.split('/')[1]}</td>
+                  <td className="text-xs text-slate-500 uppercase">{item.filename.split('.').pop()}</td>
                   <td className="text-right text-sm text-slate-500">{formatFileSize(item.size)}</td>
-                  <td className="text-sm text-slate-500">{item.uploadedBy.name}</td>
+                  <td className="text-sm text-slate-500">{item.uploadedBy || 'Unknown'}</td>
                   <td className="text-right text-sm text-slate-400">{formatDate(item.createdAt)}</td>
                   <td>
                     <div className="flex items-center gap-1">
@@ -196,11 +216,11 @@ export default function MediaPage() {
                 {[
                   { label: 'Tên tệp', value: previewItem.filename },
                   { label: 'Tên gốc', value: previewItem.originalName },
-                  { label: 'Loại', value: previewItem.mimeType },
+                  { label: 'Loại', value: previewItem.filename.split('.').pop()?.toUpperCase() },
                   { label: 'Kích thước', value: formatFileSize(previewItem.size) },
                   ...(previewItem.width ? [{ label: 'Độ phân giải', value: `${previewItem.width}×${previewItem.height}px` }] : []),
                   { label: 'Thư mục', value: previewItem.folder },
-                  { label: 'Người tải', value: previewItem.uploadedBy.name },
+                  { label: 'Người tải', value: previewItem.uploadedBy || 'Unknown' },
                   { label: 'Ngày tải', value: formatDate(previewItem.createdAt) },
                 ].map((row) => (
                   <div key={row.label} className="flex items-center justify-between">

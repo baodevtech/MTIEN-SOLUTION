@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   TrendingUp, TrendingDown, Users, Eye, MousePointerClick,
   Clock, Globe, Monitor, Smartphone, Tablet, ArrowUpRight,
@@ -12,35 +12,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 
-const trafficData = [
-  { date: '01/07', visitors: 1240, pageViews: 3420, sessions: 1680 },
-  { date: '02/07', visitors: 1380, pageViews: 3890, sessions: 1820 },
-  { date: '03/07', visitors: 1190, pageViews: 3210, sessions: 1560 },
-  { date: '04/07', visitors: 1520, pageViews: 4120, sessions: 2010 },
-  { date: '05/07', visitors: 1680, pageViews: 4580, sessions: 2250 },
-  { date: '06/07', visitors: 1450, pageViews: 3980, sessions: 1890 },
-  { date: '07/07', visitors: 1890, pageViews: 5240, sessions: 2480 },
-  { date: '08/07', visitors: 2100, pageViews: 5780, sessions: 2750 },
-  { date: '09/07', visitors: 1760, pageViews: 4890, sessions: 2310 },
-  { date: '10/07', visitors: 2340, pageViews: 6120, sessions: 3080 },
-  { date: '11/07', visitors: 2180, pageViews: 5950, sessions: 2870 },
-  { date: '12/07', visitors: 2560, pageViews: 6780, sessions: 3320 },
-  { date: '13/07', visitors: 2890, pageViews: 7450, sessions: 3690 },
-  { date: '14/07', visitors: 2720, pageViews: 7120, sessions: 3540 },
-]
-
-const topPages = [
-  { path: '/', title: 'Trang chủ', views: 12450, avgTime: '2:34', bounceRate: 32 },
-  { path: '/dich-vu/phan-mem', title: 'Phần mềm', views: 8320, avgTime: '3:12', bounceRate: 28 },
-  { path: '/shop', title: 'Cửa hàng', views: 6780, avgTime: '4:05', bounceRate: 22 },
-  { path: '/blog', title: 'Blog', views: 5490, avgTime: '2:48', bounceRate: 45 },
-  { path: '/about', title: 'Giới thiệu', views: 4230, avgTime: '1:56', bounceRate: 52 },
-  { path: '/contact', title: 'Liên hệ', views: 3890, avgTime: '1:22', bounceRate: 38 },
-  { path: '/dich-vu/marketing', title: 'Marketing', views: 3560, avgTime: '2:58', bounceRate: 35 },
-  { path: '/dich-vu/cloud-server', title: 'Cloud Server', views: 2980, avgTime: '3:45', bounceRate: 25 },
-]
-
-const sourceData = [
+const defaultSourceData = [
   { name: 'Google', value: 42, color: '#4285F4' },
   { name: 'Trực tiếp', value: 28, color: '#34A853' },
   { name: 'Facebook', value: 18, color: '#1877F2' },
@@ -48,37 +20,52 @@ const sourceData = [
   { name: 'Khác', value: 4, color: '#94A3B8' },
 ]
 
+const sourceColors: Record<string, string> = {
+  'Google': '#4285F4', 'Google Search': '#4285F4', 'Direct': '#34A853',
+  'Trực tiếp': '#34A853', 'Facebook': '#1877F2', 'Zalo': '#0068FF',
+  'Referral': '#F59E0B', 'Khác': '#94A3B8',
+}
+
 const deviceData = [
   { name: 'Desktop', value: 58, icon: Monitor, color: '#3B82F6' },
   { name: 'Mobile', value: 35, icon: Smartphone, color: '#10B981' },
   { name: 'Tablet', value: 7, icon: Tablet, color: '#F59E0B' },
 ]
 
-const conversionData = [
-  { date: '01/07', contacts: 5, orders: 3 },
-  { date: '02/07', contacts: 8, orders: 4 },
-  { date: '03/07', contacts: 6, orders: 2 },
-  { date: '04/07', contacts: 12, orders: 7 },
-  { date: '05/07', contacts: 9, orders: 5 },
-  { date: '06/07', contacts: 7, orders: 3 },
-  { date: '07/07', contacts: 15, orders: 8 },
-  { date: '08/07', contacts: 11, orders: 6 },
-  { date: '09/07', contacts: 13, orders: 9 },
-  { date: '10/07', contacts: 18, orders: 11 },
-  { date: '11/07', contacts: 14, orders: 8 },
-  { date: '12/07', contacts: 20, orders: 12 },
-  { date: '13/07', contacts: 22, orders: 14 },
-  { date: '14/07', contacts: 19, orders: 10 },
-]
-
 export default function AnalyticsPage() {
   const [period, setPeriod] = useState<'7d' | '14d' | '30d'>('14d')
+  const [analyticsData, setAnalyticsData] = useState<{
+    stats: { visitors: number; pageViews: number; contacts: number; orders: number }
+    trafficSources: Array<{ source: string; visitors: number }>
+    topPages: Array<{ path: string; views: number }>
+  } | null>(null)
+
+  useEffect(() => {
+    const days = period === '7d' ? 7 : period === '14d' ? 14 : 30
+    fetch(`/api/admin/analytics?days=${days}`)
+      .then(r => r.json())
+      .then(json => { if (json.data) setAnalyticsData(json.data) })
+      .catch(() => {})
+  }, [period])
+
+  const apiStats = analyticsData?.stats
+  const sourceData = analyticsData?.trafficSources?.length
+    ? analyticsData.trafficSources.map(s => ({
+        name: s.source || 'Khác',
+        value: s.visitors,
+        color: sourceColors[s.source || ''] || '#94A3B8',
+      }))
+    : defaultSourceData
+
+  const topPages = analyticsData?.topPages?.length
+    ? analyticsData.topPages.map(p => ({ path: p.path || '/', title: p.path || '/', views: p.views, avgTime: '—', bounceRate: 0 }))
+    : []
 
   const stats = [
-    { label: 'Số truy cập', value: 28_910, change: 12.5, icon: Users, color: 'bg-blue-500' },
-    { label: 'Lượt xem trang', value: 82_360, change: 8.3, icon: Eye, color: 'bg-green-500' },
-    { label: 'Tỷ lệ click', value: 3.8, change: -0.5, icon: MousePointerClick, color: 'bg-purple-500', suffix: '%' },
-    { label: 'Thời gian trung bình', value: '2:48', change: 4.2, icon: Clock, color: 'bg-amber-500', isTime: true },
+    { label: 'Số truy cập', value: apiStats?.visitors ?? 0, change: 0, icon: Users, color: 'bg-blue-500' },
+    { label: 'Lượt xem trang', value: apiStats?.pageViews ?? 0, change: 0, icon: Eye, color: 'bg-green-500' },
+    { label: 'Liên hệ mới', value: apiStats?.contacts ?? 0, change: 0, icon: MousePointerClick, color: 'bg-purple-500' },
+    { label: 'Đơn hàng', value: apiStats?.orders ?? 0, change: 0, icon: Clock, color: 'bg-amber-500' },
   ]
 
   return (
@@ -114,7 +101,7 @@ export default function AnalyticsPage() {
                   {Math.abs(stat.change)}%
                 </span>
               </div>
-              <p className="text-2xl font-bold text-slate-800">{stat.isTime ? stat.value : typeof stat.value === 'number' ? formatNumber(stat.value) : stat.value}{stat.suffix || ''}</p>
+              <p className="text-2xl font-bold text-slate-800">{typeof stat.value === 'number' ? formatNumber(stat.value) : stat.value}</p>
               <p className="text-xs text-slate-500 mt-0.5">{stat.label}</p>
             </div>
           )
@@ -124,27 +111,25 @@ export default function AnalyticsPage() {
       {/* Traffic Chart */}
       <div className="bg-white rounded-xl border border-slate-200 p-5">
         <h3 className="text-sm font-semibold text-slate-700 mb-4">Lưu lượng truy cập</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={trafficData}>
-            <defs>
-              <linearGradient id="gradVisitors" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="gradPageViews" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-            <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#94A3B8', fontSize: 11 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94A3B8', fontSize: 11 }} />
-            <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '12px' }} />
-            <Legend wrapperStyle={{ fontSize: '12px' }} />
-            <Area type="monotone" dataKey="visitors" name="Truy cập" stroke="#3B82F6" fill="url(#gradVisitors)" strokeWidth={2} />
-            <Area type="monotone" dataKey="pageViews" name="Lượt xem" stroke="#10B981" fill="url(#gradPageViews)" strokeWidth={2} />
-          </AreaChart>
-        </ResponsiveContainer>
+        {analyticsData?.raw?.length ? (
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={analyticsData.raw.filter((d: { metric: string }) => d.metric === 'visitors').map((d: { date: string; value: number }) => ({ date: new Date(d.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }), visitors: d.value }))}>
+              <defs>
+                <linearGradient id="gradVisitors" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+              <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#94A3B8', fontSize: 11 }} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94A3B8', fontSize: 11 }} />
+              <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '12px' }} />
+              <Area type="monotone" dataKey="visitors" name="Truy cập" stroke="#3B82F6" fill="url(#gradVisitors)" strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex items-center justify-center h-[300px] text-slate-400 text-sm">Chưa có dữ liệu analytics. Dữ liệu sẽ được thu thập tự động.</div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

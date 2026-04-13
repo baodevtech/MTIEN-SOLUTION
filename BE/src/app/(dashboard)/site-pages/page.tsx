@@ -1,11 +1,29 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Plus, Edit, Trash2, Eye, Layers, GripVertical, ExternalLink } from 'lucide-react'
 import { cn, formatDate, getStatusColor, getStatusLabel } from '@/lib/utils'
-import { mockPages } from '@/lib/mock-data'
+
+interface PageData {
+  id: string; title: string; slug: string; content: string; template: string
+  status: string; seo: unknown; order: number; parentId?: string | null
+  createdAt: string; updatedAt: string
+}
 
 export default function SitePagesPage() {
+  const [pages, setPages] = useState<PageData[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/admin/pages')
+      .then(r => r.json())
+      .then(json => setPages(json.data || []))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" /></div>
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
@@ -32,7 +50,7 @@ export default function SitePagesPage() {
             </tr>
           </thead>
           <tbody>
-            {mockPages.map((page) => {
+            {pages.map((page) => {
               const statusColor = getStatusColor(page.status)
               return (
                 <tr key={page.id}>

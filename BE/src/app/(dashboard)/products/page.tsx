@@ -1,14 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
   Plus, Search, Filter, Trash2, Edit, Eye, ChevronLeft, ChevronRight,
-  ShoppingBag, MoreHorizontal, Download, Archive, Grid3X3, List as ListIcon,
+  ShoppingBag, MoreHorizontal, Download, Archive, Grid3X3, List as ListIcon, Loader2,
 } from 'lucide-react'
 import { cn, formatCurrency, formatNumber, getStatusColor, getStatusLabel } from '@/lib/utils'
-import { mockProducts } from '@/lib/mock-data'
 import type { ProductStatus, ProductCategory } from '@/types'
 
 const statusFilters: { label: string; value: ProductStatus | 'all' }[] = [
@@ -28,8 +27,29 @@ export default function ProductsPage() {
   const [statusFilter, setStatusFilter] = useState<ProductStatus | 'all'>('all')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table')
+  const [products, setProducts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filtered = mockProducts.filter((p) => {
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/admin/products')
+      const json = await res.json()
+      if (json.success) {
+        setProducts(json.data)
+      }
+    } catch (err) {
+      console.error('Failed to fetch products:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchProducts()
+  }, [fetchProducts])
+
+  const filtered = products.filter((p) => {
     if (statusFilter !== 'all' && p.status !== statusFilter) return false
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false
     return true
@@ -38,6 +58,8 @@ export default function ProductsPage() {
   const allSelected = filtered.length > 0 && selectedIds.length === filtered.length
   const toggleAll = () => setSelectedIds(allSelected ? [] : filtered.map((p) => p.id))
   const toggleOne = (id: string) => setSelectedIds((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id])
+
+  if (loading) return <div className="flex items-center justify-center h-96"><Loader2 className="w-8 h-8 animate-spin text-[#0066cc]" /></div>
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -65,10 +87,10 @@ export default function ProductsPage() {
       {/* Quick stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Tổng sản phẩm', value: mockProducts.length, color: 'text-blue-600 bg-blue-50' },
-          { label: 'Đang bán', value: mockProducts.filter(p => p.status === 'active').length, color: 'text-emerald-600 bg-emerald-50' },
-          { label: 'Hết hàng', value: mockProducts.filter(p => p.status === 'outOfStock').length, color: 'text-red-600 bg-red-50' },
-          { label: 'Tổng giá trị kho', value: formatCurrency(mockProducts.reduce((sum, p) => sum + p.price * p.stock, 0)), color: 'text-purple-600 bg-purple-50' },
+          { label: 'Tổng sản phẩm', value: products.length, color: 'text-blue-600 bg-blue-50' },
+          { label: 'Đang bán', value: products.filter(p => p.status === 'active').length, color: 'text-emerald-600 bg-emerald-50' },
+          { label: 'Hết hàng', value: products.filter(p => p.status === 'outOfStock').length, color: 'text-red-600 bg-red-50' },
+          { label: 'Tổng giá trị kho', value: formatCurrency(products.reduce((sum, p) => sum + p.price * (p.stock ?? 0), 0)), color: 'text-purple-600 bg-purple-50' },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-xl border border-slate-200 p-4">
             <p className="text-xs text-slate-500 font-medium">{stat.label}</p>
@@ -159,26 +181,20 @@ export default function ProductsPage() {
                       <td>
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 overflow-hidden shrink-0">
-                            <Image src={product.images[0]} alt={product.name} width={48} height={48} className="w-full h-full object-cover" />
+                            <Image src={product.image || '/placeholder.png'} alt={product.name} width={48} height={48} className="w-full h-full object-cover" />
                           </div>
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
                               <Link href={`/products/new?id=${product.id}`} className="font-semibold text-slate-800 hover:text-blue-600 transition-colors truncate">
                                 {product.name}
                               </Link>
-                              {product.badge && (
-                                <span className={cn(
-                                  'text-[10px] font-bold px-1.5 py-0.5 rounded',
-                                  product.badge === 'Best Seller' ? 'bg-amber-100 text-amber-700' :
-                                  product.badge === 'Flash Sale' ? 'bg-red-100 text-red-700' :
-                                  product.badge === 'Hot' ? 'bg-orange-100 text-orange-700' :
-                                  'bg-blue-100 text-blue-700'
-                                )}>
-                                  {product.badge}
+                              {product.featured && (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">
+                                  Featured
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-slate-400 mt-0.5">{product.brand}</p>
+                            <p className="text-xs text-slate-400 mt-0.5">{product.category}</p>
                           </div>
                         </div>
                       </td>
@@ -191,8 +207,8 @@ export default function ProductsPage() {
                       <td className="text-right">
                         <div>
                           <span className="font-semibold text-sm">{formatCurrency(product.price)}</span>
-                          {product.oldPrice && (
-                            <span className="text-xs text-slate-400 line-through ml-2">{formatCurrency(product.oldPrice)}</span>
+                          {product.comparePrice && (
+                            <span className="text-xs text-slate-400 line-through ml-2">{formatCurrency(product.comparePrice)}</span>
                           )}
                         </div>
                       </td>
@@ -212,7 +228,7 @@ export default function ProductsPage() {
                           {getStatusLabel(product.status)}
                         </span>
                       </td>
-                      <td className="text-right text-sm text-slate-500">{formatNumber(product.sold)}</td>
+                      <td className="text-right text-sm text-slate-500">{formatNumber(product.sold ?? 0)}</td>
                       <td>
                         <div className="flex items-center justify-end gap-1">
                           <Link href={`/products/new?id=${product.id}`} className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600">
@@ -246,16 +262,10 @@ export default function ProductsPage() {
             return (
               <div key={product.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-all group">
                 <div className="relative h-48 bg-slate-50">
-                  <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
-                  {product.badge && (
-                    <span className={cn(
-                      'absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-md',
-                      product.badge === 'Best Seller' ? 'bg-amber-100 text-amber-700' :
-                      product.badge === 'Flash Sale' ? 'bg-red-500 text-white' :
-                      product.badge === 'Hot' ? 'bg-orange-500 text-white' :
-                      'bg-blue-500 text-white'
-                    )}>
-                      {product.badge}
+                  <Image src={product.image || '/placeholder.png'} alt={product.name} fill className="object-cover" />
+                  {product.featured && (
+                    <span className="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-md bg-amber-100 text-amber-700">
+                      Featured
                     </span>
                   )}
                   <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -279,9 +289,9 @@ export default function ProductsPage() {
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
                     <div>
                       <span className="font-bold text-blue-600">{formatCurrency(product.price)}</span>
-                      {product.oldPrice && <span className="text-xs text-slate-400 line-through ml-1">{formatCurrency(product.oldPrice)}</span>}
+                      {product.comparePrice && <span className="text-xs text-slate-400 line-through ml-1">{formatCurrency(product.comparePrice)}</span>}
                     </div>
-                    <span className="text-xs text-slate-400">{formatNumber(product.sold)} đã bán</span>
+                    <span className="text-xs text-slate-400">{formatNumber(product.sold ?? 0)} đã bán</span>
                   </div>
                 </div>
               </div>

@@ -1,15 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
   Search, Filter, Eye, ChevronLeft, ChevronRight, Package,
   Truck, CheckCircle, XCircle, Clock, CreditCard, MapPin,
-  Phone, Mail, ChevronDown, MoreHorizontal, Printer, Download,
+  Phone, Mail, ChevronDown, MoreHorizontal, Printer, Download, Loader2,
 } from 'lucide-react'
 import { cn, formatCurrency, formatDate, formatRelativeTime, getStatusColor, getStatusLabel } from '@/lib/utils'
-import { mockOrders } from '@/lib/mock-data'
 import type { OrderStatus } from '@/types'
 
 const statusFilters: { label: string; value: OrderStatus | 'all'; icon: React.ReactNode }[] = [
@@ -25,19 +24,42 @@ const statusFilters: { label: string; value: OrderStatus | 'all'; icon: React.Re
 export default function OrdersPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'all'>('all')
-  const [selectedOrder, setSelectedOrder] = useState<typeof mockOrders[0] | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null)
+  const [orders, setOrders] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filtered = mockOrders.filter((o) => {
+  const fetchOrders = useCallback(async () => {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/admin/orders')
+      const json = await res.json()
+      if (json.success) {
+        setOrders(json.data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch orders:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchOrders()
+  }, [fetchOrders])
+
+  if (loading) return <div className="flex items-center justify-center h-96"><Loader2 className="w-8 h-8 animate-spin text-[#0066cc]" /></div>
+
+  const filtered = orders.filter((o) => {
     if (statusFilter !== 'all' && o.status !== statusFilter) return false
     if (search && !o.orderNumber.toLowerCase().includes(search.toLowerCase()) && !o.customer.name.toLowerCase().includes(search.toLowerCase())) return false
     return true
   })
 
   const orderStats = [
-    { label: 'Tổng đơn', value: mockOrders.length, color: 'text-slate-700' },
-    { label: 'Chờ xử lý', value: mockOrders.filter(o => o.status === 'pending').length, color: 'text-amber-600' },
-    { label: 'Đang giao', value: mockOrders.filter(o => ['processing', 'shipped', 'confirmed'].includes(o.status)).length, color: 'text-blue-600' },
-    { label: 'Hoàn thành', value: mockOrders.filter(o => o.status === 'delivered').length, color: 'text-emerald-600' },
+    { label: 'Tổng đơn', value: orders.length, color: 'text-slate-700' },
+    { label: 'Chờ xử lý', value: orders.filter(o => o.status === 'pending').length, color: 'text-amber-600' },
+    { label: 'Đang giao', value: orders.filter(o => ['processing', 'shipped', 'confirmed'].includes(o.status)).length, color: 'text-blue-600' },
+    { label: 'Hoàn thành', value: orders.filter(o => o.status === 'delivered').length, color: 'text-emerald-600' },
   ]
 
   return (

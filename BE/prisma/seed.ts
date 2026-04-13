@@ -340,6 +340,253 @@ async function main() {
   }
   console.log('✅ Settings seeded')
 
+  // ─── Services ────────────────────────────────────
+  const services = [
+    {
+      title: 'Phát triển Phần mềm & Ứng dụng',
+      slug: 'phan-mem',
+      description: 'Thiết kế và phát triển phần mềm, ứng dụng web, mobile app theo yêu cầu.',
+      shortDesc: 'Custom software development',
+      icon: 'Code',
+      features: ['Web Application', 'Mobile App', 'API Development', 'ERP/CRM'],
+      pricing: [
+        { name: 'Starter', price: '15.000.000₫', features: ['Landing page', '5 trang', 'Responsive'], popular: false },
+        { name: 'Business', price: '45.000.000₫', features: ['Web app đầy đủ', 'Admin panel', 'API integration'], popular: true },
+      ],
+      status: 'active',
+      order: 1,
+    },
+    {
+      title: 'Hạ tầng Cloud & Server',
+      slug: 'cloud-server',
+      description: 'Giải pháp cloud computing, VPS, dedicated server với uptime 99.99%.',
+      shortDesc: 'Cloud infrastructure solutions',
+      icon: 'Cloud',
+      features: ['Cloud VPS', 'Dedicated Server', 'CDN', 'Backup & Recovery'],
+      pricing: [
+        { name: 'Cloud Basic', price: '500.000₫/tháng', features: ['2 vCPU', '4GB RAM', '80GB SSD'], popular: false },
+        { name: 'Cloud Pro', price: '1.500.000₫/tháng', features: ['8 vCPU', '16GB RAM', '200GB SSD'], popular: true },
+      ],
+      status: 'active',
+      order: 2,
+    },
+    {
+      title: 'Marketing số & Quảng cáo',
+      slug: 'marketing',
+      description: 'Chiến lược marketing toàn diện, SEO, Google Ads, Facebook Ads.',
+      shortDesc: 'Digital marketing solutions',
+      icon: 'BarChart',
+      features: ['SEO/SEM', 'Social Media Marketing', 'Google Ads', 'Content Marketing'],
+      pricing: [
+        { name: 'Basic', price: '5.000.000₫/tháng', features: ['SEO On-page', '2 bài viết/tuần', 'Báo cáo hàng tháng'], popular: false },
+        { name: 'Premium', price: '15.000.000₫/tháng', features: ['SEO toàn diện', 'Google Ads', 'Facebook Ads', 'Content strategy'], popular: true },
+      ],
+      status: 'active',
+      order: 3,
+    },
+    {
+      title: 'Thiết kế Thương hiệu & Sáng tạo',
+      slug: 'marketing-design',
+      description: 'Thiết kế bộ nhận diện thương hiệu, video, đồ hoạ chuyên nghiệp.',
+      shortDesc: 'Brand design & creative',
+      icon: 'Palette',
+      features: ['Logo & Branding', 'UI/UX Design', 'Video Production', 'Print Design'],
+      pricing: [
+        { name: 'Logo Package', price: '8.000.000₫', features: ['3 concepts', 'Brand guide', 'File nguồn'], popular: false },
+        { name: 'Full Branding', price: '35.000.000₫', features: ['Full identity', 'Stationery', 'Brand guide', 'Social templates'], popular: true },
+      ],
+      status: 'active',
+      order: 4,
+    },
+  ]
+  for (const s of services) {
+    await prisma.service.upsert({
+      where: { slug: s.slug },
+      update: {},
+      create: s,
+    })
+  }
+  console.log('✅ Services seeded')
+
+  // ─── Projects ────────────────────────────────────
+  const projects = [
+    {
+      title: 'Hệ thống ERP cho Tập đoàn ABC',
+      slug: 'erp-tap-doan-abc',
+      client: 'Tập đoàn ABC',
+      description: 'Phát triển hệ thống ERP quản lý toàn diện cho tập đoàn sản xuất với 500+ nhân viên.',
+      images: ['https://picsum.photos/800/600?random=40', 'https://picsum.photos/800/600?random=41'],
+      technologies: ['Next.js', 'Node.js', 'PostgreSQL', 'Docker'],
+      category: 'Phần mềm',
+      status: 'completed',
+      featured: true,
+      url: 'https://abc-corp.vn',
+      completedAt: new Date('2025-06-15T00:00:00Z'),
+    },
+    {
+      title: 'Website thương mại điện tử GreenShop',
+      slug: 'website-greenshop',
+      client: 'GreenShop JSC',
+      description: 'Thiết kế và phát triển website bán hàng online với hơn 10,000 sản phẩm.',
+      images: ['https://picsum.photos/800/600?random=42'],
+      technologies: ['React', 'Node.js', 'MongoDB', 'AWS'],
+      category: 'Website',
+      status: 'completed',
+      featured: true,
+      url: 'https://greenshop.vn',
+      completedAt: new Date('2025-04-20T00:00:00Z'),
+    },
+    {
+      title: 'Chiến dịch Digital Marketing StartupIO',
+      slug: 'digital-marketing-startupio',
+      client: 'StartupIO',
+      description: 'Triển khai chiến dịch marketing số toàn diện, tăng 300% lưu lượng truy cập trong 6 tháng.',
+      images: ['https://picsum.photos/800/600?random=43'],
+      technologies: ['Google Ads', 'Facebook Ads', 'SEO', 'Analytics'],
+      category: 'Marketing',
+      status: 'in-progress',
+      featured: false,
+    },
+    {
+      title: 'Cloud Migration cho Medical Center',
+      slug: 'cloud-migration-medical-center',
+      client: 'Medical Center',
+      description: 'Di chuyển toàn bộ hạ tầng IT lên cloud, đảm bảo uptime 99.99% cho hệ thống y tế.',
+      images: ['https://picsum.photos/800/600?random=44'],
+      technologies: ['AWS', 'Docker', 'Kubernetes', 'Terraform'],
+      category: 'Cloud',
+      status: 'planned',
+      featured: false,
+    },
+  ]
+  for (const p of projects) {
+    await prisma.project.upsert({
+      where: { slug: p.slug },
+      update: {},
+      create: p,
+    })
+  }
+  console.log('✅ Projects seeded')
+
+  // ─── Pages ───────────────────────────────────────
+  const pages = [
+    {
+      title: 'Trang chủ',
+      slug: 'home',
+      content: '',
+      template: 'home',
+      status: 'published',
+      seo: { metaTitle: 'MTIEN Solution - Giải pháp công nghệ toàn diện', metaDescription: 'MTIEN Solution cung cấp dịch vụ phần mềm, cloud, marketing số cho doanh nghiệp.', keywords: ['MTIEN', 'giải pháp công nghệ'] },
+      order: 1,
+    },
+    {
+      title: 'Giới thiệu',
+      slug: 'about',
+      content: '<p>MTIEN Solution được thành lập năm 2020 với sứ mệnh mang công nghệ đến gần hơn với doanh nghiệp Việt Nam.</p>',
+      template: 'default',
+      status: 'published',
+      seo: { metaTitle: 'Giới thiệu - MTIEN Solution', metaDescription: 'Tìm hiểu về MTIEN Solution và đội ngũ chuyên gia công nghệ.', keywords: ['giới thiệu', 'MTIEN'] },
+      order: 2,
+    },
+    {
+      title: 'Dịch vụ',
+      slug: 'services',
+      content: '',
+      template: 'services',
+      status: 'published',
+      seo: { metaTitle: 'Dịch vụ - MTIEN Solution', metaDescription: 'Các dịch vụ phần mềm, cloud server, marketing số và thiết kế thương hiệu.', keywords: ['dịch vụ', 'phần mềm', 'cloud'] },
+      order: 3,
+    },
+    {
+      title: 'Dự án',
+      slug: 'projects',
+      content: '',
+      template: 'default',
+      status: 'published',
+      seo: { metaTitle: 'Dự án - MTIEN Solution', metaDescription: 'Portfolio các dự án đã thực hiện.', keywords: ['dự án', 'portfolio'] },
+      order: 4,
+    },
+    {
+      title: 'Blog',
+      slug: 'blog',
+      content: '',
+      template: 'blog',
+      status: 'published',
+      seo: { metaTitle: 'Blog - MTIEN Solution', metaDescription: 'Tin tức và bài viết về công nghệ.', keywords: ['blog', 'tin tức'] },
+      order: 5,
+    },
+    {
+      title: 'Liên hệ',
+      slug: 'contact',
+      content: '',
+      template: 'contact',
+      status: 'published',
+      seo: { metaTitle: 'Liên hệ - MTIEN Solution', metaDescription: 'Liên hệ với MTIEN Solution để được tư vấn.', keywords: ['liên hệ', 'tư vấn'] },
+      order: 6,
+    },
+    {
+      title: 'Cửa hàng',
+      slug: 'shop',
+      content: '',
+      template: 'shop',
+      status: 'published',
+      seo: { metaTitle: 'Cửa hàng - MTIEN Solution', metaDescription: 'Sản phẩm và giải pháp công nghệ.', keywords: ['cửa hàng', 'sản phẩm'] },
+      order: 7,
+    },
+    {
+      title: 'Chính sách bảo mật',
+      slug: 'privacy-policy',
+      content: '<p>Chính sách bảo mật thông tin cá nhân của MTIEN Solution...</p>',
+      template: 'default',
+      status: 'published',
+      seo: { metaTitle: 'Chính sách bảo mật', metaDescription: 'Chính sách bảo mật thông tin.', keywords: [] },
+      order: 8,
+    },
+  ]
+  for (const p of pages) {
+    await prisma.page.upsert({
+      where: { slug: p.slug },
+      update: {},
+      create: p,
+    })
+  }
+  console.log('✅ Pages seeded')
+
+  // ─── Analytics ───────────────────────────────────
+  const analyticsData: { date: Date; metric: string; value: number; path?: string; source?: string }[] = []
+  const metrics = ['pageView', 'visitor', 'session']
+  const sources = ['Google', 'Facebook', 'Direct', 'Zalo', 'Other']
+  const paths = ['/', '/about', '/services', '/blog', '/contact', '/shop', '/projects']
+
+  for (let i = 30; i >= 0; i--) {
+    const date = new Date()
+    date.setDate(date.getDate() - i)
+    date.setHours(0, 0, 0, 0)
+
+    for (const source of sources) {
+      const baseVisitors = source === 'Google' ? 400 : source === 'Direct' ? 280 : source === 'Facebook' ? 180 : source === 'Zalo' ? 80 : 40
+      analyticsData.push({
+        date,
+        metric: 'visitor',
+        value: baseVisitors + Math.floor(Math.random() * 100),
+        source,
+      })
+    }
+
+    for (const path of paths) {
+      const baseViews = path === '/' ? 500 : path === '/services' ? 200 : 80
+      analyticsData.push({
+        date,
+        metric: 'pageView',
+        value: baseViews + Math.floor(Math.random() * 80),
+        path,
+      })
+    }
+  }
+
+  await prisma.analytics.createMany({ data: analyticsData })
+  console.log('✅ Analytics seeded')
+
   console.log('🎉 Database seeded successfully!')
 }
 

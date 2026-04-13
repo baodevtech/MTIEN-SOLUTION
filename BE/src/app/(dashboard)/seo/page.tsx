@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Globe, Search as SearchIcon, FileText, Settings, AlertTriangle,
   CheckCircle2, XCircle, ExternalLink, RefreshCw, Download,
@@ -19,19 +19,40 @@ interface SEOPage {
   issues: string[]
 }
 
-const seoPages: SEOPage[] = [
-  { path: '/', title: 'Trang chủ', metaTitle: 'MTIEN Solution - Giải pháp công nghệ toàn diện', metaDescription: 'MTIEN Solution cung cấp giải pháp phần mềm, marketing số, thiết kế...', ogImage: '/og-home.jpg', indexed: true, score: 92, issues: [] },
-  { path: '/about', title: 'Giới thiệu', metaTitle: 'Về MTIEN Solution - Đội ngũ & Sứ mệnh', metaDescription: 'Tìm hiểu về đội ngũ chuyên gia tại MTIEN Solution...', ogImage: '/og-about.jpg', indexed: true, score: 85, issues: ['Meta description quá ngắn'] },
-  { path: '/services', title: 'Dịch vụ', metaTitle: 'Dịch vụ - MTIEN Solution', metaDescription: 'Các dịch vụ công nghệ hàng đầu: phần mềm, marketing, cloud server...', ogImage: '', indexed: true, score: 70, issues: ['Thiếu OG Image', 'Meta title nên dài hơn'] },
-  { path: '/blog', title: 'Blog', metaTitle: 'Blog - MTIEN Solution', metaDescription: 'Cập nhật tin tức, kiến thức công nghệ mới nhất...', ogImage: '/og-blog.jpg', indexed: true, score: 88, issues: [] },
-  { path: '/contact', title: 'Liên hệ', metaTitle: 'Liên hệ MTIEN Solution', metaDescription: 'Liên hệ với chúng tôi qua hotline, email hoặc form...', ogImage: '', indexed: true, score: 65, issues: ['Thiếu OG Image', 'Thiếu Schema markup'] },
-  { path: '/shop', title: 'Cửa hàng', metaTitle: 'Cửa hàng - MTIEN Solution', metaDescription: 'Mua sắm sản phẩm công nghệ chính hãng tại MTIEN Solution...', ogImage: '/og-shop.jpg', indexed: true, score: 78, issues: ['Cần cải thiện canonical URL'] },
-  { path: '/projects', title: 'Dự án', metaTitle: 'Dự án - MTIEN Solution', metaDescription: '', ogImage: '', indexed: false, score: 35, issues: ['Thiếu meta description', 'Thiếu OG Image', 'Trang chưa được index'] },
-]
+function buildSEOPages(pages: Array<{ slug: string; title: string; seo: Record<string, unknown> }>): SEOPage[] {
+  return pages.map(p => {
+    const seo = (p.seo || {}) as Record<string, string | boolean | string[]>
+    const issues: string[] = []
+    if (!seo.metaDescription) issues.push('Thiếu meta description')
+    if (!seo.ogImage) issues.push('Thiếu OG Image')
+    if (seo.noIndex) issues.push('Trang chưa được index')
+    const score = 100 - issues.length * 15
+    return {
+      path: p.slug,
+      title: p.title,
+      metaTitle: (seo.metaTitle as string) || p.title,
+      metaDescription: (seo.metaDescription as string) || '',
+      ogImage: (seo.ogImage as string) || '',
+      indexed: !seo.noIndex,
+      score: Math.max(score, 20),
+      issues,
+    }
+  })
+}
 
 export default function SEOPage() {
+  const [seoPages, setSeoPages] = useState<SEOPage[]>([])
+  const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<'pages' | 'sitemap' | 'robots' | 'global'>('pages')
   const [expandedPath, setExpandedPath] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/admin/pages')
+      .then(r => r.json())
+      .then(json => setSeoPages(buildSEOPages(json.data || [])))
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
 
   const avgScore = Math.round(seoPages.reduce((s, p) => s + p.score, 0) / seoPages.length)
   const indexedCount = seoPages.filter(p => p.indexed).length

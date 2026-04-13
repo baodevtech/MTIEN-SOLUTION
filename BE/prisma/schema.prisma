@@ -123,3 +123,66 @@ model Setting {
   key   String @unique
   value Json
 }
+
+// ─── Services ────────────────────────────────────────
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  shortDesc   String?
+  icon        String?
+  features    Json     @default("[]")
+  pricing     Json     @default("[]")
+  status      String   @default("active")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── Projects ────────────────────────────────────────
+model Project {
+  id           String    @id @default(cuid())
+  title        String
+  slug         String    @unique
+  client       String
+  description  String?
+  images       String[]  @default([])
+  technologies String[]  @default([])
+  category     String
+  status       String    @default("planned")
+  featured     Boolean   @default(false)
+  url          String?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+// ─── Site Pages ──────────────────────────────────────
+model Page {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String   @default("")
+  template  String   @default("default")
+  status    String   @default("published")
+  seo       Json     @default("{}")
+  order     Int      @default(0)
+  parentId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Analytics ───────────────────────────────────────
+model Analytics {
+  id        String   @id @default(cuid())
+  date      DateTime
+  metric    String
+  value     Int
+  path      String?
+  source    String?
+  createdAt DateTime @default(now())
+
+  @@index([date, metric])
+  @@index([metric, source])
+}

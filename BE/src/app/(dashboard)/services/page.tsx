@@ -1,27 +1,49 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Search, Plus, Pencil, Trash2, GripVertical, ExternalLink,
   Zap, Globe, Code, Palette, Megaphone, Server, ChevronDown,
   Eye, DollarSign, ToggleLeft, ToggleRight,
 } from 'lucide-react'
 import { cn, formatCurrency } from '@/lib/utils'
-import { mockServices } from '@/lib/mock-data'
 
 const iconMap: Record<string, typeof Zap> = {
   'Zap': Zap, 'Globe': Globe, 'Code': Code, 'Palette': Palette,
   'Megaphone': Megaphone, 'Server': Server,
 }
 
+interface ServiceData {
+  id: string; title: string; slug: string; description?: string | null
+  shortDesc?: string | null; icon?: string | null; features: unknown[]
+  pricing: Array<{ name: string; price: string; features: string[]; popular?: boolean }>
+  status: string; order: number; createdAt: string; updatedAt: string
+}
+
 export default function ServicesPage() {
+  const [services, setServices] = useState<ServiceData[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
-  const filtered = mockServices.filter((s) => {
+  const fetchServices = useCallback(async () => {
+    try {
+      const params = new URLSearchParams()
+      if (search) params.set('search', search)
+      const res = await fetch(`/api/admin/services?${params}`)
+      const json = await res.json()
+      setServices(json.data || [])
+    } catch { /* ignore */ } finally { setLoading(false) }
+  }, [search])
+
+  useEffect(() => { fetchServices() }, [fetchServices])
+
+  const filtered = services.filter((s) => {
     if (search && !s.title.toLowerCase().includes(search.toLowerCase())) return false
     return true
   })
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" /></div>
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -57,7 +79,7 @@ export default function ServicesPage() {
                     <h3 className="font-semibold text-slate-800">{service.title}</h3>
                     <span className="text-xs text-slate-400">#{idx + 1}</span>
                   </div>
-                  <p className="text-xs text-slate-500 truncate">{service.description.slice(0, 120)}...</p>
+                  <p className="text-xs text-slate-500 truncate">{(service.description || '').slice(0, 120)}...</p>
                 </div>
                 <span className={cn('px-2 py-1 rounded-md text-xs font-medium', service.status === 'active' ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-500')}>
                   {service.status === 'active' ? 'Đang hoạt động' : 'Nháp'}

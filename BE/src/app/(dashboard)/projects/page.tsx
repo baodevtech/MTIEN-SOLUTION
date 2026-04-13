@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Search, Plus, Pencil, Trash2, ExternalLink, Star,
   Calendar, Eye, Tag, Image as ImageIcon,
 } from 'lucide-react'
 import { cn, formatDate } from '@/lib/utils'
-import { mockProjects } from '@/lib/mock-data'
 
 const statusMap: Record<string, { label: string; color: string }> = {
   completed: { label: 'Hoàn thành', color: 'bg-green-50 text-green-700' },
@@ -21,16 +20,37 @@ const categoryColors: Record<string, string> = {
   'ERP System': 'bg-orange-100 text-orange-700',
 }
 
+interface ProjectData {
+  id: string; title: string; slug: string; client: string; description?: string | null
+  images: string[]; technologies: string[]; category: string; status: string
+  featured: boolean; url?: string | null; completedAt?: string | null
+  createdAt: string; updatedAt: string
+}
+
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState<ProjectData[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  const filtered = mockProjects.filter((p) => {
-    if (statusFilter !== 'all' && p.status !== statusFilter) return false
-    if (search && !p.title.toLowerCase().includes(search.toLowerCase()) && !p.client.toLowerCase().includes(search.toLowerCase())) return false
-    return true
-  })
+  const fetchProjects = useCallback(async () => {
+    try {
+      const params = new URLSearchParams()
+      if (statusFilter !== 'all') params.set('status', statusFilter)
+      if (search) params.set('search', search)
+      params.set('limit', '50')
+      const res = await fetch(`/api/admin/projects?${params}`)
+      const json = await res.json()
+      setProjects(json.data || [])
+    } catch { /* ignore */ } finally { setLoading(false) }
+  }, [statusFilter, search])
+
+  useEffect(() => { fetchProjects() }, [fetchProjects])
+
+  const filtered = projects
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" /></div>
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -47,7 +67,7 @@ export default function ProjectsPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {Object.entries(statusMap).map(([key, val]) => {
-          const count = mockProjects.filter(p => p.status === key).length
+          const count = projects.filter(p => p.status === key).length
           return (
             <div key={key} className="bg-white rounded-xl border border-slate-200 p-4 text-center">
               <p className="text-2xl font-bold text-slate-800">{count}</p>
