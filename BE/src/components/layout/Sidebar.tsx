@@ -104,34 +104,34 @@ export default function AdminSidebar({
       className={cn(
         'fixed top-0 left-0 h-screen z-40 flex flex-col sidebar-transition border-r backdrop-blur-3xl',
         collapsed ? 'w-[72px]' : 'w-[260px]',
-        'bg-[#fbfbfd]/70 border-black/5'
+        'bg-white/60 border-slate-200/80 shadow-[1px_0_40px_rgba(15,23,42,0.02)]'
       )}
     >
       {/* Logo */}
-      <div className="flex items-center h-16 px-4 border-b border-black/5 shrink-0">
+      <div className="flex items-center h-16 px-4 border-b border-slate-200/60 shrink-0">
         <div className="flex items-center gap-3 min-w-0 px-1">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0066cc] to-[#3694f4] flex items-center justify-center shrink-0 shadow-sm">
-            <span className="text-white font-semibold text-sm">M</span>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center shrink-0 shadow-[0_4px_12px_rgba(79,70,229,0.3)]">
+            <span className="text-white font-bold text-[15px] font-heading tracking-tight">M</span>
           </div>
           {!collapsed && (
-            <div className="min-w-0">
-              <div className="text-[#1d1d1f] font-semibold text-[15px] leading-tight truncate tracking-tight">MTIEN</div>
-              <div className="text-[#86868b] text-[11px] leading-tight mt-0.5">Admin Workspace</div>
+            <div className="min-w-0 animate-fade-in flex flex-col justify-center">
+              <div className="text-slate-900 font-bold text-[15px] leading-none truncate tracking-tight font-heading block">MTIEN</div>
+              <div className="text-slate-500 font-medium text-[11px] leading-tight mt-1">Admin Workspace</div>
             </div>
           )}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto custom-scrollbar py-4 px-3 space-y-4">
+      <nav className="flex-1 overflow-y-auto custom-scrollbar py-6 px-4 space-y-6">
         {navigation.map((group) => (
-          <div key={group.title}>
+          <div key={group.title} className="relative">
             {!collapsed && (
-              <div className="text-[11px] font-semibold text-[#86868b] px-3 mb-1.5 tracking-tight">
+              <div className="text-[11px] font-bold text-slate-400/80 px-2 mb-2 tracking-widest uppercase font-heading">
                 {group.title}
               </div>
             )}
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {group.items.map((item) => {
                 const active = isActive(item.href)
                 const hasChildren = item.children && item.children.length > 0
@@ -143,20 +143,20 @@ export default function AdminSidebar({
                       href={hasChildren ? '#' : item.href}
                       onClick={hasChildren ? (e) => { e.preventDefault(); toggleExpand(item.label) } : undefined}
                       className={cn(
-                        'flex items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-medium transition-all duration-200 group relative',
+                        'flex items-center gap-3.5 rounded-xl px-3 py-2.5 text-[0.875rem] font-medium transition-all duration-300 group relative',
                         active
-                          ? 'bg-black/5 text-[#1d1d1f]'
-                          : 'text-[#424245] hover:bg-black/[0.03]',
+                          ? 'bg-indigo-50/80 text-indigo-700 shadow-sm ring-1 ring-indigo-100/50'
+                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
                         collapsed && 'justify-center px-0'
                       )}
                       title={collapsed ? item.label : undefined}
                     >
                       {/* Active indicator */}
-                      {active && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-blue-500 rounded-r-full" />
+                      {active && !collapsed && (
+                        <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-5 bg-indigo-600 rounded-r-full shadow-[0_0_8px_rgba(79,70,229,0.5)]" />
                       )}
 
-                      <span className={cn('shrink-0', active ? 'text-[#0066cc]' : 'text-[#86868b]')}>
+                      <span className={cn('shrink-0 transition-colors duration-300 py-0.5', active ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600')}>
                         {item.icon}
                       </span>
 
@@ -165,10 +165,10 @@ export default function AdminSidebar({
                           <span className="flex-1 truncate">{item.label}</span>
                           {item.badge && (
                             <span className={cn(
-                              'text-[10px] font-semibold px-1.5 py-0.5 rounded-full',
+                              'text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm',
                               active
-                                ? 'bg-[#0066cc]/10 text-[#0066cc]'
-                                : 'bg-black/5 text-[#86868b]'
+                                ? 'bg-indigo-100 text-indigo-700'
+                                : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'
                             )}>
                               {item.badge}
                             </span>
@@ -177,8 +177,8 @@ export default function AdminSidebar({
                             <ChevronDown
                               size={14}
                               className={cn(
-                                'transition-transform duration-200',
-                                expanded && 'rotate-180'
+                                'transition-transform duration-300 text-slate-400',
+                                expanded && 'rotate-180 text-slate-600'
                               )}
                             />
                           )}
@@ -188,16 +188,16 @@ export default function AdminSidebar({
 
                     {/* Sub-items */}
                     {hasChildren && expanded && !collapsed && (
-                      <div className="ml-8 mt-1 space-y-0.5">
+                      <div className="ml-[2.25rem] mt-1.5 border-l-2 border-slate-100 pl-3 space-y-1 py-1">
                         {item.children!.map((child) => (
                           <Link
                             key={child.href}
                             href={child.href}
                             className={cn(
-                              'block px-3 py-2 text-[13px] rounded-lg transition-colors font-medium',
+                              'block px-3 py-2 text-[0.8125rem] rounded-lg transition-all duration-300 font-medium',
                               isActive(child.href)
-                                ? 'text-[#0066cc] bg-[#0066cc]/5'
-                                : 'text-[#86868b] hover:text-[#1d1d1f] hover:bg-black/[0.03]'
+                                ? 'text-indigo-700 bg-indigo-50/50 font-semibold'
+                                : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
                             )}
                           >
                             {child.label}
@@ -214,18 +214,18 @@ export default function AdminSidebar({
       </nav>
 
       {/* Bottom section */}
-      <div className="border-t border-black/5 p-3 space-y-1 shrink-0">
+      <div className="border-t border-slate-200/60 p-4 space-y-1.5 shrink-0 bg-slate-50/50">
         <a
           href="http://localhost:3000"
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
-            'flex items-center justify-start gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-[#86868b] hover:bg-black/[0.03] hover:text-[#1d1d1f] transition-colors',
-            collapsed && 'justify-center px-0'
+            'flex items-center justify-start gap-3.5 rounded-xl px-3 py-2.5 text-[0.875rem] font-medium text-slate-500 hover:bg-slate-100/80 hover:text-indigo-600 transition-all duration-300 group',
+            collapsed && 'justify-center px-0 gap-0'
           )}
           title="Xem website"
         >
-          <ExternalLink size={18} className="shrink-0" />
+          <ExternalLink size={18} className="shrink-0 transition-transform group-hover:scale-105" />
           {!collapsed && <span>Xem website</span>}
         </a>
 
@@ -233,12 +233,12 @@ export default function AdminSidebar({
         <button
           onClick={onToggle}
           className={cn(
-            'flex items-center justify-start gap-3 rounded-xl px-3 py-2.5 text-[14px] font-medium text-[#86868b] hover:bg-black/[0.03] hover:text-[#1d1d1f] transition-colors w-full',
-            collapsed && 'justify-center px-0'
+            'flex items-center justify-start gap-3.5 rounded-xl px-3 py-2.5 text-[0.875rem] font-medium text-slate-500 hover:bg-slate-100/80 hover:text-slate-900 transition-all duration-300 w-full group',
+            collapsed && 'justify-center px-0 gap-0'
           )}
         >
-          {collapsed ? <PanelLeft size={18} className="shrink-0" /> : <PanelLeftClose size={18} className="shrink-0" />}
-          {!collapsed && <span>Thu gọn</span>}
+          {collapsed ? <PanelLeft size={18} className="shrink-0 transition-transform group-hover:scale-105" /> : <PanelLeftClose size={18} className="shrink-0 transition-transform group-hover:scale-105" />}
+          {!collapsed && <span>Thu gọn sidebar</span>}
         </button>
       </div>
     </aside>

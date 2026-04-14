@@ -1,5 +1,18 @@
 import type { Metadata } from 'next'
+import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import './globals.css'
+
+const fontHeading = Plus_Jakarta_Sans({
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-heading',
+});
+
+const fontBody = Inter({
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-body',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -12,8 +25,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi">
-      <body className="antialiased text-slate-800">
+    <html lang="vi" className={`${fontHeading.variable} ${fontBody.variable}`}>
+      <body className="antialiased text-slate-800 font-sans selection:bg-indigo-500/30 selection:text-indigo-900">
         {children}
       </body>
     </html>

@@ -130,35 +130,37 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="apple-card text-[#1d1d1f] p-5 hover:shadow-md transition-all duration-200"
+            className="elegant-card relative overflow-hidden group"
           >
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between relative z-10">
               <div>
-                <p className="text-sm text-[#86868b] font-medium">{stat.label}</p>
-                <p className="text-2xl font-bold text-[#1d1d1f] mt-1">{stat.value}</p>
+                <p className="text-[0.75rem] text-slate-500 font-bold uppercase tracking-widest font-heading">{stat.label}</p>
+                <p className="text-3xl font-bold text-slate-800 mt-2 tracking-tight">{stat.value}</p>
               </div>
-              <div className={cn('w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center text-white', stat.color)}>
+              <div className={cn('w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3', stat.color)}>
                 {stat.icon}
               </div>
             </div>
-            <div className="flex items-center gap-1.5 mt-3">
+            <div className="flex items-center gap-2 mt-5 relative z-10">
               {stat.change > 0 ? (
-                <div className="flex items-center gap-0.5 text-[#34c759] bg-[#34c759]/10 px-1.5 py-0.5 rounded-full text-xs font-semibold">
-                  <ArrowUpRight size={12} />
+                <div className="flex items-center gap-1 text-emerald-600 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[0.75rem] font-bold shadow-sm">
+                  <ArrowUpRight size={14} />
                   {stat.change}%
                 </div>
               ) : (
-                <div className="flex items-center gap-0.5 text-red-600 bg-red-50 px-1.5 py-0.5 rounded-full text-xs font-semibold">
-                  <ArrowDownRight size={12} />
+                <div className="flex items-center gap-1 text-rose-600 bg-rose-50/80 px-2 py-0.5 rounded-md text-[0.75rem] font-bold shadow-sm">
+                  <ArrowDownRight size={14} />
                   {Math.abs(stat.change)}%
                 </div>
               )}
-              <span className="text-xs text-[#86868b]">so với tháng trước</span>
+              <span className="text-[0.75rem] text-slate-400 font-medium">so với tháng trước</span>
             </div>
+            {/* Ambient Background Glow */}
+            <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-slate-100 rounded-full blur-2xl opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-500 pointer-events-none" />
           </div>
         ))}
       </div>
@@ -166,22 +168,22 @@ export default function DashboardPage() {
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue chart */}
-        <div className="lg:col-span-2 apple-card text-[#1d1d1f] p-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="lg:col-span-2 elegant-card p-6 flex flex-col relative overflow-hidden group/chart">
+          <div className="flex items-center justify-between mb-8 relative z-10">
             <div>
-              <h3 className="font-semibold text-[#1d1d1f]">Doanh thu & Đơn hàng</h3>
-              <p className="text-sm text-[#86868b] mt-0.5">Biểu đồ theo thời gian</p>
+              <h3 className="font-bold text-[1.125rem] text-slate-800 tracking-tight font-heading">Doanh thu & Đơn hàng</h3>
+              <p className="text-[0.8125rem] font-medium text-slate-500 mt-1">Biểu đồ biến động theo thời gian</p>
             </div>
-            <div className="flex items-center bg-black/5 rounded-lg p-0.5">
+            <div className="flex items-center bg-slate-100/80 rounded-xl p-1 shadow-inner border border-slate-200/50">
               {(['7d', '30d', '90d'] as const).map((period) => (
                 <button
                   key={period}
                   onClick={() => setChartPeriod(period)}
                   className={cn(
-                    'px-3 py-1.5 text-xs font-medium rounded-md transition-all',
+                    'px-4 py-1.5 text-[0.75rem] font-bold uppercase tracking-wider rounded-lg transition-all duration-300',
                     chartPeriod === period
-                      ? 'bg-white text-[#1d1d1f] shadow-sm'
-                      : 'text-[#86868b] hover:text-[#1d1d1f]'
+                      ? 'bg-white text-indigo-600 shadow-[0_2px_8px_rgba(15,23,42,0.06)]'
+                      : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
                   )}
                 >
                   {period === '7d' ? '7 ngày' : period === '30d' ? '30 ngày' : '90 ngày'}
@@ -189,31 +191,38 @@ export default function DashboardPage() {
               ))}
             </div>
           </div>
+          {/* Ambient Background Gradient for chart */}
+          <div className="absolute left-0 bottom-0 w-full h-[60%] bg-gradient-to-t from-indigo-50/50 to-transparent pointer-events-none z-0" />
+          
           {/* Chart placeholder - using bars */}
-          <div className="h-64 flex items-end gap-2 px-2">
+          <div className="h-64 flex items-end gap-3 px-2 relative z-10 mt-auto">
             {(dashboard?.revenueChart || []).map((item, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full flex flex-col items-center gap-0.5">
-                  <div
-                    className="w-full bg-[#0066cc] rounded-t-md transition-all duration-500 hover:bg-[#0071e3] cursor-pointer relative group"
-                    style={{ height: `${(item.revenue / 140000000) * 200}px` }}
-                  >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      {formatCurrency(item.revenue)}
-                    </div>
+              <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar cursor-pointer">
+                <div className="w-full flex items-end justify-center gap-1.5 h-48 relative">
+                  {/* Tooltip */}
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-800/95 backdrop-blur-md text-white text-[0.75rem] px-3 py-1.5 rounded-lg opacity-0 group-hover/bar:opacity-100 group-hover/bar:-translate-y-2 transition-all duration-300 whitespace-nowrap shadow-xl pointer-events-none z-20 font-medium">
+                    <div className="font-bold text-indigo-300 mb-0.5">{formatCurrency(item.revenue)}</div>
+                    <div className="text-slate-300 text-[0.6875rem]">{item.orders} Đơn hàng</div>
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800/95" />
                   </div>
+                  
+                  {/* Bars */}
                   <div
-                    className="w-3/4 bg-[#34c759] rounded-t-sm"
-                    style={{ height: `${(item.orders / 70) * 40}px` }}
+                    className="w-[60%] max-w-[24px] bg-indigo-500 group-hover/bar:bg-indigo-400 rounded-t-md transition-all duration-500 shadow-[0_0_12px_rgba(79,70,229,0.3)] group-hover/bar:shadow-[0_0_20px_rgba(79,70,229,0.6)]"
+                    style={{ height: `${(item.revenue / 140000000) * 100}%` }}
+                  />
+                  <div
+                    className="w-[40%] max-w-[16px] bg-emerald-400 group-hover/bar:bg-emerald-300 rounded-t-md transition-all duration-500 opacity-80"
+                    style={{ height: `${(item.orders / 70) * 100}%` }}
                   />
                 </div>
-                <span className="text-[10px] text-[#86868b] mt-1">{item.date}</span>
+                <span className="text-[0.6875rem] font-bold text-slate-400 group-hover/bar:text-slate-600 transition-colors uppercase tracking-wider">{item.date}</span>
               </div>
             ))}
           </div>
-          <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-black/5">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-sm bg-[#0066cc]" />
+          <div className="flex items-center justify-center gap-8 mt-6 pt-5 border-t border-slate-100 relative z-10">
+            <div className="flex items-center gap-2.5">
+              <div className="w-3 h-3 rounded-md bg-indigo-500 shadow-[0_0_8px_rgba(79,70,229,0.4)]" />
               <span className="text-xs text-[#86868b]">Doanh thu</span>
             </div>
             <div className="flex items-center gap-2">
@@ -346,31 +355,32 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent contacts */}
-          <div className="apple-card text-[#1d1d1f] p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-[#1d1d1f]">Liên hệ mới</h3>
-                <span className="bg-red-100 text-red-600 text-xs font-bold px-1.5 py-0.5 rounded-full">
-                  {contacts.filter(c => c.status === 'new').length}
+          <div className="elegant-card p-6 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-sky-50 rounded-full blur-3xl opacity-50 z-0 pointer-events-none" />
+            <div className="flex items-center justify-between mb-6 relative z-10">
+              <div className="flex items-center gap-3">
+                <h3 className="font-bold text-[1rem] text-slate-800 tracking-tight">Liên hệ mới</h3>
+                <span className="bg-rose-100 text-rose-600 text-[0.6875rem] font-bold px-2 py-0.5 rounded-md shadow-sm">
+                  {contacts.filter(c => c.status === 'new').length} mới
                 </span>
               </div>
-              <Link href="/contacts" className="text-xs text-[#0066cc] hover:text-[#0071e3] font-medium">Xem tất cả</Link>
+              <Link href="/contacts" className="text-[0.75rem] font-bold text-indigo-600 hover:text-indigo-700 transition-colors uppercase tracking-wider">Xem tất cả</Link>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4 relative z-10">
               {contacts.slice(0, 4).map((contact) => {
                 const statusColor = getStatusColor(contact.status)
                 return (
-                  <div key={contact.id} className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-black/[0.02] transition-colors cursor-pointer">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-xs font-bold text-[#424245] shrink-0">
+                  <div key={contact.id} className="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-50/80 transition-all duration-300 cursor-pointer group border border-transparent hover:border-slate-100">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-slate-200 to-slate-100 border border-slate-200/50 flex items-center justify-center text-[0.875rem] font-bold text-slate-600 shrink-0 shadow-sm group-hover:scale-105 transition-transform">
                       {contact.name.split(' ').slice(-1)[0][0]}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-[#1d1d1f] truncate">{contact.name}</p>
-                        <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', statusColor.dot, contact.status === 'new' && 'status-pulse')} />
+                        <p className="text-[0.875rem] font-bold text-slate-800 truncate group-hover:text-indigo-600 transition-colors">{contact.name}</p>
+                        <span className={cn('w-2 h-2 rounded-full shrink-0 shadow-sm', statusColor.bg, contact.status === 'new' && 'animate-pulse')} />
                       </div>
-                      <p className="text-xs text-[#86868b] truncate">{contact.subject}</p>
-                      <p className="text-[10px] text-[#86868b] mt-0.5">{formatRelativeTime(contact.createdAt)}</p>
+                      <p className="text-[0.8125rem] text-slate-500 truncate mt-0.5 font-medium">{contact.subject}</p>
+                      <p className="text-[0.6875rem] font-bold text-slate-400 mt-1.5 uppercase tracking-wider">{formatRelativeTime(contact.createdAt)}</p>
                     </div>
                   </div>
                 )
@@ -379,21 +389,24 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick actions */}
-          <div className="bg-gradient-to-br from-[#0066cc] to-[#0071e3] rounded-xl p-5 text-white">
-            <h3 className="font-semibold mb-3">Thao tác nhanh</h3>
-            <div className="grid grid-cols-2 gap-2">
+          <div className="bg-gradient-to-br from-indigo-600 to-blue-600 rounded-3xl p-6 text-white shadow-[0_8px_30px_rgba(79,70,229,0.3)] relative overflow-hidden group">
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+            <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+            
+            <h3 className="font-bold text-[1.125rem] mb-5 tracking-tight relative z-10 font-heading">Thao tác nhanh</h3>
+            <div className="grid grid-cols-2 gap-3 relative z-10">
               {[
-                { label: 'Tạo bài viết', href: '/posts/new', icon: <FileText size={16} /> },
-                { label: 'Thêm sản phẩm', href: '/products/new', icon: <Package size={16} /> },
-                { label: 'Quản lý đơn hàng', href: '/orders', icon: <ShoppingCart size={16} /> },
-                { label: 'Xem Analytics', href: '/analytics', icon: <TrendingUp size={16} /> },
+                { label: 'Tạo bài viết', href: '/posts/new', icon: <FileText size={18} /> },
+                { label: 'Thêm thiết bị', href: '/products/new', icon: <Package size={18} /> },
+                { label: 'Xử lý đơn', href: '/orders', icon: <ShoppingCart size={18} /> },
+                { label: 'Analytics', href: '/analytics', icon: <TrendingUp size={18} /> },
               ].map((action) => (
                 <Link
                   key={action.href}
                   href={action.href}
-                  className="flex items-center gap-2 bg-white/10 hover:bg-white/20 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
+                  className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/5 hover:border-white/20 rounded-xl px-4 py-3 text-[0.8125rem] font-bold shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                 >
-                  {action.icon}
+                  <span className="text-indigo-200">{action.icon}</span>
                   {action.label}
                 </Link>
               ))}
