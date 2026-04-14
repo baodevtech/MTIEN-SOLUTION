@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,8 +31,10 @@ export async function PUT(request: NextRequest) {
     const settings = await prisma.setting.findMany()
     const data = Object.fromEntries(settings.map((s) => [s.key, s.value]))
 
+    await logActivity({ action: 'settings.update', module: 'settings', status: 'success', message: `Cập nhật cài đặt: ${Object.keys(body).join(', ')}`, detail: { keys: Object.keys(body) } })
     return corsResponse({ success: true, data, message: 'Cập nhật cài đặt thành công' })
   } catch {
+    await logActivity({ action: 'settings.update', module: 'settings', status: 'failed', message: 'Cập nhật cài đặt thất bại' })
     return corsResponse({ success: false, message: 'Invalid request' }, 400)
   }
 }

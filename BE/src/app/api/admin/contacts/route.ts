@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,6 +42,7 @@ export async function POST(request: NextRequest) {
         where: { id: body.id },
         data: { status: body.status },
       })
+      await logActivity({ action: 'contact.update-status', module: 'contact', status: 'success', message: `Cập nhật liên hệ ${contact.name} → ${body.status}`, detail: { id: body.id, newStatus: body.status } })
       return corsResponse({ success: true, data: contact })
     }
 
@@ -56,6 +58,7 @@ export async function POST(request: NextRequest) {
         status: 'new',
       },
     })
+    await logActivity({ action: 'contact.create', module: 'contact', status: 'success', message: `Liên hệ mới từ ${contact.name}`, detail: { id: contact.id, email: contact.email } })
     return corsResponse({ success: true, data: contact }, 201)
   } catch {
     return corsResponse({ success: false, message: 'Invalid request', code: 'CONTACT_CREATE_FAILED' }, 400)
@@ -68,6 +71,7 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get('id')
     if (!id) return corsResponse({ success: false, message: 'Thiếu ID liên hệ', code: 'MISSING_ID' }, 400)
     await prisma.contact.delete({ where: { id } })
+    await logActivity({ action: 'contact.delete', module: 'contact', status: 'success', message: 'Xóa liên hệ', detail: { id } })
     return corsResponse({ success: true })
   } catch {
     return corsResponse({ success: false, message: 'Không thể xoá liên hệ', code: 'CONTACT_DELETE_FAILED' }, 400)

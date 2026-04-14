@@ -9,6 +9,7 @@ import {
   Settings, Search, TrendingUp, Mail, FolderKanban, Globe,
   ChevronLeft, ChevronDown, Layers, Server, PanelLeftClose, PanelLeft,
   Palette, Megaphone, ClipboardList, BarChart3, LogOut, ExternalLink,
+  Activity,
 } from 'lucide-react'
 
 interface NavItem {
@@ -71,6 +72,7 @@ const navigation: NavGroup[] = [
       { label: 'Người dùng', href: '/users', icon: <Users size={20} /> },
       { label: 'SEO & Meta', href: '/seo', icon: <Search size={20} /> },
       { label: 'Analytics', href: '/analytics', icon: <BarChart3 size={20} /> },
+      { label: 'Activity Logs', href: '/logs', icon: <Activity size={20} /> },
       { label: 'Cài đặt', href: '/settings', icon: <Settings size={20} /> },
     ],
   },

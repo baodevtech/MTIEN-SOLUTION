@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -60,9 +61,11 @@ export async function POST(request: NextRequest) {
         featured: body.featured || false,
       },
     })
+    await logActivity({ action: 'product.create', module: 'product', status: 'success', message: `Tạo sản phẩm: ${product.name}`, detail: { id: product.id, slug: product.slug } })
     return corsResponse({ success: true, data: product }, 201)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Invalid request body'
+    await logActivity({ action: 'product.create', module: 'product', status: 'failed', message: `Tạo sản phẩm thất bại: ${message}` })
     return corsResponse({ success: false, message }, 400)
   }
 }
@@ -91,9 +94,11 @@ export async function PUT(request: NextRequest) {
         ...(rest.featured !== undefined && { featured: rest.featured }),
       },
     })
+    await logActivity({ action: 'product.update', module: 'product', status: 'success', message: `Cập nhật sản phẩm: ${product.name}`, detail: { id: product.id } })
     return corsResponse({ success: true, data: product })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Update failed'
+    await logActivity({ action: 'product.update', module: 'product', status: 'failed', message: `Cập nhật sản phẩm thất bại: ${message}` })
     return corsResponse({ success: false, message }, 400)
   }
 }
@@ -105,6 +110,7 @@ export async function DELETE(request: NextRequest) {
 
   try {
     await prisma.product.delete({ where: { id } })
+    await logActivity({ action: 'product.delete', module: 'product', status: 'success', message: 'Xóa sản phẩm', detail: { id } })
     return corsResponse({ success: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Delete failed'

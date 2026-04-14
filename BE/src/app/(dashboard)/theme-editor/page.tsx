@@ -57,6 +57,12 @@ export default function ThemeEditorPage() {
   const [tab, setTab] = useState<'page' | 'global'>('page')
   const [loaded, setLoaded] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [toast, setToast] = useState<{ type: 'success' | 'error' | 'warning' | 'info'; title: string; detail?: string } | null>(null)
+  const showToast = (type: 'success' | 'error' | 'warning' | 'info', title: string, detail?: string) => {
+    setToast({ type, title, detail })
+    setTimeout(() => setToast(null), type === 'error' ? 8000 : 4000)
+  }
+  const [verifying, setVerifying] = useState(false)
 
   // ---- Load saved config ----
   useEffect(() => {
@@ -165,14 +171,19 @@ export default function ThemeEditorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'save-draft', config }),
       })
-      if (resp.ok) {
+      const json = await resp.json()
+      if (resp.ok && json.success) {
         setSaved(true)
         setIsDirty(true)
         setTimeout(() => setSaved(false), 2000)
         setEditor(prev => ({ ...prev, unsavedChanges: false }))
+        showToast('success', 'Đã lưu nháp', json.savedAt ? `Lúc ${new Date(json.savedAt).toLocaleTimeString('vi-VN')}` : undefined)
+      } else {
+        showToast('error', 'Lưu thất bại', json.message || json.error || `HTTP ${resp.status}`)
       }
-    } catch { alert('Lưu thất bại!') }
-    finally { setSaving(false) }
+    } catch (err) {
+      showToast('error', 'Lưu thất bại', err instanceof Error ? err.message : 'Không thể kết nối server')
+    } finally { setSaving(false) }
   }, [config])
 
   // ---- Publish (make live on FE) ----
@@ -185,15 +196,46 @@ export default function ThemeEditorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'publish', config }),
       })
-      if (resp.ok) {
+      const json = await resp.json()
+      if (resp.ok && json.success) {
         setPublished(true)
         setIsDirty(false)
         setTimeout(() => setPublished(false), 3000)
         setEditor(prev => ({ ...prev, unsavedChanges: false }))
+        // Show revalidation result
+        if (json.revalidation?.success) {
+          showToast('success', 'Xuất bản thành công', `FE đã nhận cập nhật lúc ${new Date(json.publishedAt).toLocaleTimeString('vi-VN')}`)
+        } else {
+          showToast('warning', 'Đã lưu published nhưng FE chưa cập nhật', json.revalidation?.error || 'Revalidation failed — kiểm tra kết nối FE')
+        }
+      } else {
+        showToast('error', 'Xuất bản thất bại', json.message || json.error || `HTTP ${resp.status}`)
       }
-    } catch { alert('Xuất bản thất bại!') }
-    finally { setPublishing(false) }
+    } catch (err) {
+      showToast('error', 'Xuất bản thất bại', err instanceof Error ? err.message : 'Không thể kết nối server')
+    } finally { setPublishing(false) }
   }, [config])
+
+  // ---- Verify FE received theme ----
+  const verifyFE = useCallback(async () => {
+    setVerifying(true)
+    try {
+      const resp = await fetch('/api/theme?mode=verify-fe')
+      const json = await resp.json()
+      if (resp.ok && json.success) {
+        const fe = json.frontend
+        if (fe.hasTheme) {
+          showToast('success', 'FE đã nhận theme', `FE loaded at: ${new Date(fe.loadedAt || fe.timestamp).toLocaleTimeString('vi-VN')}`)
+        } else {
+          showToast('warning', 'FE chưa có theme', 'FE báo không có dữ liệu theme — hãy Xuất bản trước')
+        }
+      } else {
+        showToast('error', 'Không thể kiểm tra FE', json.message || json.error || `HTTP ${resp.status}`)
+      }
+    } catch (err) {
+      showToast('error', 'Kiểm tra FE thất bại', err instanceof Error ? err.message : 'Không thể kết nối')
+    } finally { setVerifying(false) }
+  }, [])
 
   // ---- Export ----
   const exportTheme = useCallback(() => {
@@ -280,6 +322,30 @@ export default function ThemeEditorPage() {
 
   return (
     <div className="space-y-6">
+      {/* Toast notifications */}
+      {toast && (
+        <div className={cn(
+          'fixed top-4 right-4 z-50 max-w-sm p-4 rounded-xl shadow-lg border backdrop-blur-sm animate-in slide-in-from-top-2 fade-in duration-300',
+          toast.type === 'success' && 'bg-[#f0fdf4] border-[#34c759]/30 text-[#166534]',
+          toast.type === 'error' && 'bg-[#fef2f2] border-[#ff3b30]/30 text-[#991b1b]',
+          toast.type === 'warning' && 'bg-[#fffbeb] border-[#ff9500]/30 text-[#92400e]',
+          toast.type === 'info' && 'bg-[#eff6ff] border-[#007aff]/30 text-[#1e40af]',
+        )}>
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 mt-0.5">
+              {toast.type === 'success' && <Check size={16} />}
+              {toast.type === 'error' && <X size={16} />}
+              {toast.type === 'warning' && <Info size={16} />}
+              {toast.type === 'info' && <Globe size={16} />}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold">{toast.title}</p>
+              {toast.detail && <p className="text-xs mt-1 opacity-80 break-words">{toast.detail}</p>}
+            </div>
+            <button onClick={() => setToast(null)} className="shrink-0 opacity-50 hover:opacity-100"><X size={14} /></button>
+          </div>
+        </div>
+      )}
       {/* ===== Header ===== */}
       <div className="flex items-center justify-between">
         <div>
@@ -337,6 +403,12 @@ export default function ThemeEditorPage() {
             {publishing ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               : published ? <Check size={16} /> : <Globe size={16} />}
             {publishing ? 'Đang xuất bản...' : published ? 'Đã xuất bản!' : 'Xuất bản'}
+          </button>
+          <button onClick={verifyFE} disabled={verifying}
+            className="apple-btn h-9 px-4 text-[13px] font-semibold border border-[#d2d2d7] text-[#424245] hover:bg-[#f5f5f7] gap-2 transition-all"
+            title="Kiểm tra FE đã nhận theme chưa">
+            {verifying ? <div className="w-3.5 h-3.5 border-2 border-[#424245] border-t-transparent rounded-full animate-spin" /> : <Monitor size={16} />}
+            {verifying ? 'Đang kiểm tra...' : 'Kiểm tra FE'}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -60,9 +61,11 @@ export async function POST(request: NextRequest) {
         publishedAt: body.status === 'published' ? new Date() : null,
       },
     })
+    await logActivity({ action: 'post.create', module: 'post', status: 'success', message: `Tạo bài viết: ${post.title}`, detail: { id: post.id, slug: post.slug } })
     return corsResponse({ success: true, data: post }, 201)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Invalid request body'
+    await logActivity({ action: 'post.create', module: 'post', status: 'failed', message: `Tạo bài viết thất bại: ${message}` })
     return corsResponse({ success: false, message }, 400)
   }
 }
@@ -88,9 +91,11 @@ export async function PUT(request: NextRequest) {
         ...(rest.status === 'published' && { publishedAt: new Date() }),
       },
     })
+    await logActivity({ action: 'post.update', module: 'post', status: 'success', message: `Cập nhật bài viết: ${post.title}`, detail: { id: post.id } })
     return corsResponse({ success: true, data: post })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Update failed'
+    await logActivity({ action: 'post.update', module: 'post', status: 'failed', message: `Cập nhật bài viết thất bại: ${message}` })
     return corsResponse({ success: false, message }, 400)
   }
 }
@@ -104,6 +109,7 @@ export async function DELETE(request: NextRequest) {
     // Bulk delete
     const idList = ids.split(',')
     await prisma.post.deleteMany({ where: { id: { in: idList } } })
+    await logActivity({ action: 'post.bulk-delete', module: 'post', status: 'success', message: `Xóa ${idList.length} bài viết`, detail: { count: idList.length } })
     return corsResponse({ success: true, deleted: idList.length })
   }
 
@@ -111,6 +117,7 @@ export async function DELETE(request: NextRequest) {
 
   try {
     await prisma.post.delete({ where: { id } })
+    await logActivity({ action: 'post.delete', module: 'post', status: 'success', message: `Xóa bài viết`, detail: { id } })
     return corsResponse({ success: true })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Delete failed'

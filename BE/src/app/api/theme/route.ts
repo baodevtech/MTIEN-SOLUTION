@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { logActivity } from '@/lib/activity-log'
 
 // Send revalidation webhook to frontend after publishing
 async function revalidateFrontend(): Promise<{ success: boolean; error?: string }> {
@@ -30,7 +31,53 @@ async function revalidateFrontend(): Promise<{ success: boolean; error?: string 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    const mode = searchParams.get('mode') // 'published' | 'draft' | 'history' | 'export'
+    const mode = searchParams.get('mode') // 'published' | 'draft' | 'history' | 'export' | 'verify-fe'
+
+    // Verify if FE received the published theme
+    if (mode === 'verify-fe') {
+      try {
+        const conn = await prisma.connectionSetting.findFirst()
+        if (!conn?.frontendUrl || !conn?.secretKey) {
+          return NextResponse.json({ success: false, error: 'NO_CONNECTION', message: 'Chưa cấu hình kết nối Frontend. Vào Cài đặt → Kết nối Frontend để thiết lập.' })
+        }
+
+        // Get published timestamp from DB
+        const publishedRow = await prisma.themeConfig.findUnique({ where: { type: 'published' } })
+
+        // Fetch current theme from FE
+        const feUrl = new URL('/api/theme/status', conn.frontendUrl)
+        const feRes = await fetch(feUrl.toString(), {
+          headers: { 'x-api-key': conn.secretKey },
+          signal: AbortSignal.timeout(10000),
+        })
+
+        if (!feRes.ok) {
+          return NextResponse.json({
+            success: false,
+            error: 'FE_UNREACHABLE',
+            message: `Frontend trả về HTTP ${feRes.status}. Kiểm tra URL: ${conn.frontendUrl}`,
+            frontendUrl: conn.frontendUrl,
+          })
+        }
+
+        const feData = await feRes.json()
+        return NextResponse.json({
+          success: true,
+          admin: {
+            hasPublished: !!publishedRow,
+            publishedAt: publishedRow?.updatedAt?.toISOString() || null,
+          },
+          frontend: feData,
+          frontendUrl: conn.frontendUrl,
+        })
+      } catch (err) {
+        return NextResponse.json({
+          success: false,
+          error: 'VERIFY_FAILED',
+          message: err instanceof Error ? err.message : 'Không thể kết nối Frontend',
+        })
+      }
+    }
 
     if (mode === 'history') {
       const versions = await prisma.themeVersion.findMany({
@@ -97,14 +144,15 @@ export async function POST(req: NextRequest) {
 
     if (action === 'save-draft') {
       if (!body.config) {
-        return NextResponse.json({ error: 'Missing config' }, { status: 400 })
+        return NextResponse.json({ success: false, error: 'MISSING_CONFIG', message: 'Thiếu dữ liệu config' }, { status: 400 })
       }
-      await prisma.themeConfig.upsert({
+      const row = await prisma.themeConfig.upsert({
         where: { type: 'draft' },
         update: { config: body.config },
         create: { type: 'draft', config: body.config },
       })
-      return NextResponse.json({ success: true, action: 'save-draft' })
+      await logActivity({ action: 'theme.save-draft', module: 'theme', status: 'success', message: 'Lưu nháp theme thành công', detail: { savedAt: row.updatedAt.toISOString() } })
+      return NextResponse.json({ success: true, action: 'save-draft', savedAt: row.updatedAt.toISOString() })
     }
 
     if (action === 'publish') {
@@ -122,11 +170,11 @@ export async function POST(req: NextRequest) {
       const configToPublish = draftRow?.config ?? body.config
 
       if (!configToPublish) {
-        return NextResponse.json({ error: 'Nothing to publish' }, { status: 400 })
+        return NextResponse.json({ success: false, error: 'NOTHING_TO_PUBLISH', message: 'Không có dữ liệu để xuất bản' }, { status: 400 })
       }
 
       // Update published
-      await prisma.themeConfig.upsert({
+      const publishedRow = await prisma.themeConfig.upsert({
         where: { type: 'published' },
         update: { config: configToPublish },
         create: { type: 'published', config: configToPublish },
@@ -140,9 +188,17 @@ export async function POST(req: NextRequest) {
 
       const revalidation = await revalidateFrontend()
 
+      await logActivity({ action: 'theme.publish', module: 'theme', status: 'success', message: 'Xuất bản theme thành công', detail: { publishedAt: publishedRow.updatedAt.toISOString(), revalidation } })
+      if (!revalidation.success) {
+        await logActivity({ action: 'theme.revalidate-fe', module: 'theme', status: 'failed', message: `Gửi FE thất bại: ${revalidation.error}`, detail: { revalidation } })
+      } else {
+        await logActivity({ action: 'theme.revalidate-fe', module: 'theme', status: 'success', message: 'Gửi cập nhật FE thành công' })
+      }
+
       return NextResponse.json({
         success: true,
         action: 'publish',
+        publishedAt: publishedRow.updatedAt.toISOString(),
         revalidation,
       })
     }
@@ -161,6 +217,7 @@ export async function POST(req: NextRequest) {
         update: { config: version.config! },
         create: { type: 'draft', config: version.config! },
       })
+      await logActivity({ action: 'theme.restore', module: 'theme', status: 'success', message: `Khôi phục theme version: ${versionName}`, detail: { version: versionName } })
       return NextResponse.json({ success: true, action: 'restore', config: version.config })
     }
 
@@ -174,16 +231,20 @@ export async function POST(req: NextRequest) {
         update: { config: importConfig },
         create: { type: 'draft', config: importConfig },
       })
+      await logActivity({ action: 'theme.import', module: 'theme', status: 'success', message: 'Import theme thành công' })
       return NextResponse.json({ success: true, action: 'import' })
     }
 
     if (action === 'reset') {
       await prisma.themeConfig.deleteMany({ where: { type: 'draft' } })
+      await logActivity({ action: 'theme.reset', module: 'theme', status: 'success', message: 'Reset theme draft về mặc định' })
       return NextResponse.json({ success: true, action: 'reset' })
     }
 
-    return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 })
-  } catch {
-    return NextResponse.json({ error: 'Operation failed' }, { status: 500 })
+    return NextResponse.json({ success: false, error: 'UNKNOWN_ACTION', message: `Action không hợp lệ: ${action}` }, { status: 400 })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Operation failed'
+    await logActivity({ action: 'theme.error', module: 'theme', status: 'failed', message: `Lỗi theme: ${message}`, detail: { error: message } })
+    return NextResponse.json({ success: false, error: 'INTERNAL_ERROR', message }, { status: 500 })
   }
 }

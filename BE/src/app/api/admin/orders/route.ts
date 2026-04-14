@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -67,8 +68,10 @@ export async function PUT(request: NextRequest) {
       include: { items: true },
     })
 
+    await logActivity({ action: 'order.update-status', module: 'order', status: 'success', message: `Cập nhật đơn hàng ${order.orderNumber} → ${newStatus}`, detail: { id, orderNumber: order.orderNumber, newStatus } })
     return corsResponse({ success: true, data: order })
   } catch {
+    await logActivity({ action: 'order.update-status', module: 'order', status: 'failed', message: 'Cập nhật đơn hàng thất bại' })
     return corsResponse({ success: false, message: 'Invalid request' }, 400)
   }
 }

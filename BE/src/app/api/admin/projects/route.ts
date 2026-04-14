@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,9 +59,11 @@ export async function POST(request: NextRequest) {
         completedAt: body.completedAt ? new Date(body.completedAt) : null,
       },
     })
+    await logActivity({ action: 'project.create', module: 'project', status: 'success', message: `Tạo dự án: ${project.title}`, detail: { id: project.id, slug: project.slug } })
     return corsResponse({ success: true, data: project }, 201)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Invalid request body'
+    await logActivity({ action: 'project.create', module: 'project', status: 'failed', message: `Tạo dự án thất bại: ${message}` })
     return corsResponse({ success: false, message }, 400)
   }
 }
@@ -73,6 +76,7 @@ export async function PUT(request: NextRequest) {
 
     if (rest.completedAt) rest.completedAt = new Date(rest.completedAt)
     const project = await prisma.project.update({ where: { id }, data: rest })
+    await logActivity({ action: 'project.update', module: 'project', status: 'success', message: `Cập nhật dự án: ${project.title}`, detail: { id: project.id } })
     return corsResponse({ success: true, data: project })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Update failed'
@@ -86,5 +90,6 @@ export async function DELETE(request: NextRequest) {
   if (!id) return corsResponse({ success: false, message: 'ID required' }, 400)
 
   await prisma.project.delete({ where: { id } })
+  await logActivity({ action: 'project.delete', module: 'project', status: 'success', message: 'Xóa dự án', detail: { id } })
   return corsResponse({ success: true })
 }

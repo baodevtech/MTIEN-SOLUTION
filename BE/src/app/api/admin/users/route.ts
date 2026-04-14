@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
 import { hashSync } from 'bcryptjs'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,9 +50,11 @@ export async function POST(request: NextRequest) {
       },
       select: { id: true, name: true, email: true, role: true, avatar: true, createdAt: true, updatedAt: true },
     })
+    await logActivity({ action: 'user.create', module: 'user', status: 'success', message: `Tạo người dùng: ${user.name} (${user.email})`, detail: { id: user.id, email: user.email, role: user.role } })
     return corsResponse({ success: true, data: user }, 201)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Create failed'
+    await logActivity({ action: 'user.create', module: 'user', status: 'failed', message: `Tạo người dùng thất bại: ${message}` })
     return corsResponse({ success: false, message }, 400)
   }
 }
@@ -70,6 +73,7 @@ export async function PUT(request: NextRequest) {
       data,
       select: { id: true, name: true, email: true, role: true, avatar: true, createdAt: true, updatedAt: true },
     })
+    await logActivity({ action: 'user.update', module: 'user', status: 'success', message: `Cập nhật người dùng: ${user.name}`, detail: { id: user.id } })
     return corsResponse({ success: true, data: user })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Update failed'
@@ -83,5 +87,6 @@ export async function DELETE(request: NextRequest) {
   if (!id) return corsResponse({ success: false, message: 'ID required' }, 400)
 
   await prisma.user.delete({ where: { id } })
+  await logActivity({ action: 'user.delete', module: 'user', status: 'success', message: 'Xóa người dùng', detail: { id } })
   return corsResponse({ success: true })
 }

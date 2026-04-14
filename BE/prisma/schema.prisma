@@ -211,3 +211,22 @@ model ConnectionSetting {
   lastConnected DateTime?
   updatedAt     DateTime @updatedAt
 }
+
+// ─── Activity Logs ───────────────────────────────────
+model ActivityLog {
+  id         String   @id @default(cuid())
+  action     String   // 'theme.save-draft' | 'theme.publish' | 'post.create' | etc.
+  module     String   // 'theme' | 'post' | 'product' | 'order' | 'contact' | 'settings' | etc.
+  status     String   // 'success' | 'failed' | 'warning'
+  message    String   // Human-readable description
+  detail     Json?    // Extra structured data (error codes, HTTP status, payloads, etc.)
+  userId     String?  // Who performed the action
+  userName   String?  // Denormalised for quick display
+  ip         String?
+  duration   Int?     // milliseconds
+  createdAt  DateTime @default(now())
+
+  @@index([module])
+  @@index([status])
+  @@index([createdAt])
+}

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { logActivity } from '@/lib/activity-log'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
         uploadedBy: body.uploadedBy || 'Admin',
       },
     })
+    await logActivity({ action: 'media.upload', module: 'media', status: 'success', message: `Upload: ${media.originalName}`, detail: { id: media.id, filename: media.filename, type: media.type } })
     return corsResponse({ success: true, data: media }, 201)
   } catch {
     return corsResponse({ success: false, message: 'Invalid request', code: 'MEDIA_CREATE_FAILED' }, 400)
@@ -58,11 +60,13 @@ export async function DELETE(request: NextRequest) {
       const idList = ids.split(',').map(s => s.trim()).filter(Boolean)
       if (idList.length === 0) return corsResponse({ success: false, message: 'Danh sách ID trống', code: 'INVALID_IDS' }, 400)
       const result = await prisma.media.deleteMany({ where: { id: { in: idList } } })
+      await logActivity({ action: 'media.bulk-delete', module: 'media', status: 'success', message: `Xóa ${result.count} media`, detail: { count: result.count } })
       return corsResponse({ success: true, deleted: result.count })
     }
 
     if (!id) return corsResponse({ success: false, message: 'Thiếu ID media', code: 'MISSING_ID' }, 400)
     await prisma.media.delete({ where: { id } })
+    await logActivity({ action: 'media.delete', module: 'media', status: 'success', message: 'Xóa media', detail: { id } })
     return corsResponse({ success: true })
   } catch {
     return corsResponse({ success: false, message: 'Không thể xoá media', code: 'MEDIA_DELETE_FAILED' }, 400)
