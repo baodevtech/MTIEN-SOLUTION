@@ -38,6 +38,7 @@ export default function AnalyticsPage() {
     stats: { visitors: number; pageViews: number; contacts: number; orders: number }
     trafficSources: Array<{ source: string; visitors: number }>
     topPages: Array<{ path: string; views: number }>
+    raw: Array<{ date: string; metric: string; value: number }>
   } | null>(null)
 
   useEffect(() => {
@@ -56,6 +57,23 @@ export default function AnalyticsPage() {
         color: sourceColors[s.source || ''] || '#94A3B8',
       }))
     : defaultSourceData
+
+  const conversionData = (() => {
+    if (!analyticsData?.raw?.length) {
+      return Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(); d.setDate(d.getDate() - (6 - i))
+        return { date: d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }), contacts: 0, orders: 0 }
+      })
+    }
+    const grouped: Record<string, { contacts: number; orders: number }> = {}
+    for (const d of analyticsData.raw) {
+      const key = new Date(d.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })
+      if (!grouped[key]) grouped[key] = { contacts: 0, orders: 0 }
+      if (d.metric === 'contacts') grouped[key].contacts += d.value
+      if (d.metric === 'orders') grouped[key].orders += d.value
+    }
+    return Object.entries(grouped).map(([date, v]) => ({ date, ...v }))
+  })()
 
   const topPages = analyticsData?.topPages?.length
     ? analyticsData.topPages.map(p => ({ path: p.path || '/', title: p.path || '/', views: p.views, avgTime: '—', bounceRate: 0 }))

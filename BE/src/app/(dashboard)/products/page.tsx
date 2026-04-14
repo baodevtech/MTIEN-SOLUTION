@@ -201,7 +201,7 @@ export default function ProductsPage() {
                       <td><span className="text-xs font-mono text-slate-500">{product.sku}</span></td>
                       <td>
                         <span className="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded-md">
-                          {categoryLabels[product.category]}
+                          {categoryLabels[product.category as ProductCategory]}
                         </span>
                       </td>
                       <td className="text-right">
@@ -279,7 +279,7 @@ export default function ProductsPage() {
                 </div>
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] font-medium bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">{categoryLabels[product.category]}</span>
+                    <span className="text-[10px] font-medium bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">{categoryLabels[product.category as ProductCategory]}</span>
                     <span className={cn('text-[10px] font-medium px-1.5 py-0.5 rounded-full', statusColor.bg, statusColor.text)}>
                       {getStatusLabel(product.status)}
                     </span>

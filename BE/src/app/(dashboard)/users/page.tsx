@@ -17,7 +17,7 @@ const roleLabels: Record<UserRole, { label: string; color: string; icon: typeof 
 }
 
 interface UserData {
-  id: string; name: string; email: string; role: UserRole; avatar?: string | null
+  id: string; name: string; email: string; role: UserRole; status?: string; avatar?: string | null
   createdAt: string; updatedAt: string
 }
 
@@ -129,7 +129,7 @@ export default function UsersPage() {
           <tbody>
             {filtered.map((user) => {
               const roleConf = roleLabels[user.role as UserRole]
-              const statusColor = getStatusColor(user.status)
+              const statusColor = getStatusColor(user.status || 'active')
               return (
                 <tr key={user.id}>
                   <td>
@@ -151,7 +151,7 @@ export default function UsersPage() {
                   <td>
                     <span className={cn('inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full', statusColor.bg, statusColor.text)}>
                       <span className={cn('w-1.5 h-1.5 rounded-full', statusColor.dot)} />
-                      {getStatusLabel(user.status)}
+                      {getStatusLabel(user.status || 'active')}
                     </span>
                   </td>
                   <td className="text-xs text-slate-400">{formatDate(user.createdAt)}</td>

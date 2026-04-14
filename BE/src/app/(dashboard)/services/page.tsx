@@ -10,7 +10,8 @@ import { cn, formatCurrency } from '@/lib/utils'
 
 const iconMap: Record<string, typeof Zap> = {
   'Zap': Zap, 'Globe': Globe, 'Code': Code, 'Palette': Palette,
-  'Megaphone': Megaphone, 'Server': Server,
+  'Megaphone': Megaphone, 'Server': Server, 'Cloud': Server,
+  'BarChart': Megaphone,
 }
 
 interface ServiceData {
@@ -66,7 +67,7 @@ export default function ServicesPage() {
       {/* Services List */}
       <div className="space-y-3">
         {filtered.map((service, idx) => {
-          const Icon = iconMap[service.icon] || Zap
+          const Icon = iconMap[service.icon ?? ''] || Zap
           const expanded = expandedId === service.id
           return (
             <div key={service.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
@@ -104,7 +105,7 @@ export default function ServicesPage() {
                       <ul className="space-y-1.5">
                         {service.features.map((f, i) => (
                           <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" /> {f}
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" /> {String(f)}
                           </li>
                         ))}
                       </ul>

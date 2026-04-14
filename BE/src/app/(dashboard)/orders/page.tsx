@@ -132,7 +132,7 @@ export default function OrdersPage() {
                       <td>
                         <div className="flex items-center gap-2">
                           <div className="flex -space-x-2">
-                            {order.items.slice(0, 2).map((item, i) => (
+                            {order.items.slice(0, 2).map((item: { image: string; name: string; quantity: number; total: number }, i: number) => (
                               <div key={i} className="w-8 h-8 rounded-md bg-slate-100 border-2 border-white overflow-hidden">
                                 <Image src={item.image} alt="" width={32} height={32} className="w-full h-full object-cover" />
                               </div>
@@ -189,7 +189,7 @@ export default function OrdersPage() {
             {/* Items */}
             <div className="space-y-2">
               <h4 className="text-xs font-semibold text-slate-500 uppercase">Sản phẩm</h4>
-              {selectedOrder.items.map((item, i) => (
+              {selectedOrder.items.map((item: { image: string; name: string; quantity: number; total: number }, i: number) => (
                 <div key={i} className="flex items-center gap-3 p-2 bg-slate-50 rounded-lg">
                   <Image src={item.image} alt="" width={40} height={40} className="w-10 h-10 rounded-md object-cover" />
                   <div className="flex-1 min-w-0">
