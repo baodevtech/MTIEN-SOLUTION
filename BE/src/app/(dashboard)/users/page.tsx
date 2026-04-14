@@ -57,20 +57,6 @@ export default function UsersPage() {
     } catch { /* ignore */ }
   }
 
-  const filtered = users
-
-  const handleSave = async () => {
-    try {
-      const method = editUser ? 'PUT' : 'POST'
-      const body = editUser
-        ? { id: editUser.id, name: form.name, email: form.email, role: form.role, ...(form.password ? { password: form.password } : {}) }
-        : { name: form.name, email: form.email, password: form.password, role: form.role }
-      await fetch('/api/admin/users', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-      setShowModal(false)
-      fetchUsers()
-    } catch { /* ignore */ }
-  }
-
   const openNew = () => {
     setEditUser(null)
     setForm({ name: '', email: '', password: '', role: 'editor', status: 'active' })
