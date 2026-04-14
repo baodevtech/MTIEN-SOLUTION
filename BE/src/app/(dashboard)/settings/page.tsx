@@ -6,7 +6,7 @@ import {
   Facebook, Youtube, Instagram, Linkedin, FileText, Send,
   Image as ImageIcon, Upload, Palette, Settings as SettingsIcon,
   ChevronRight, Eye, Shield, Database, Bell, Link2, Key,
-  RefreshCw, CheckCircle2, XCircle, Copy, Zap,
+  RefreshCw, CheckCircle2, XCircle, Copy, Zap, Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -158,15 +158,63 @@ export default function SettingsPage() {
     fromEmail: 'noreply@mtiensolution.vn',
   })
 
+  const [settingsSaving, setSettingsSaving] = useState(false)
+  const [settingsMsg, setSettingsMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  const showSettingsMsg = (type: 'success' | 'error', text: string) => {
+    setSettingsMsg({ type, text })
+    setTimeout(() => setSettingsMsg(null), 3000)
+  }
+
+  // Load saved settings on mount
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(r => r.json())
+      .then(json => {
+        const d = json.data || {}
+        if (d.general) setGeneral(prev => ({ ...prev, ...d.general }))
+        if (d.company) setCompany(prev => ({ ...prev, ...d.company }))
+        if (d.social) setSocial(prev => ({ ...prev, ...d.social }))
+        if (d.email) setEmail(prev => ({ ...prev, ...d.email }))
+      })
+      .catch(() => {})
+  }, [])
+
+  const saveSettings = useCallback(async (keys?: string[]) => {
+    setSettingsSaving(true)
+    try {
+      const allData: Record<string, unknown> = { general, company, social, email }
+      const payload = keys ? Object.fromEntries(keys.map(k => [k, allData[k]])) : allData
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const json = await res.json()
+      if (!res.ok || !json.success) throw new Error(json.message || 'SETTINGS_SAVE_FAILED')
+      showSettingsMsg('success', 'Đã lưu cài đặt thành công!')
+    } catch (err) {
+      showSettingsMsg('error', err instanceof Error ? err.message : 'Lỗi lưu cài đặt')
+    } finally {
+      setSettingsSaving(false)
+    }
+  }, [general, company, social, email])
+
   return (
     <div className="space-y-6 animate-fade-in">
+      {settingsMsg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', settingsMsg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {settingsMsg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {settingsMsg.text}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Cài đặt</h1>
           <p className="text-sm text-slate-500 mt-0.5">Quản lý cấu hình hệ thống</p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
-          <Save size={16} /> Lưu tất cả
+        <button onClick={() => saveSettings()} disabled={settingsSaving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm disabled:opacity-50">
+          {settingsSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} Lưu tất cả
         </button>
       </div>
 
@@ -649,8 +697,8 @@ REVALIDATION_SECRET=${connection.secretKey}`}
 
           {/* Save Button at bottom */}
           <div className="flex justify-end mt-6">
-            <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
-              <Save size={16} /> Lưu cài đặt
+            <button onClick={() => saveSettings()} disabled={settingsSaving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm disabled:opacity-50">
+              {settingsSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} Lưu cài đặt
             </button>
           </div>
         </div>

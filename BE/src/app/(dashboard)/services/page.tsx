@@ -4,15 +4,17 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   Search, Plus, Pencil, Trash2, GripVertical, ExternalLink,
   Zap, Globe, Code, Palette, Megaphone, Server, ChevronDown,
-  Eye, DollarSign, ToggleLeft, ToggleRight,
+  Eye, DollarSign, ToggleLeft, ToggleRight, X, Save, Loader2, CheckCircle2, XCircle,
 } from 'lucide-react'
-import { cn, formatCurrency } from '@/lib/utils'
+import { cn, formatCurrency, slugify } from '@/lib/utils'
 
 const iconMap: Record<string, typeof Zap> = {
   'Zap': Zap, 'Globe': Globe, 'Code': Code, 'Palette': Palette,
   'Megaphone': Megaphone, 'Server': Server, 'Cloud': Server,
   'BarChart': Megaphone,
 }
+
+const iconOptions = ['Zap', 'Globe', 'Code', 'Palette', 'Megaphone', 'Server']
 
 interface ServiceData {
   id: string; title: string; slug: string; description?: string | null
@@ -26,6 +28,12 @@ export default function ServicesPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState(false)
+  const [editService, setEditService] = useState<ServiceData | null>(null)
+  const [form, setForm] = useState({ title: '', description: '', shortDesc: '', icon: 'Zap', status: 'active', features: '' })
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
 
   const fetchServices = useCallback(async () => {
     try {
@@ -39,6 +47,55 @@ export default function ServicesPage() {
 
   useEffect(() => { fetchServices() }, [fetchServices])
 
+  const openNew = () => {
+    setEditService(null)
+    setForm({ title: '', description: '', shortDesc: '', icon: 'Zap', status: 'active', features: '' })
+    setShowModal(true)
+  }
+
+  const openEdit = (s: ServiceData) => {
+    setEditService(s)
+    setForm({ title: s.title, description: s.description || '', shortDesc: s.shortDesc || '', icon: s.icon || 'Zap', status: s.status, features: (s.features || []).map(String).join('\n') })
+    setShowModal(true)
+  }
+
+  const handleSave = async () => {
+    if (!form.title) return alert('Vui lòng nhập tên dịch vụ')
+    setSaving(true)
+    try {
+      const body = {
+        ...(editService && { id: editService.id }),
+        title: form.title,
+        slug: editService?.slug || slugify(form.title),
+        description: form.description,
+        shortDesc: form.shortDesc,
+        icon: form.icon,
+        status: form.status,
+        features: form.features.split('\n').map(s => s.trim()).filter(Boolean),
+        order: editService?.order ?? services.length,
+      }
+      const res = await fetch('/api/admin/services', {
+        method: editService ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const json = await res.json()
+      if (json.success) { setShowModal(false); showMsg('success', editService ? 'Đã cập nhật dịch vụ!' : 'Đã tạo dịch vụ mới!'); fetchServices() }
+      else showMsg('error', json.message || 'SERVICE_SAVE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+    finally { setSaving(false) }
+  }
+
+  const handleDelete = async (id: string, title: string) => {
+    if (!confirm(`Xoá dịch vụ "${title}"?`)) return
+    try {
+      const res = await fetch(`/api/admin/services?id=${id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) { showMsg('success', 'Đã xoá dịch vụ!'); fetchServices() }
+      else showMsg('error', json.message || 'SERVICE_DELETE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
+
   const filtered = services.filter((s) => {
     if (search && !s.title.toLowerCase().includes(search.toLowerCase())) return false
     return true
@@ -48,12 +105,18 @@ export default function ServicesPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {msg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {msg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {msg.text}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Dịch vụ</h1>
           <p className="text-sm text-slate-500 mt-0.5">Quản lý danh sách dịch vụ của MTIEN Solution</p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
+        <button onClick={openNew} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
           <Plus size={16} /> Thêm dịch vụ
         </button>
       </div>
@@ -87,8 +150,8 @@ export default function ServicesPage() {
                 </span>
                 <div className="flex items-center gap-1">
                   <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-100"><ExternalLink size={14} /></button>
-                  <button className="p-2 rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600"><Pencil size={14} /></button>
-                  <button className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
+                  <button onClick={() => openEdit(service)} className="p-2 rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600"><Pencil size={14} /></button>
+                  <button onClick={() => handleDelete(service.id, service.title)} className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
                   <button onClick={() => setExpandedId(expanded ? null : service.id)} className={cn('p-2 rounded-lg text-slate-400 hover:bg-slate-100 transition-transform', expanded && 'rotate-180')}>
                     <ChevronDown size={14} />
                   </button>
@@ -142,6 +205,57 @@ export default function ServicesPage() {
         <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
           <Zap size={48} className="mx-auto text-slate-200 mb-3" />
           <p className="text-sm text-slate-400">Không tìm thấy dịch vụ nào</p>
+        </div>
+      )}
+
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4">
+            <div className="flex items-center justify-between p-5 border-b border-slate-200">
+              <h2 className="text-lg font-bold text-slate-800">{editService ? 'Chỉnh sửa dịch vụ' : 'Thêm dịch vụ mới'}</h2>
+              <button onClick={() => setShowModal(false)} className="p-1 rounded-lg hover:bg-slate-100"><X size={18} /></button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Tên dịch vụ *</label>
+                <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Mô tả ngắn</label>
+                <input value={form.shortDesc} onChange={e => setForm(f => ({ ...f, shortDesc: e.target.value }))} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Mô tả chi tiết</label>
+                <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Tính năng (mỗi dòng 1 tính năng)</label>
+                <textarea value={form.features} onChange={e => setForm(f => ({ ...f, features: e.target.value }))} rows={4} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono" placeholder={"Tính năng 1\nTính năng 2\nTính năng 3"} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Icon</label>
+                  <select value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {iconOptions.map(i => <option key={i} value={i}>{i}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Trạng thái</label>
+                  <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="active">Hoạt động</option>
+                    <option value="draft">Nháp</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 p-5 border-t border-slate-200">
+              <button onClick={() => setShowModal(false)} className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Huỷ</button>
+              <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 rounded-lg disabled:opacity-50">
+                {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                {editService ? 'Cập nhật' : 'Tạo dịch vụ'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

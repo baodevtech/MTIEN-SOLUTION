@@ -58,6 +58,18 @@ export async function POST(request: NextRequest) {
     })
     return corsResponse({ success: true, data: contact }, 201)
   } catch {
-    return corsResponse({ success: false, message: 'Invalid request' }, 400)
+    return corsResponse({ success: false, message: 'Invalid request', code: 'CONTACT_CREATE_FAILED' }, 400)
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    if (!id) return corsResponse({ success: false, message: 'Thiếu ID liên hệ', code: 'MISSING_ID' }, 400)
+    await prisma.contact.delete({ where: { id } })
+    return corsResponse({ success: true })
+  } catch {
+    return corsResponse({ success: false, message: 'Không thể xoá liên hệ', code: 'CONTACT_DELETE_FAILED' }, 400)
   }
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   Search, Mail, Phone, Building2, Clock, Eye, Reply, Archive,
-  Trash2, ChevronDown, X, User, Send, Loader2,
+  Trash2, ChevronDown, X, User, Send, Loader2, CheckCircle2, XCircle,
 } from 'lucide-react'
 import { cn, formatRelativeTime, getStatusColor, getStatusLabel } from '@/lib/utils'
 import type { ContactStatus } from '@/types'
@@ -23,6 +23,8 @@ export default function ContactsPage() {
   const [replyText, setReplyText] = useState('')
   const [contacts, setContacts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
 
   const fetchContacts = useCallback(async () => {
     try {
@@ -46,6 +48,31 @@ export default function ContactsPage() {
     fetchContacts()
   }, [fetchContacts])
 
+  const handleUpdateStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch('/api/admin/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      })
+      const json = await res.json()
+      if (json.success) {
+        fetchContacts()
+        if (selected?.id === id) setSelected({ ...selected, status })
+      } else showMsg('error', json.message || 'CONTACT_UPDATE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Xoá liên hệ này?')) return
+    try {
+      const res = await fetch(`/api/admin/contacts?id=${id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) { if (selected?.id === id) setSelected(null); showMsg('success', 'Đã xoá liên hệ!'); fetchContacts() }
+      else showMsg('error', json.message || 'CONTACT_DELETE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -62,6 +89,12 @@ export default function ContactsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {msg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {msg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {msg.text}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Liên hệ</h1>
@@ -91,7 +124,7 @@ export default function ContactsPage() {
             const statusColor = getStatusColor(contact.status)
             const active = selected?.id === contact.id
             return (
-              <div key={contact.id} onClick={() => setSelected(contact)} className={cn('bg-white rounded-xl border p-4 cursor-pointer transition-all hover:shadow-sm', active ? 'border-blue-500 ring-1 ring-blue-500/20' : 'border-slate-200')}>
+              <div key={contact.id} onClick={() => { setSelected(contact); if (contact.status === 'new') handleUpdateStatus(contact.id, 'read') }} className={cn('bg-white rounded-xl border p-4 cursor-pointer transition-all hover:shadow-sm', active ? 'border-blue-500 ring-1 ring-blue-500/20' : 'border-slate-200')}>
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-xs font-bold text-slate-600">
@@ -123,8 +156,8 @@ export default function ContactsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-lg font-bold text-slate-800">{selected.subject}</h2>
                   <div className="flex items-center gap-1">
-                    <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-100" title="Lưu trữ"><Archive size={16} /></button>
-                    <button className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500" title="Xoá"><Trash2 size={16} /></button>
+                    <button onClick={() => handleUpdateStatus(selected.id, 'archived')} className="p-2 rounded-lg text-slate-400 hover:bg-slate-100" title="Lưu trữ"><Archive size={16} /></button>
+                    <button onClick={() => handleDelete(selected.id)} className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500" title="Xoá"><Trash2 size={16} /></button>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 flex-wrap">
@@ -153,7 +186,7 @@ export default function ContactsPage() {
                 <textarea value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder="Nhập nội dung trả lời..." className="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500/20" rows={4} />
                 <div className="flex items-center justify-between mt-3">
                   <p className="text-xs text-slate-400">Trả lời qua email: {selected.email}</p>
-                  <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold">
+                  <button onClick={() => handleUpdateStatus(selected.id, 'replied')} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold">
                     <Send size={14} /> Gửi trả lời
                   </button>
                 </div>

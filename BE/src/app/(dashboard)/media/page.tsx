@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import {
   Upload, Search, Grid3X3, List, Image as ImageIcon, FileText, Film,
-  Trash2, Download, Eye, X, Check, Folder, Filter, Loader2,
+  Trash2, Download, Eye, X, Check, Folder, Filter, Loader2, CheckCircle2, XCircle,
 } from 'lucide-react'
 import { cn, formatFileSize, formatDate } from '@/lib/utils'
 
@@ -26,6 +26,8 @@ export default function MediaPage() {
   const [previewItem, setPreviewItem] = useState<any | null>(null)
   const [media, setMedia] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
 
   const fetchMedia = useCallback(async () => {
     try {
@@ -44,6 +46,27 @@ export default function MediaPage() {
     fetchMedia()
   }, [fetchMedia])
 
+  const handleDelete = async (id: string) => {
+    if (!confirm('Xoá tệp tin này?')) return
+    try {
+      const res = await fetch(`/api/admin/media?id=${id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) { if (previewItem?.id === id) setPreviewItem(null); showMsg('success', 'Đã xoá tệp tin!'); fetchMedia() }
+      else showMsg('error', json.message || 'MEDIA_DELETE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+    if (!confirm(`Xoá ${selectedIds.length} tệp tin đã chọn?`)) return
+    try {
+      const res = await fetch(`/api/admin/media?ids=${selectedIds.join(',')}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) { setSelectedIds([]); showMsg('success', `Đã xoá ${selectedIds.length} tệp tin!`); fetchMedia() }
+      else showMsg('error', json.message || 'BULK_DELETE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
+
   const filtered = media.filter((m) => {
     if (typeFilter !== 'all' && m.type !== typeFilter) return false
     if (folderFilter !== 'Tất cả' && m.folder !== folderFilter) return false
@@ -59,6 +82,12 @@ export default function MediaPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {msg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {msg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {msg.text}
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -94,7 +123,7 @@ export default function MediaPage() {
           {selectedIds.length > 0 && (
             <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
               <span className="text-sm text-slate-500">{selectedIds.length} đã chọn</span>
-              <button className="p-2 rounded-lg text-red-500 hover:bg-red-50"><Trash2 size={16} /></button>
+              <button onClick={handleBulkDelete} className="p-2 rounded-lg text-red-500 hover:bg-red-50"><Trash2 size={16} /></button>
               <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100"><Download size={16} /></button>
             </div>
           )}
@@ -168,7 +197,7 @@ export default function MediaPage() {
                   <td>
                     <div className="flex items-center gap-1">
                       <button onClick={() => setPreviewItem(item)} className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100"><Eye size={14} /></button>
-                      <button className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
+                      <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
                     </div>
                   </td>
                 </tr>
@@ -244,7 +273,7 @@ export default function MediaPage() {
                 <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
                   <Download size={14} /> Tải xuống
                 </button>
-                <button className="flex items-center justify-center gap-2 px-4 py-2.5 border border-red-200 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50">
+                <button onClick={() => handleDelete(previewItem.id)} className="flex items-center justify-center gap-2 px-4 py-2.5 border border-red-200 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50">
                   <Trash2 size={14} /> Xoá
                 </button>
               </div>

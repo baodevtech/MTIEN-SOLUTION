@@ -44,6 +44,27 @@ export async function POST(request: NextRequest) {
     })
     return corsResponse({ success: true, data: media }, 201)
   } catch {
-    return corsResponse({ success: false, message: 'Invalid request' }, 400)
+    return corsResponse({ success: false, message: 'Invalid request', code: 'MEDIA_CREATE_FAILED' }, 400)
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    const ids = searchParams.get('ids') // comma-separated for bulk
+
+    if (ids) {
+      const idList = ids.split(',').map(s => s.trim()).filter(Boolean)
+      if (idList.length === 0) return corsResponse({ success: false, message: 'Danh sách ID trống', code: 'INVALID_IDS' }, 400)
+      const result = await prisma.media.deleteMany({ where: { id: { in: idList } } })
+      return corsResponse({ success: true, deleted: result.count })
+    }
+
+    if (!id) return corsResponse({ success: false, message: 'Thiếu ID media', code: 'MISSING_ID' }, 400)
+    await prisma.media.delete({ where: { id } })
+    return corsResponse({ success: true })
+  } catch {
+    return corsResponse({ success: false, message: 'Không thể xoá media', code: 'MEDIA_DELETE_FAILED' }, 400)
   }
 }

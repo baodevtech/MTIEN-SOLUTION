@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   Plus, Search, Filter, Trash2, Edit, Eye, ChevronLeft, ChevronRight,
-  ShoppingBag, MoreHorizontal, Download, Archive, Grid3X3, List as ListIcon, Loader2,
+  ShoppingBag, MoreHorizontal, Download, Archive, Grid3X3, List as ListIcon, Loader2, CheckCircle2, XCircle,
 } from 'lucide-react'
 import { cn, formatCurrency, formatNumber, getStatusColor, getStatusLabel } from '@/lib/utils'
 import type { ProductStatus, ProductCategory } from '@/types'
@@ -29,6 +29,8 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table')
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -49,6 +51,27 @@ export default function ProductsPage() {
     fetchProducts()
   }, [fetchProducts])
 
+  const handleDelete = async (id: string) => {
+    if (!confirm('Xác nhận xoá sản phẩm này?')) return
+    try {
+      const res = await fetch(`/api/admin/products?id=${id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) { showMsg('success', 'Đã xoá sản phẩm!'); fetchProducts() }
+      else showMsg('error', json.message || 'DELETE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+    if (!confirm(`Xoá ${selectedIds.length} sản phẩm đã chọn?`)) return
+    for (const id of selectedIds) {
+      try { await fetch(`/api/admin/products?id=${id}`, { method: 'DELETE' }) } catch {}
+    }
+    showMsg('success', `Đã xoá ${selectedIds.length} sản phẩm!`)
+    setSelectedIds([])
+    fetchProducts()
+  }
+
   const filtered = products.filter((p) => {
     if (statusFilter !== 'all' && p.status !== statusFilter) return false
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false
@@ -63,6 +86,12 @@ export default function ProductsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {msg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {msg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {msg.text}
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -142,7 +171,7 @@ export default function ProductsPage() {
           {selectedIds.length > 0 && (
             <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
               <span className="text-sm text-slate-500">{selectedIds.length} đã chọn</span>
-              <button className="p-2 rounded-lg text-red-500 hover:bg-red-50"><Trash2 size={16} /></button>
+              <button onClick={handleBulkDelete} className="p-2 rounded-lg text-red-500 hover:bg-red-50"><Trash2 size={16} /></button>
               <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100"><Archive size={16} /></button>
             </div>
           )}
@@ -234,7 +263,7 @@ export default function ProductsPage() {
                           <Link href={`/products/new?id=${product.id}`} className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600">
                             <Edit size={14} />
                           </Link>
-                          <button className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500">
+                          <button onClick={() => handleDelete(product.id)} className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500">
                             <Trash2 size={14} />
                           </button>
                         </div>
@@ -272,7 +301,7 @@ export default function ProductsPage() {
                     <Link href={`/products/new?id=${product.id}`} className="w-8 h-8 bg-white/90 rounded-lg flex items-center justify-center text-slate-600 hover:bg-white shadow-sm">
                       <Edit size={14} />
                     </Link>
-                    <button className="w-8 h-8 bg-white/90 rounded-lg flex items-center justify-center text-red-500 hover:bg-white shadow-sm">
+                    <button onClick={() => handleDelete(product.id)} className="w-8 h-8 bg-white/90 rounded-lg flex items-center justify-center text-red-500 hover:bg-white shadow-sm">
                       <Trash2 size={14} />
                     </button>
                   </div>

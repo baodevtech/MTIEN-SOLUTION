@@ -6,7 +6,7 @@ import Image from 'next/image'
 import {
   Plus, Search, Filter, MoreHorizontal, Trash2, Edit, Eye,
   ChevronDown, ChevronLeft, ChevronRight, FileText, Check,
-  Download, Archive, Copy,
+  Download, Archive, Copy, CheckCircle2, XCircle,
 } from 'lucide-react'
 import { cn, formatDate, formatNumber, getStatusColor, getStatusLabel, truncate } from '@/lib/utils'
 import type { PostStatus } from '@/types'
@@ -29,6 +29,8 @@ export default function PostsPage() {
   const [categoryFilter, setCategoryFilter] = useState('Tất cả')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -43,6 +45,27 @@ export default function PostsPage() {
   }, [statusFilter, search])
 
   useEffect(() => { fetchPosts() }, [fetchPosts])
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Xác nhận xoá bài viết này?')) return
+    try {
+      const res = await fetch(`/api/admin/posts?id=${id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) { showMsg('success', 'Đã xoá bài viết!'); fetchPosts() }
+      else showMsg('error', json.message || 'DELETE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+    if (!confirm(`Xoá ${selectedIds.length} bài viết đã chọn?`)) return
+    try {
+      const res = await fetch(`/api/admin/posts?ids=${selectedIds.join(',')}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) { setSelectedIds([]); showMsg('success', `Đã xoá ${selectedIds.length} bài viết!`); fetchPosts() }
+      else showMsg('error', json.message || 'BULK_DELETE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+  }
 
   const filtered = posts.filter((post) => {
     if (categoryFilter !== 'Tất cả' && post.category !== categoryFilter) return false
@@ -69,6 +92,12 @@ export default function PostsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {msg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {msg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {msg.text}
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -138,7 +167,7 @@ export default function PostsPage() {
           {selectedIds.length > 0 && (
             <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
               <span className="text-sm text-slate-500">{selectedIds.length} đã chọn</span>
-              <button className="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Xoá">
+              <button onClick={handleBulkDelete} className="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors" title="Xoá">
                 <Trash2 size={16} />
               </button>
               <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors" title="Lưu trữ">
@@ -238,7 +267,7 @@ export default function PostsPage() {
                         >
                           <Edit size={14} />
                         </Link>
-                        <button className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors">
+                        <button onClick={(e) => { e.stopPropagation(); handleDelete(post.id) }} className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors">
                           <Trash2 size={14} />
                         </button>
                       </div>

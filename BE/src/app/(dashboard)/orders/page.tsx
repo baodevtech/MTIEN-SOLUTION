@@ -6,7 +6,7 @@ import Image from 'next/image'
 import {
   Search, Filter, Eye, ChevronLeft, ChevronRight, Package,
   Truck, CheckCircle, XCircle, Clock, CreditCard, MapPin,
-  Phone, Mail, ChevronDown, MoreHorizontal, Printer, Download, Loader2,
+  Phone, Mail, ChevronDown, MoreHorizontal, Printer, Download, Loader2, CheckCircle2,
 } from 'lucide-react'
 import { cn, formatCurrency, formatDate, formatRelativeTime, getStatusColor, getStatusLabel } from '@/lib/utils'
 import type { OrderStatus } from '@/types'
@@ -27,6 +27,10 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null)
   const [orders, setOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [newStatus, setNewStatus] = useState('')
+  const [updating, setUpdating] = useState(false)
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -47,6 +51,29 @@ export default function OrdersPage() {
     fetchOrders()
   }, [fetchOrders])
 
+  useEffect(() => {
+    if (selectedOrder) setNewStatus(selectedOrder.status)
+  }, [selectedOrder])
+
+  const handleUpdateStatus = async () => {
+    if (!selectedOrder || !newStatus) return
+    setUpdating(true)
+    try {
+      const res = await fetch('/api/admin/orders', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selectedOrder.id, status: newStatus }),
+      })
+      const json = await res.json()
+      if (json.success) {
+        showMsg('success', 'Đã cập nhật trạng thái đơn hàng!')
+        setSelectedOrder(null)
+        fetchOrders()
+      } else showMsg('error', json.message || 'ORDER_UPDATE_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+    finally { setUpdating(false) }
+  }
+
   if (loading) return <div className="flex items-center justify-center h-96"><Loader2 className="w-8 h-8 animate-spin text-[#0066cc]" /></div>
 
   const filtered = orders.filter((o) => {
@@ -64,6 +91,12 @@ export default function OrdersPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {msg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {msg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {msg.text}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Đơn hàng</h1>
@@ -172,7 +205,7 @@ export default function OrdersPage() {
             {/* Status */}
             <div>
               <label className="block text-xs font-medium text-slate-500 mb-1.5">Cập nhật trạng thái</label>
-              <select defaultValue={selectedOrder.status} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20">
+              <select value={newStatus} onChange={e => setNewStatus(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20">
                 {statusFilters.filter(f => f.value !== 'all').map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
               </select>
             </div>
@@ -213,8 +246,8 @@ export default function OrdersPage() {
               </div>
             )}
             <div className="flex gap-2">
-              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-blue-500 text-white rounded-lg text-sm font-semibold hover:bg-blue-600">
-                <CheckCircle size={14} /> Cập nhật
+              <button onClick={handleUpdateStatus} disabled={updating} className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-blue-500 text-white rounded-lg text-sm font-semibold hover:bg-blue-600 disabled:opacity-50">
+                <CheckCircle size={14} /> {updating ? 'Đang cập nhật...' : 'Cập nhật'}
               </button>
               <button className="p-2.5 border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50"><Printer size={16} /></button>
             </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import {
   Globe, Search as SearchIcon, FileText, Settings, AlertTriangle,
   CheckCircle2, XCircle, ExternalLink, RefreshCw, Download,
-  ChevronDown, Eye, Link2, Image as ImageIcon, MapPin,
+  ChevronDown, Eye, Link2, Image as ImageIcon, MapPin, Save, Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -42,16 +42,35 @@ function buildSEOPages(pages: Array<{ slug: string; title: string; seo: Record<s
 
 export default function SEOPage() {
   const [seoPages, setSeoPages] = useState<SEOPage[]>([])
+  const [rawPages, setRawPages] = useState<Array<{ id: string; slug: string; title: string; seo: Record<string, unknown> }>>([])
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<'pages' | 'sitemap' | 'robots' | 'global'>('pages')
   const [expandedPath, setExpandedPath] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   useEffect(() => {
     fetch('/api/admin/pages')
       .then(r => r.json())
-      .then(json => setSeoPages(buildSEOPages(json.data || [])))
+      .then(json => {
+        const pages = json.data || []
+        setRawPages(pages)
+        setSeoPages(buildSEOPages(pages))
+      })
       .catch(() => {})
       .finally(() => setLoading(false))
+  }, [])
+
+  // Load saved global SEO + robots from settings
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(r => r.json())
+      .then(json => {
+        const d = json.data || {}
+        if (d.globalSEO) setGlobalSEO(prev => ({ ...prev, ...d.globalSEO }))
+        if (d.robotsTxt) setRobotsTxt(d.robotsTxt)
+      })
+      .catch(() => {})
   }, [])
 
   const avgScore = Math.round(seoPages.reduce((s, p) => s + p.score, 0) / seoPages.length)
@@ -76,8 +95,81 @@ Disallow: /api/
 
 Sitemap: https://mtiensolution.vn/sitemap.xml`)
 
+  const showMsg = (type: 'success' | 'error', text: string) => {
+    setMsg({ type, text })
+    setTimeout(() => setMsg(null), 3000)
+  }
+
+  const handleSavePageSEO = async (pageId: string, fields: { metaTitle: string; metaDescription: string; canonicalUrl: string }) => {
+    setSaving(true)
+    try {
+      const raw = rawPages.find(p => p.id === pageId)
+      const seo = { ...(raw?.seo || {}), metaTitle: fields.metaTitle, metaDescription: fields.metaDescription, canonicalUrl: fields.canonicalUrl }
+      const res = await fetch('/api/admin/pages', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: pageId, seo }),
+      })
+      const json = await res.json()
+      if (!res.ok || !json.success) throw new Error(json.message || 'SEO_PAGE_SAVE_FAILED')
+      // Refresh pages
+      const refreshRes = await fetch('/api/admin/pages')
+      const refreshJson = await refreshRes.json()
+      const pages = refreshJson.data || []
+      setRawPages(pages)
+      setSeoPages(buildSEOPages(pages))
+      showMsg('success', 'Đã lưu SEO cho trang!')
+    } catch (err) {
+      showMsg('error', err instanceof Error ? err.message : 'Lỗi lưu SEO trang')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleSaveGlobalSEO = async () => {
+    setSaving(true)
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ globalSEO }),
+      })
+      const json = await res.json()
+      if (!res.ok || !json.success) throw new Error(json.message || 'GLOBAL_SEO_SAVE_FAILED')
+      showMsg('success', 'Đã lưu cài đặt SEO toàn cục!')
+    } catch (err) {
+      showMsg('error', err instanceof Error ? err.message : 'Lỗi lưu SEO toàn cục')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleSaveRobotsTxt = async () => {
+    setSaving(true)
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ robotsTxt }),
+      })
+      const json = await res.json()
+      if (!res.ok || !json.success) throw new Error(json.message || 'ROBOTS_SAVE_FAILED')
+      showMsg('success', 'Đã lưu robots.txt!')
+    } catch (err) {
+      showMsg('error', err instanceof Error ? err.message : 'Lỗi lưu robots.txt')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
+      {msg && (
+        <div className={cn('flex items-center gap-2 p-3 rounded-lg text-sm fixed top-4 right-4 z-50 shadow-lg', msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200')}>
+          {msg.type === 'success' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
+          {msg.text}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">SEO</h1>
@@ -172,18 +264,29 @@ Sitemap: https://mtiensolution.vn/sitemap.xml`)
                     </div>
 
                     {/* Edit Fields */}
+                    <form onSubmit={(e) => {
+                      e.preventDefault()
+                      const fd = new FormData(e.currentTarget)
+                      const raw = rawPages.find(p => p.slug === page.path)
+                      if (!raw) return
+                      handleSavePageSEO(raw.id, {
+                        metaTitle: fd.get('metaTitle') as string,
+                        metaDescription: fd.get('metaDescription') as string,
+                        canonicalUrl: fd.get('canonicalUrl') as string,
+                      })
+                    }}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-medium text-slate-600 mb-1">Meta Title <span className="text-slate-400">({(page.metaTitle || '').length}/60)</span></label>
-                        <input type="text" defaultValue={page.metaTitle} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+                        <input name="metaTitle" type="text" defaultValue={page.metaTitle} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-slate-600 mb-1">Canonical URL</label>
-                        <input type="text" defaultValue={`https://mtiensolution.vn${page.path}`} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+                        <input name="canonicalUrl" type="text" defaultValue={`https://mtiensolution.vn${page.path}`} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
                       </div>
                       <div className="md:col-span-2">
                         <label className="block text-xs font-medium text-slate-600 mb-1">Meta Description <span className="text-slate-400">({(page.metaDescription || '').length}/160)</span></label>
-                        <textarea defaultValue={page.metaDescription} rows={2} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500/20" />
+                        <textarea name="metaDescription" defaultValue={page.metaDescription} rows={2} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500/20" />
                       </div>
                     </div>
 
@@ -200,8 +303,12 @@ Sitemap: https://mtiensolution.vn/sitemap.xml`)
                     )}
 
                     <div className="flex items-center justify-end">
-                      <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Lưu thay đổi</button>
+                      <button type="submit" disabled={saving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50">
+                        {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                        Lưu thay đổi
+                      </button>
                     </div>
+                    </form>
                   </div>
                 )}
               </div>
@@ -251,7 +358,10 @@ Sitemap: https://mtiensolution.vn/sitemap.xml`)
           </div>
 
           <div className="flex justify-end">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold">Lưu cài đặt SEO</button>
+            <button onClick={handleSaveGlobalSEO} disabled={saving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50">
+              {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+              Lưu cài đặt SEO
+            </button>
           </div>
         </div>
       )}
@@ -314,7 +424,10 @@ Sitemap: https://mtiensolution.vn/sitemap.xml`)
           </div>
           <textarea value={robotsTxt} onChange={(e) => setRobotsTxt(e.target.value)} rows={10} className="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm font-mono outline-none resize-none focus:ring-2 focus:ring-blue-500/20 bg-slate-50" />
           <div className="flex justify-end">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold">Lưu robots.txt</button>
+            <button onClick={handleSaveRobotsTxt} disabled={saving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50">
+              {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+              Lưu robots.txt
+            </button>
           </div>
         </div>
       )}
