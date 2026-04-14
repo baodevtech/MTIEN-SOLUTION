@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft, Save, Eye, Plus, X, Upload, Trash2, GripVertical,
-  ChevronDown, Settings2,
+  ChevronDown, Settings2, Loader2,
 } from 'lucide-react'
 import { cn, slugify, formatCurrency } from '@/lib/utils'
 
@@ -18,6 +19,10 @@ const categories = [
 ]
 
 export default function ProductEditorPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const editId = searchParams.get('id')
+
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [shortDesc, setShortDesc] = useState('')
@@ -34,6 +39,68 @@ export default function ProductEditorPage() {
   const [images, setImages] = useState<string[]>([])
   const [specs, setSpecs] = useState<{ label: string; value: string }[]>([{ label: '', value: '' }])
   const [seoExpanded, setSeoExpanded] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  // Load product data if editing
+  useEffect(() => {
+    if (!editId) return
+    fetch(`/api/admin/products?search=&limit=100`)
+      .then(r => r.json())
+      .then(json => {
+        const p = (json.data || []).find((item: { id: string }) => item.id === editId)
+        if (p) {
+          setName(p.name || '')
+          setSlug(p.slug || '')
+          setShortDesc(p.description || '')
+          setDescription(p.description || '')
+          setPrice(p.price?.toString() || '')
+          setOldPrice(p.comparePrice?.toString() || '')
+          setSku(p.sku || '')
+          setStock(p.stock?.toString() || '')
+          setCategory(p.category || '')
+          setStatus(p.status || 'draft')
+          setImages(p.images || [])
+        }
+      })
+      .catch(() => {})
+  }, [editId])
+
+  const handleSave = async () => {
+    if (!name || !price) return alert('Vui lòng nhập tên và giá sản phẩm')
+    setSaving(true)
+    try {
+      const body = {
+        ...(editId && { id: editId }),
+        name,
+        slug: slug || slugify(name),
+        description: description || shortDesc,
+        shortDesc,
+        price: Number(price),
+        comparePrice: oldPrice ? Number(oldPrice) : null,
+        sku,
+        stock: Number(stock) || 0,
+        category,
+        status,
+        images,
+        image: images[0] || null,
+        tags: [],
+        featured: false,
+      }
+      const method = editId ? 'PUT' : 'POST'
+      const res = await fetch('/api/admin/products', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const json = await res.json()
+      if (json.success) {
+        router.push('/products')
+      } else {
+        alert(json.message || 'Lưu thất bại')
+      }
+    } catch { alert('Lỗi kết nối') }
+    finally { setSaving(false) }
+  }
 
   const handleNameChange = (val: string) => { setName(val); if (!slug) setSlug(slugify(val)) }
   const addSpec = () => setSpecs([...specs, { label: '', value: '' }])
@@ -53,7 +120,7 @@ export default function ProductEditorPage() {
             <ArrowLeft size={20} />
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-slate-800">Thêm sản phẩm mới</h1>
+            <h1 className="text-xl font-bold text-slate-800">{editId ? 'Chỉnh sửa sản phẩm' : 'Thêm sản phẩm mới'}</h1>
             <p className="text-sm text-slate-500">Nhập thông tin chi tiết sản phẩm</p>
           </div>
         </div>
@@ -61,8 +128,8 @@ export default function ProductEditorPage() {
           <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
             <Eye size={16} /> Xem trước
           </button>
-          <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
-            <Save size={16} /> Lưu sản phẩm
+          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm disabled:opacity-50">
+            {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} {saving ? 'Đang lưu...' : 'Lưu sản phẩm'}
           </button>
         </div>
       </div>

@@ -66,3 +66,48 @@ export async function POST(request: NextRequest) {
     return corsResponse({ success: false, message }, 400)
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { id, ...rest } = body
+    if (!id) return corsResponse({ success: false, message: 'ID required' }, 400)
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: {
+        ...(rest.name !== undefined && { name: rest.name }),
+        ...(rest.slug !== undefined && { slug: rest.slug }),
+        ...(rest.description !== undefined && { description: rest.description }),
+        ...(rest.price !== undefined && { price: rest.price }),
+        ...(rest.comparePrice !== undefined && { comparePrice: rest.comparePrice }),
+        ...(rest.category !== undefined && { category: rest.category }),
+        ...(rest.status !== undefined && { status: rest.status }),
+        ...(rest.stock !== undefined && { stock: rest.stock }),
+        ...(rest.sku !== undefined && { sku: rest.sku }),
+        ...(rest.image !== undefined && { image: rest.image }),
+        ...(rest.images !== undefined && { images: rest.images }),
+        ...(rest.tags !== undefined && { tags: rest.tags }),
+        ...(rest.featured !== undefined && { featured: rest.featured }),
+      },
+    })
+    return corsResponse({ success: true, data: product })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Update failed'
+    return corsResponse({ success: false, message }, 400)
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  if (!id) return corsResponse({ success: false, message: 'ID required' }, 400)
+
+  try {
+    await prisma.product.delete({ where: { id } })
+    return corsResponse({ success: true })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Delete failed'
+    return corsResponse({ success: false, message }, 400)
+  }
+}

@@ -1,18 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft, Save, Eye, Clock, Image as ImageIcon, X, Plus,
   Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon,
   Quote, Code, Heading1, Heading2, AlignLeft, AlignCenter, Upload,
-  Settings2, Search as SearchIcon, Globe, ChevronDown,
+  Settings2, Search as SearchIcon, Globe, ChevronDown, Loader2,
 } from 'lucide-react'
 import { cn, slugify } from '@/lib/utils'
 
 const categories = ['Thiết kế', 'Cloud', 'Marketing', 'E-commerce', 'AI', 'Bảo mật', 'Chuyển đổi số', 'Phần mềm']
 
 export default function PostEditorPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const editId = searchParams.get('id')
+
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
   const [content, setContent] = useState('')
@@ -26,6 +31,59 @@ export default function PostEditorPage() {
   const [seoExpanded, setSeoExpanded] = useState(false)
   const [metaTitle, setMetaTitle] = useState('')
   const [metaDescription, setMetaDescription] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  // Load post data if editing
+  useEffect(() => {
+    if (!editId) return
+    fetch(`/api/admin/posts?search=&limit=100`)
+      .then(r => r.json())
+      .then(json => {
+        const p = (json.data || []).find((item: { id: string }) => item.id === editId)
+        if (p) {
+          setTitle(p.title || '')
+          setSlug(p.slug || '')
+          setContent(p.content || '')
+          setExcerpt(p.excerpt || '')
+          setCategory(p.category || '')
+          setTags(p.tags || [])
+          setStatus(p.status || 'draft')
+          setFeaturedImage(p.coverImage || null)
+        }
+      })
+      .catch(() => {})
+  }, [editId])
+
+  const handleSave = async (saveStatus: 'draft' | 'published') => {
+    if (!title) return alert('Vui lòng nhập tiêu đề bài viết')
+    setSaving(true)
+    try {
+      const body = {
+        ...(editId && { id: editId }),
+        title,
+        slug: slug || slugify(title),
+        content,
+        excerpt,
+        category,
+        tags,
+        coverImage: featuredImage,
+        status: saveStatus,
+      }
+      const method = editId ? 'PUT' : 'POST'
+      const res = await fetch('/api/admin/posts', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const json = await res.json()
+      if (json.success) {
+        router.push('/posts')
+      } else {
+        alert(json.message || 'Lưu thất bại')
+      }
+    } catch { alert('Lỗi kết nối') }
+    finally { setSaving(false) }
+  }
 
   const handleTitleChange = (value: string) => {
     setTitle(value)
@@ -62,12 +120,12 @@ export default function PostEditorPage() {
             <Eye size={16} />
             Xem trước
           </button>
-          <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
-            <Clock size={16} />
+          <button onClick={() => handleSave('draft')} disabled={saving} className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50">
+            {saving ? <Loader2 size={16} className="animate-spin" /> : <Clock size={16} />}
             Lưu nháp
           </button>
-          <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-sm">
-            <Save size={16} />
+          <button onClick={() => handleSave('published')} disabled={saving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-sm disabled:opacity-50">
+            {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             Xuất bản
           </button>
         </div>
