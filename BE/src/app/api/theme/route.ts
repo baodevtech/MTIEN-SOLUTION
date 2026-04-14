@@ -1,36 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile, writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
-
-const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), 'data')
-const THEME_FILE = join(DATA_DIR, 'theme-config.json')     // published (live on FE)
-const DRAFT_FILE = join(DATA_DIR, 'theme-draft.json')       // draft (admin only)
-const HISTORY_DIR = join(DATA_DIR, 'theme-history')
-const CONNECTION_FILE = join(DATA_DIR, 'connection.json')
-
-async function ensureDir() {
-  if (!existsSync(DATA_DIR)) {
-    await mkdir(DATA_DIR, { recursive: true })
-  }
-  if (!existsSync(HISTORY_DIR)) {
-    await mkdir(HISTORY_DIR, { recursive: true })
-  }
-}
+import { prisma } from '@/lib/prisma'
 
 // Send revalidation webhook to frontend after publishing
 async function revalidateFrontend(): Promise<{ success: boolean; error?: string }> {
   try {
-    if (!existsSync(CONNECTION_FILE)) return { success: false, error: 'No connection settings' }
-    const raw = await readFile(CONNECTION_FILE, 'utf-8')
-    const { frontendUrl, secretKey } = JSON.parse(raw)
-    if (!frontendUrl || !secretKey) return { success: false, error: 'Missing frontend URL or secret key' }
+    const conn = await prisma.connectionSetting.findFirst()
+    if (!conn?.frontendUrl || !conn?.secretKey) {
+      return { success: false, error: 'No connection settings' }
+    }
 
-    const url = new URL('/api/revalidate', frontendUrl)
+    const url = new URL('/api/revalidate', conn.frontendUrl)
     const res = await fetch(url.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ secret: secretKey, tags: ['theme'] }),
+      body: JSON.stringify({ secret: conn.secretKey, tags: ['theme'] }),
       signal: AbortSignal.timeout(10000),
     })
 
@@ -46,44 +29,48 @@ async function revalidateFrontend(): Promise<{ success: boolean; error?: string 
 // GET — returns draft config (for editor), published config, and metadata
 export async function GET(req: NextRequest) {
   try {
-    await ensureDir()
     const { searchParams } = new URL(req.url)
     const mode = searchParams.get('mode') // 'published' | 'draft' | 'history' | 'export'
 
     if (mode === 'history') {
-      // List version history
-      const { readdirSync, statSync } = await import('fs')
-      if (!existsSync(HISTORY_DIR)) return NextResponse.json({ versions: [] })
-      const files = readdirSync(HISTORY_DIR)
-        .filter(f => f.endsWith('.json'))
-        .map(f => {
-          const stat = statSync(join(HISTORY_DIR, f))
-          return { name: f.replace('.json', ''), date: stat.mtime.toISOString(), size: stat.size }
-        })
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 50)
-      return NextResponse.json({ versions: files })
+      const versions = await prisma.themeVersion.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+        select: { name: true, createdAt: true },
+      })
+      return NextResponse.json({
+        versions: versions.map(v => ({
+          name: v.name,
+          date: v.createdAt.toISOString(),
+          size: JSON.stringify(v).length,
+        })),
+      })
     }
 
     if (mode === 'export') {
-      // Export both draft and published as downloadable JSON
-      const draft = existsSync(DRAFT_FILE) ? JSON.parse(await readFile(DRAFT_FILE, 'utf-8')) : null
-      const published = existsSync(THEME_FILE) ? JSON.parse(await readFile(THEME_FILE, 'utf-8')) : null
+      const [draftRow, publishedRow] = await Promise.all([
+        prisma.themeConfig.findUnique({ where: { type: 'draft' } }),
+        prisma.themeConfig.findUnique({ where: { type: 'published' } }),
+      ])
       return NextResponse.json({
         exportedAt: new Date().toISOString(),
-        draft,
-        published,
+        draft: draftRow?.config ?? null,
+        published: publishedRow?.config ?? null,
       })
     }
 
     // Default: return both draft + published + status
-    const draft = existsSync(DRAFT_FILE) ? JSON.parse(await readFile(DRAFT_FILE, 'utf-8')) : null
-    const published = existsSync(THEME_FILE) ? JSON.parse(await readFile(THEME_FILE, 'utf-8')) : null
+    const [draftRow, publishedRow] = await Promise.all([
+      prisma.themeConfig.findUnique({ where: { type: 'draft' } }),
+      prisma.themeConfig.findUnique({ where: { type: 'published' } }),
+    ])
+
+    const draft = draftRow?.config ?? null
+    const published = publishedRow?.config ?? null
     const hasDraft = draft !== null
     const isPublished = published !== null
     const isDirty = hasDraft && JSON.stringify(draft) !== JSON.stringify(published)
 
-    // Editor uses draft if available, else published
     const config = draft || published || null
 
     return NextResponse.json({
@@ -92,9 +79,9 @@ export async function GET(req: NextRequest) {
       status: {
         hasDraft,
         isPublished,
-        isDirty,      // draft differs from published
-        lastSaved: hasDraft && existsSync(DRAFT_FILE) ? (await import('fs')).statSync(DRAFT_FILE).mtime.toISOString() : null,
-        lastPublished: isPublished && existsSync(THEME_FILE) ? (await import('fs')).statSync(THEME_FILE).mtime.toISOString() : null,
+        isDirty,
+        lastSaved: draftRow?.updatedAt?.toISOString() ?? null,
+        lastPublished: publishedRow?.updatedAt?.toISOString() ?? null,
       },
     })
   } catch {
@@ -105,43 +92,52 @@ export async function GET(req: NextRequest) {
 // POST — save draft, publish, restore, import, or reset
 export async function POST(req: NextRequest) {
   try {
-    await ensureDir()
     const body = await req.json()
-    const action = body.action || 'save-draft' // 'save-draft' | 'publish' | 'restore' | 'import' | 'reset'
+    const action = body.action || 'save-draft'
 
     if (action === 'save-draft') {
       if (!body.config) {
         return NextResponse.json({ error: 'Missing config' }, { status: 400 })
       }
-      await writeFile(DRAFT_FILE, JSON.stringify(body.config, null, 2), 'utf-8')
+      await prisma.themeConfig.upsert({
+        where: { type: 'draft' },
+        update: { config: body.config },
+        create: { type: 'draft', config: body.config },
+      })
       return NextResponse.json({ success: true, action: 'save-draft' })
     }
 
     if (action === 'publish') {
       // Save current published as version before overwriting
-      if (existsSync(THEME_FILE)) {
+      const currentPublished = await prisma.themeConfig.findUnique({ where: { type: 'published' } })
+      if (currentPublished) {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-        await writeFile(
-          join(HISTORY_DIR, `v-${timestamp}.json`),
-          await readFile(THEME_FILE, 'utf-8'),
-          'utf-8'
-        )
+        await prisma.themeVersion.create({
+          data: { name: `v-${timestamp}`, config: currentPublished.config! },
+        })
       }
 
       // Use draft if available, or body.config
-      const configToPublish = existsSync(DRAFT_FILE)
-        ? JSON.parse(await readFile(DRAFT_FILE, 'utf-8'))
-        : body.config
+      const draftRow = await prisma.themeConfig.findUnique({ where: { type: 'draft' } })
+      const configToPublish = draftRow?.config ?? body.config
 
       if (!configToPublish) {
         return NextResponse.json({ error: 'Nothing to publish' }, { status: 400 })
       }
 
-      await writeFile(THEME_FILE, JSON.stringify(configToPublish, null, 2), 'utf-8')
+      // Update published
+      await prisma.themeConfig.upsert({
+        where: { type: 'published' },
+        update: { config: configToPublish },
+        create: { type: 'published', config: configToPublish },
+      })
       // Also update draft to match published
-      await writeFile(DRAFT_FILE, JSON.stringify(configToPublish, null, 2), 'utf-8')
+      await prisma.themeConfig.upsert({
+        where: { type: 'draft' },
+        update: { config: configToPublish },
+        create: { type: 'draft', config: configToPublish },
+      })
 
-      // Trigger frontend cache revalidation
       const revalidation = await revalidateFrontend()
 
       return NextResponse.json({
@@ -152,41 +148,42 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'restore') {
-      // Restore a specific version from history
       const versionName = body.version
       if (!versionName) {
         return NextResponse.json({ error: 'Missing version name' }, { status: 400 })
       }
-      const versionFile = join(HISTORY_DIR, `${versionName}.json`)
-      if (!existsSync(versionFile)) {
+      const version = await prisma.themeVersion.findUnique({ where: { name: versionName } })
+      if (!version) {
         return NextResponse.json({ error: 'Version not found' }, { status: 404 })
       }
-      const versionData = await readFile(versionFile, 'utf-8')
-      await writeFile(DRAFT_FILE, versionData, 'utf-8')
-      return NextResponse.json({ success: true, action: 'restore', config: JSON.parse(versionData) })
+      await prisma.themeConfig.upsert({
+        where: { type: 'draft' },
+        update: { config: version.config! },
+        create: { type: 'draft', config: version.config! },
+      })
+      return NextResponse.json({ success: true, action: 'restore', config: version.config })
     }
 
     if (action === 'import') {
-      // Import theme config from uploaded data
       const importConfig = body.config || body.draft || body.published
       if (!importConfig) {
         return NextResponse.json({ error: 'No config data in import' }, { status: 400 })
       }
-      await writeFile(DRAFT_FILE, JSON.stringify(importConfig, null, 2), 'utf-8')
+      await prisma.themeConfig.upsert({
+        where: { type: 'draft' },
+        update: { config: importConfig },
+        create: { type: 'draft', config: importConfig },
+      })
       return NextResponse.json({ success: true, action: 'import' })
     }
 
     if (action === 'reset') {
-      // Delete draft (reverts editor to published or defaults)
-      if (existsSync(DRAFT_FILE)) {
-        const { unlinkSync } = await import('fs')
-        unlinkSync(DRAFT_FILE)
-      }
+      await prisma.themeConfig.deleteMany({ where: { type: 'draft' } })
       return NextResponse.json({ success: true, action: 'reset' })
     }
 
     return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 })
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Operation failed' }, { status: 500 })
   }
 }

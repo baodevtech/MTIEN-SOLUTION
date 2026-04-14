@@ -1,31 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import { prisma } from '@/lib/prisma'
 
-const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), 'data')
-const THEME_FILE = join(DATA_DIR, 'theme-config.json')
-const CONNECTION_FILE = join(DATA_DIR, 'connection.json')
-
-async function getSecretKey(): Promise<string | null> {
-  try {
-    if (!existsSync(CONNECTION_FILE)) return null
-    const raw = await readFile(CONNECTION_FILE, 'utf-8')
-    const settings = JSON.parse(raw)
-    return settings.secretKey || null
-  } catch {
-    return null
-  }
-}
-
-async function getAllowedOrigin(): Promise<string> {
-  try {
-    if (!existsSync(CONNECTION_FILE)) return '*'
-    const raw = await readFile(CONNECTION_FILE, 'utf-8')
-    const settings = JSON.parse(raw)
-    return settings.frontendUrl || '*'
-  } catch {
-    return '*'
+async function getConnectionSettings() {
+  const conn = await prisma.connectionSetting.findFirst()
+  return {
+    secretKey: conn?.secretKey || null,
+    frontendUrl: conn?.frontendUrl || '*',
   }
 }
 
@@ -41,8 +21,7 @@ function corsHeaders(allowedOrigin: string) {
 // GET — serve published theme to frontend (protected by API key)
 export async function GET(req: NextRequest) {
   try {
-    const storedKey = await getSecretKey()
-    const origin = await getAllowedOrigin()
+    const { secretKey: storedKey, frontendUrl: origin } = await getConnectionSettings()
 
     // Validate API key
     const apiKey = req.headers.get('x-api-key')
@@ -53,17 +32,17 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    if (!existsSync(THEME_FILE)) {
+    const published = await prisma.themeConfig.findUnique({ where: { type: 'published' } })
+
+    if (!published) {
       return NextResponse.json(
         { config: null },
         { headers: corsHeaders(origin) }
       )
     }
 
-    const raw = await readFile(THEME_FILE, 'utf-8')
-    const config = JSON.parse(raw)
     return NextResponse.json(
-      { config, publishedAt: new Date().toISOString() },
+      { config: published.config, publishedAt: published.updatedAt.toISOString() },
       { headers: corsHeaders(origin) }
     )
   } catch {
@@ -75,7 +54,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function OPTIONS() {
-  const origin = await getAllowedOrigin()
+  const { frontendUrl: origin } = await getConnectionSettings()
   return new NextResponse(null, {
     headers: corsHeaders(origin),
   })

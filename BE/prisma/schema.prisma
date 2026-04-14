@@ -186,3 +186,28 @@ model Analytics {
   @@index([date, metric])
   @@index([metric, source])
 }
+
+// ─── Theme Config (replaces file-based JSON) ─────────
+model ThemeConfig {
+  id          String   @id @default(cuid())
+  type        String   @unique // 'draft' | 'published'
+  config      Json
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model ThemeVersion {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  config    Json
+  createdAt DateTime @default(now())
+}
+
+// ─── Connection Settings (replaces connection.json) ──
+model ConnectionSetting {
+  id            String   @id @default(cuid())
+  frontendUrl   String   @default("")
+  secretKey     String   @default("")
+  lastConnected DateTime?
+  updatedAt     DateTime @updatedAt
+}

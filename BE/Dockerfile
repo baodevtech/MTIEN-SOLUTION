@@ -43,9 +43,6 @@ COPY --from=builder /app/prisma ./prisma
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-# Create data directory (will be a volume mount in production)
-RUN mkdir -p /app/data/theme-history && chown -R nextjs:nodejs /app/data
-
 USER nextjs
 EXPOSE 3001
 

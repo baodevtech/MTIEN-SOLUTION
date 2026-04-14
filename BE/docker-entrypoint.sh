@@ -1,8 +1,4 @@
 #!/bin/sh
-# Ensure data directory exists
-mkdir -p /app/data/theme-history
-echo "Data directory initialized."
-
 # Run database migrations (push schema)
 if [ -n "$DATABASE_URL" ]; then
   echo "Running database migrations..."
