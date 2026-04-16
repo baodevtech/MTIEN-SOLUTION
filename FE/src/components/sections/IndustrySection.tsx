@@ -118,7 +118,7 @@ export default function IndustrySection() {
 
         <div className="mt-8 md:mt-24 text-center">
           <p className="text-[#86868B] text-[14px] md:text-[17px] mb-2 md:mb-4 font-medium">Bạn muốn xem thêm nhiều hơn?</p>
-          <a href="#" className="text-[15px] md:text-[20px] font-semibold text-[#0066CC] hover:text-[#0044BB] transition-colors inline-flex items-center gap-1 group">
+          <a href="/projects" className="text-[15px] md:text-[20px] font-semibold text-[#0066CC] hover:text-[#0044BB] transition-colors inline-flex items-center gap-1 group">
             Khám phá thư viện +400 giao diện
             <ChevronRight size={16} strokeWidth={2.5} aria-hidden="true" />
           </a>

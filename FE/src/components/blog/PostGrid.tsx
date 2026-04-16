@@ -78,7 +78,7 @@ export default function PostGrid() {
             {/* Nội dung bài viết */}
             <div className="p-8 flex-1 flex flex-col">
               <h3 className="text-2xl font-bold text-slate-800 mb-4 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
-                <Link href="#">{post.title}</Link>
+                <Link href={`/blog/${post.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '')}`}>{post.title}</Link>
               </h3>
               <p className="text-slate-600 mb-6 line-clamp-3 leading-relaxed flex-1">
                 {post.excerpt}

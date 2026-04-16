@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Manrope, Noto_Sans } from 'next/font/google';
 import './globals.css';
-import './inotek-clone.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ThemeProvider } from '@/lib/theme-context';
@@ -17,7 +16,7 @@ const manrope = Manrope({
 
 const notoSans = Noto_Sans({
   subsets: ['latin', 'vietnamese'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '600', '700'],
   display: 'swap',
   variable: '--font-noto-sans',
 });

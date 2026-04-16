@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Send, CheckCircle2, Loader2 } from 'lucide-react';
 
-const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_URL || 'http://localhost:3001';
+const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_URL || (typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'https://localhost:3001' : 'http://localhost:3001');
 
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);

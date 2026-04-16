@@ -1,9 +1,9 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/sections/HeroSection';
-import StatsSection from '@/components/sections/StatsSection';
 import { ThemedPage } from '@/components/theme/ThemedPage';
 
 // Lazy load below-fold sections to reduce initial JS bundle → faster LCP on mobile
+const StatsSection = dynamic(() => import('@/components/sections/StatsSection'));
 const FeaturesSection = dynamic(() => import('@/components/sections/FeaturesSection'));
 const DashboardSection = dynamic(() => import('@/components/sections/DashboardSection'));
 const TemplatesSection = dynamic(() => import('@/components/sections/TemplatesSection'));

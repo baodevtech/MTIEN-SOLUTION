@@ -115,7 +115,7 @@ export default function PricingSection() {
 
         {/* Footer link */}
         <div className="text-center">
-          <a href="#" className="inline-flex items-center gap-1 text-[#0066FF] font-bold hover:underline text-[13px] md:text-[15px]">
+          <a href="/services" className="inline-flex items-center gap-1 text-[#0066FF] font-bold hover:underline text-[13px] md:text-[15px]">
             Chi tiết giá thiết kế web tại MTIEN SOLUTION <span aria-hidden="true">→</span>
           </a>
         </div>

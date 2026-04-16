@@ -38,7 +38,7 @@ export default function DesignHero() {
             Giao diện Đẹp.<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 relative">
               Trải nghiệm 
-              <svg className="absolute w-full h-3 -bottom-1 left-0 text-blue-400/30" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0,5 Q50,0 100,5" stroke="currentColor" strokeWidth="4" fill="none"/></svg>
+              <svg className="absolute w-full h-3 -bottom-1 left-0 text-blue-400/30" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path d="M0,5 Q50,0 100,5" stroke="currentColor" strokeWidth="4" fill="none"/></svg>
             </span><br />
             Hoàn hảo.
           </motion.h1>
@@ -53,9 +53,9 @@ export default function DesignHero() {
              </Link>
              <div className="flex items-center gap-3 md:gap-4 ml-1 md:ml-2">
                <div className="flex -space-x-3">
-                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-30" />
-                 <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-20" />
-                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-10" />
+                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="Khách hàng thiết kế 1" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-30" />
+                 <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="Khách hàng thiết kế 2" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-20" />
+                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Khách hàng thiết kế 3" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#FAFAFC] object-cover z-10" />
                </div>
                <div className="text-xs md:text-sm font-medium text-neutral-600">Hơn 500+ dự án</div>
              </div>
@@ -72,7 +72,7 @@ export default function DesignHero() {
              <div className="h-8 bg-neutral-50 border-b border-neutral-100 flex items-center px-4 gap-1.5 shrink-0">
                <div className="w-2.5 h-2.5 rounded-full bg-red-400" /><div className="w-2.5 h-2.5 rounded-full bg-yellow-400" /><div className="w-2.5 h-2.5 rounded-full bg-green-400" />
              </div>
-             <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Web design" className="w-full h-full object-cover" />
+             <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Giao diện website portfolio responsive" className="w-full h-full object-cover" />
           </motion.div>
 
           {/* Mobile App Card */}
@@ -81,7 +81,7 @@ export default function DesignHero() {
              className="absolute bottom-10 right-0 w-[200px] h-[360px] bg-white rounded-[30px] border-[6px] border-neutral-900 shadow-2xl z-30 flex flex-col overflow-hidden"
           >
              <div className="h-5 w-24 bg-neutral-900 mx-auto rounded-b-xl absolute top-0 left-1/2 -translate-x-1/2 z-10" />
-             <img src="https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&w=400&q=80" alt="Mobile UI" className="w-full h-full object-cover" />
+             <img src="https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&w=400&q=80" alt="Thiết kế giao diện ứng dụng di động" className="w-full h-full object-cover" />
           </motion.div>
 
           {/* Brand Card */}
@@ -89,7 +89,7 @@ export default function DesignHero() {
              initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1, rotate: 6 }} transition={{ duration: 1, delay: 0.6 }}
              className="absolute top-40 left-0 w-[220px] h-[220px] rounded-3xl shadow-xl z-10 overflow-hidden group"
           >
-             <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=400&q=80" alt="Branding" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+             <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=400&q=80" alt="Hệ thống nhận diện thương hiệu" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent" />
              <div className="absolute bottom-0 left-0 p-6 text-white text-left font-bold z-10">
                 <div className="text-xl mb-1 drop-shadow-md">Nhận diện</div>

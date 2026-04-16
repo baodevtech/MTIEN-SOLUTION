@@ -40,7 +40,7 @@ export default function NetworkTopology() {
           {/* Abstract Node Map */}
           <div className="relative h-[200px] md:h-[400px] w-full rounded-2xl md:rounded-[2rem] border border-white/10 bg-white/[0.02] backdrop-blur-sm overflow-hidden flex items-center justify-center">
             {/* SVG Connecting Lines */}
-            <svg className="absolute inset-0 w-full h-full opacity-30" preserveAspectRatio="none">
+            <svg className="absolute inset-0 w-full h-full opacity-30" preserveAspectRatio="none" aria-hidden="true">
               <path d="M 200 200 Q 400 50 600 200 T 1000 200" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="5,5" className="animate-[dash_20s_linear_infinite]" />
               <path d="M 300 100 Q 500 300 800 150" fill="none" stroke="#6366f1" strokeWidth="1.5" className="opacity-50" />
             </svg>

@@ -41,12 +41,12 @@ export default function SoftwareBreadcrumb() {
             <ul className="flex items-center gap-2 md:gap-3 text-white/80 font-medium text-xs md:text-base tracking-wide">
               <li>
                 <a href="/" className="hover:text-blue-300 transition-colors flex items-center gap-1.5 md:gap-2.5 group">
-                  <svg className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+                  <svg className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
                   <span className="group-hover:-translate-y-0.5 transition-transform">Trang chủ</span>
                 </a>
               </li>
               <li className="text-white/40">/</li>
-              <li><a href="#" className="hover:text-blue-300 transition-colors group"><span className="group-hover:-translate-y-0.5 transition-transform">Dịch vụ</span></a></li>
+              <li><a href="/services" className="hover:text-blue-300 transition-colors group"><span className="group-hover:-translate-y-0.5 transition-transform">Dịch vụ</span></a></li>
               <li className="text-white/40">/</li>
               <li className="text-white font-semibold">Chuyên sâu</li>
             </ul>
@@ -54,10 +54,10 @@ export default function SoftwareBreadcrumb() {
         </div>
 
         <div className="hidden md:block absolute right-0 top-0 w-1/2 h-full z-20 pointer-events-none">
-          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/circle.webp" className="absolute top-[20%] left-[20%] opacity-40" alt="shape" />
-          <motion.img animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 15, ease: "linear" }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/star-1.webp" className="absolute top-[30%] right-[30%] opacity-80" alt="shape" />
-          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/snake.webp" className="absolute bottom-[20%] left-[30%] opacity-40" alt="shape" />
-          <motion.img animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/doot.webp" className="absolute bottom-[30%] right-[20%] opacity-80" alt="shape" />
+          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/circle.webp" className="absolute top-[20%] left-[20%] opacity-40" alt="" />
+          <motion.img animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 15, ease: "linear" }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/star-1.webp" className="absolute top-[30%] right-[30%] opacity-80" alt="" />
+          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/snake.webp" className="absolute bottom-[20%] left-[30%] opacity-40" alt="" />
+          <motion.img animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/doot.webp" className="absolute bottom-[30%] right-[20%] opacity-80" alt="" />
         </div>
       </div>
     </section>

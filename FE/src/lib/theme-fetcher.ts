@@ -1,5 +1,4 @@
 import { cache } from 'react'
-import { unstable_noStore as noStore } from 'next/cache'
 
 export interface ThemeConfig {
   global: Record<string, Record<string, unknown>>
@@ -18,7 +17,7 @@ async function fetchThemeData(): Promise<ThemeConfig | null> {
     try {
       const res = await fetch(`${adminUrl}/api/public/theme`, {
         headers: { 'x-api-key': apiKey },
-        next: { tags: ['theme'], revalidate: 60 },
+        next: { tags: ['theme'], revalidate: 300 },
       })
       if (res.ok) {
         const data = await res.json()
@@ -30,8 +29,6 @@ async function fetchThemeData(): Promise<ThemeConfig | null> {
   }
 
   // Local fallback: read from filesystem (development)
-  // Use noStore() to prevent static caching during build when no ADMIN_API_URL
-  noStore()
   try {
     const { readFile } = await import('fs/promises')
     const { join } = await import('path')

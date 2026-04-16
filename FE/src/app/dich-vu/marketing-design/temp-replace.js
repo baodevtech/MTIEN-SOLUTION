@@ -85,4 +85,3 @@ c = c.replace(
 
 
 fs.writeFileSync(p, c);
-console.log('Images patched directly in page.tsx');

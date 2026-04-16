@@ -239,7 +239,7 @@ export default function Navbar() {
                               <p className="text-[12px] text-gray-500">Nhận tư vấn 1-1 miễn phí từ chuyên gia</p>
                             </div>
                           </div>
-                          <Link href="#" className="text-sm font-bold text-white bg-gray-900 hover:bg-[#0066FF] px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md group-hover/cta:shadow-xl">
+                          <Link href="/contact" className="text-sm font-bold text-white bg-gray-900 hover:bg-[#0066FF] px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md group-hover/cta:shadow-xl">
                             Tư vấn ngay <ArrowRight size={14} className="group-hover/cta:translate-x-1 transition-transform" />
                           </Link>
                         </div>
@@ -362,10 +362,10 @@ export default function Navbar() {
           </div>
 
           <div className="p-6 border-t border-gray-100 bg-gray-50/50 space-y-3">
-            <Link href="#" onClick={closeMenu} className="block w-full text-center py-3.5 text-[15px] font-bold text-gray-700 bg-white border border-gray-200/80 rounded-2xl shadow-sm hover:bg-gray-50 transition-colors">
+            <Link href="/login" onClick={closeMenu} className="block w-full text-center py-3.5 text-[15px] font-bold text-gray-700 bg-white border border-gray-200/80 rounded-2xl shadow-sm hover:bg-gray-50 transition-colors">
               Đăng nhập tài khoản
             </Link>
-            <Link href="#" onClick={closeMenu} className="flex items-center justify-center gap-2 w-full py-3.5 text-[15px] font-bold text-white bg-gray-900 hover:bg-[#0066FF] rounded-2xl shadow-md transition-colors">
+            <Link href="/contact" onClick={closeMenu} className="flex items-center justify-center gap-2 w-full py-3.5 text-[15px] font-bold text-white bg-gray-900 hover:bg-[#0066FF] rounded-2xl shadow-md transition-colors">
               Bắt đầu miễn phí <ArrowRight size={16} />
             </Link>
           </div>

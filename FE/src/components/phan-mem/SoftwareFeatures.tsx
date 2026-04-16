@@ -48,7 +48,7 @@ export default function SoftwareFeatures() {
             <div className="flex items-center mb-5 md:mb-[30px]">
               <div className="flex -space-x-3 md:-space-x-4">
                 {[1, 2, 3, 4].map((num) => (
-                  <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="khach-hang" className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full border-[3px] md:border-4 border-white object-cover shadow-sm group-hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${num * 50}ms` }} />
+                  <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt={`Khách hàng ${num}`} className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full border-[3px] md:border-4 border-white object-cover shadow-sm group-hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${num * 50}ms` }} />
                 ))}
                 <div className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full bg-gradient-to-br from-[#1053F3] to-blue-700 border-[3px] md:border-4 border-white flex items-center justify-center text-white font-bold text-xs md:text-sm z-10 relative shadow-md">
                   +500
@@ -59,7 +59,7 @@ export default function SoftwareFeatures() {
               <h3 className="text-[36px] md:text-[50px] font-extrabold text-[#1053F3] leading-none tracking-tight drop-shadow-sm">
                 <NumberCounter to={500} />+
               </h3>
-              <motion.img animate={{ x: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 3 }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/scribble.webp" className="w-[40px] md:w-[50px]" alt="shape" />
+              <motion.img animate={{ x: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 3 }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/scribble.webp" className="w-[40px] md:w-[50px]" alt="" />
             </div>
             <p className="text-slate-500 text-sm md:text-base leading-relaxed mb-5 md:mb-[30px]">Dự án phần mềm & web đã triển khai thành công.</p>
             <a href="#lien-he" className="inline-flex items-center justify-between w-full bg-[#061153] text-white px-5 md:px-[30px] py-3 md:py-[15px] rounded-full font-semibold hover:bg-[#1053F3] hover:shadow-[0_10px_20px_rgba(16,83,243,0.3)] transition-all duration-300 group/btn text-[13px] md:text-base">
@@ -80,7 +80,7 @@ export default function SoftwareFeatures() {
               </div>
             </div>
             <div className="mb-4 md:mb-[40px]">
-              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon01.webp" alt="icon" className="h-9 md:h-[60px] group-hover:scale-110 transition-transform duration-500" />
+              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon01.webp" alt="Biểu tượng tư vấn và thiết kế kiến trúc IT" className="h-9 md:h-[60px] group-hover:scale-110 transition-transform duration-500" />
             </div>
             <h2 className="text-[15px] md:text-[24px] font-extrabold text-[#061153] mb-2 md:mb-4 leading-snug tracking-tight">Tư Vấn & Thiết Kế <br /> Kiến Trúc IT</h2>
             <p className="text-slate-500 leading-relaxed text-[11px] md:text-base">Phân tích quy trình kinh doanh, định hướng nền tảng công nghệ bền vững cho doanh nghiệp.</p>
@@ -93,7 +93,7 @@ export default function SoftwareFeatures() {
               </div>
             </div>
             <div className="mb-4 md:mb-[40px]">
-              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon02.webp" alt="icon" className="h-9 md:h-[60px] brightness-0 invert group-hover:scale-110 transition-transform duration-500" />
+              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon02.webp" alt="Biểu tượng chuyển đổi số và tự động hóa" className="h-9 md:h-[60px] brightness-0 invert group-hover:scale-110 transition-transform duration-500" />
             </div>
             <h2 className="text-[15px] md:text-[24px] font-extrabold text-white mb-2 md:mb-4 leading-snug tracking-tight">Chuyển Đổi Số & <br /> Tự Động Hóa</h2>
             <p className="text-blue-100/80 leading-relaxed text-[11px] md:text-base">Số hóa quy trình làm việc thủ công, nâng cao hiệu suất và bảo mật dữ liệu an toàn tuyệt đối.</p>
