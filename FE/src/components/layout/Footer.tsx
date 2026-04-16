@@ -193,7 +193,7 @@ export default function Footer() {
             <p className="text-[14px] text-slate-400 mb-8 leading-relaxed font-medium">
               {companyDesc}
             </p>
-            <div className="flex space-x-3" role="list" aria-label="Mạng xã hội">
+            <div className="flex space-x-3" aria-label="Mạng xã hội">
               <a href={facebookUrl || '#'} className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 shadow-sm flex items-center justify-center text-slate-400 hover:text-[#0066FF] hover:border-[#0066FF]/30 hover:bg-[#0066FF]/10 transition-all duration-300" aria-label="Facebook">
                 <Facebook size={18} strokeWidth={2} />
               </a>

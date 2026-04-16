@@ -19,7 +19,7 @@ export default function TrustSection() {
         {/* Rating */}
         <div className="flex justify-center mb-5 md:mb-6">
           <div className="flex items-center gap-2 md:gap-3 bg-white border border-slate-200 rounded-full px-4 md:px-4 py-1.5 md:py-1.5 shadow-sm">
-            <div className="flex gap-0.5 text-[#FFB800]" aria-label="5 sao">
+            <div className="flex gap-0.5 text-[#FFB800]" role="img" aria-label="Đánh giá 5 sao">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} size={14} fill="currentColor" aria-hidden="true" />
               ))}

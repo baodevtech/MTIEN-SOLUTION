@@ -74,7 +74,7 @@ export default function AppStoreRedesign() {
                   </div>
                   
                   <div className="mt-auto">
-                    <h4 className="font-bold text-slate-900 text-[11px] md:text-[13px] tracking-tight">{app.name}</h4>
+                    <p className="font-bold text-slate-900 text-[11px] md:text-[13px] tracking-tight">{app.name}</p>
                     {app.desc && <p className="text-[9px] md:text-[11px] text-slate-400 mt-0.5 md:mt-1 line-clamp-1 font-medium">{app.desc}</p>}
                   </div>
 

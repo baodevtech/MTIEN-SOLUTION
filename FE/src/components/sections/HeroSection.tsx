@@ -158,6 +158,7 @@ export default function HeroSection() {
                     fill
                     className="object-cover object-top"
                     priority
+                    fetchPriority="high"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </div>
@@ -257,14 +258,14 @@ export default function HeroSection() {
                     <Zap size={20} className="text-[#0066FF] fill-[#0066FF]/20" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">Tốc độ tối đa</h4>
+                    <p className="text-sm font-bold text-slate-900">Tốc độ tối đa</p>
                     <p className="text-xs font-medium text-[#0066FF]">99/100 Google Insights</p>
                   </div>
                 </motion.div>
 
                 <motion.div {...floatDown} className="absolute -bottom-8 -right-10 bg-white/90 backdrop-blur-xl rounded-2xl p-5 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] border border-white w-[260px] z-30 hidden md:block">
                   <div className="flex justify-between items-center mb-4">
-                    <h4 className="text-sm font-bold text-slate-800">Doanh thu hôm nay</h4>
+                    <p className="text-sm font-bold text-slate-800">Doanh thu hôm nay</p>
                     <span className="text-xs font-semibold px-2 py-1 rounded bg-[#00D68F]/10 text-[#00D68F]">+24.5%</span>
                   </div>
                   <div className="text-2xl font-extrabold text-slate-900 mb-2">124.500.000₫</div>

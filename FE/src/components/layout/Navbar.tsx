@@ -315,7 +315,7 @@ export default function Navbar() {
                <div className="w-9 h-9 bg-gradient-to-br from-[#0066FF] to-[#00D68F] rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow-md border border-white/20">M</div>
                <span className="font-extrabold text-xl text-gray-900 tracking-tight">MTIEN</span>
             </Link>
-            <button onClick={closeMenu} className="p-2.5 bg-white shadow-sm border border-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors">
+            <button onClick={closeMenu} className="p-2.5 bg-white shadow-sm border border-gray-100 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors" aria-label="Đóng menu">
               <X size={18} strokeWidth={2.5} />
             </button>
           </div>
@@ -348,7 +348,7 @@ export default function Navbar() {
                               {SubIcon ? <div className="mt-0.5 w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-[#0066FF] transition-colors"><SubIcon size={12} /></div> : <div className="mt-0.5 w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-[#0066FF] transition-colors"><Sparkles size={12} /></div>}
                               <div>
                                 <p className="text-[14px] font-semibold text-gray-700 group-hover:text-[#0066FF] transition-colors leading-tight">{subLink.label}</p>
-                                <p className="text-[12px] text-gray-400 mt-0.5 leading-snug">{subLink.desc}</p>
+                                <p className="text-[12px] text-gray-600 mt-0.5 leading-snug">{subLink.desc}</p>
                               </div>
                             </Link>
                           );

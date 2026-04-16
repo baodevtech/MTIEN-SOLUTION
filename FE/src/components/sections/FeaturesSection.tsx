@@ -116,7 +116,7 @@ export default function FeaturesSection() {
         
         {/* Tabs Điều Hướng - Thiết kế cuộn ngang mượt mà trên mobile */}
         <div className="flex justify-start md:justify-center mb-6 md:mb-16 -mx-4 px-4 md:mx-0 md:px-0">
-          <div className="inline-flex items-center p-1 md:p-1.5 bg-slate-50/80 backdrop-blur-xl rounded-full border border-slate-200/60 shadow-sm overflow-x-auto scrollbar-hide max-w-full ring-1 ring-slate-100">
+          <div className="inline-flex items-center p-1 md:p-1.5 bg-slate-50/80 backdrop-blur-xl rounded-full border border-slate-200/60 shadow-sm overflow-x-auto scrollbar-hide max-w-full ring-1 ring-slate-100" role="tablist" aria-label="Tính năng nổi bật">
             {featuresData.map((item, idx) => {
               const isActive = activeTab === idx;
               return (
@@ -183,7 +183,7 @@ export default function FeaturesSection() {
                         <feature.icon size={18} strokeWidth={2.5} className="hidden md:block" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold text-slate-900 text-[12px] md:text-[15px] mb-0 md:mb-1 tracking-tight leading-tight">{feature.title}</h4>
+                        <p className="font-semibold text-slate-900 text-[12px] md:text-[15px] mb-0 md:mb-1 tracking-tight leading-tight">{feature.title}</p>
                         <p className="text-[11px] md:text-[13px] text-slate-500 leading-relaxed tracking-tight">{feature.desc}</p>
                       </div>
                     </div>

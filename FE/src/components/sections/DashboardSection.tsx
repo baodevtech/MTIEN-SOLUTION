@@ -538,9 +538,9 @@ export default function DashboardSection() {
                     >
                       <feature.icon size={13} strokeWidth={2.5} aria-hidden="true" />
                     </div>
-                    <h4 className={`text-[15px] md:text-xl font-bold transition-colors duration-500 ${activeFeature === idx ? 'text-slate-900' : 'text-slate-400 group-hover:text-slate-600'}`}>
+                    <p className={`text-[15px] md:text-xl font-bold transition-colors duration-500 ${activeFeature === idx ? 'text-slate-900' : 'text-slate-400 group-hover:text-slate-600'}`}>
                       {feature.title}
-                    </h4>
+                    </p>
                   </div>
                   {skipAnim ? (
                     <div className={`overflow-hidden ${activeFeature === idx ? 'block mt-2' : 'hidden'}`}>
