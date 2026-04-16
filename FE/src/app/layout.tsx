@@ -117,6 +117,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <head>
+        <link rel="dns-prefetch" href="https://picsum.photos" />
+        <link rel="preconnect" href="https://picsum.photos" crossOrigin="anonymous" />
         <JsonLd />
       </head>
       <body
