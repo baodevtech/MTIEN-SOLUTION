@@ -1,30 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { CheckCircle2, Zap } from 'lucide-react';
+import { useTheme } from '@/hooks/use-theme';
 
-const plans = [
+const defaultPlans = [
   {
     name: 'Web Standard',
-    desc: 'Website bán hàng chuyên nghiệp',
-    price: { monthly: '499.000đ', yearly: '399.000đ' },
-    features: ['Giao diện chuẩn SEO', 'Băng thông không giới hạn', 'Bảo mật SSL miễn phí', 'Hỗ trợ 24/7'],
-    cta: 'Dùng thử 7 ngày',
-    featured: false,
+    description: 'Website bán hàng chuyên nghiệp',
+    price: 499000,
+    yearlyPrice: 399000,
+    features: 'Giao diện chuẩn SEO\nBăng thông không giới hạn\nBảo mật SSL miễn phí\nHỗ trợ 24/7',
+    buttonText: 'Dùng thử 7 ngày',
+    popular: false,
   },
   {
     name: 'Omni',
-    desc: 'Quản lý và bán hàng hợp kênh',
-    price: { monthly: '899.000đ', yearly: '699.000đ' },
-    features: ['Mọi tính năng Standard', 'Bán hàng trên Facebook, Sàn', 'Quản lý kho tập trung', 'Tích hợp vận chuyển, thanh toán'],
-    cta: 'Dùng thử 7 ngày',
-    featured: true,
-    badge: 'Phổ biến nhất',
+    description: 'Quản lý và bán hàng hợp kênh',
+    price: 899000,
+    yearlyPrice: 699000,
+    features: 'Mọi tính năng Standard\nBán hàng trên Facebook, Sàn\nQuản lý kho tập trung\nTích hợp vận chuyển, thanh toán',
+    buttonText: 'Dùng thử 7 ngày',
+    popular: true,
   },
 ];
 
+function formatPrice(price: number) {
+  return new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+}
+
 export default function PricingSection() {
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
+  const t = useTheme('home', 'pricing');
+  const plans = useMemo(() => {
+    const raw = t<typeof defaultPlans>('plans', defaultPlans);
+    return raw.map(p => ({
+      ...p,
+      featuresList: typeof p.features === 'string' ? p.features.split('\n').filter(Boolean) : (p.features as unknown as string[]),
+    }));
+  }, [t]);
 
   return (
     <section className="py-12 md:py-24 bg-white relative" aria-label="Bảng giá">
@@ -33,7 +47,7 @@ export default function PricingSection() {
         {/* Header */}
         <div className="text-center mb-6 md:mb-10">
           <h2 className="text-[22px] md:text-[40px] font-bold text-[#1A1A1A] tracking-tight">
-            Bảng giá dịch vụ thiết kế website
+            {t('title', 'Bảng giá dịch vụ thiết kế website')}
           </h2>
         </div>
 
@@ -61,38 +75,38 @@ export default function PricingSection() {
             <div
               key={plan.name}
               className={`rounded-2xl md:rounded-[20px] p-4 sm:p-6 md:p-10 flex flex-col h-full relative transition-all ${
-                plan.featured
+                plan.popular
                   ? 'bg-[#001c54] text-white border border-[#002a7a] shadow-xl'
                   : 'bg-white border border-[#0066FF]'
               }`}
             >
-              {plan.badge && (
+              {plan.popular && (
                 <div className="absolute top-0 right-2.5 sm:right-4 md:right-10 -translate-y-1/2 bg-[#FF8C00] text-white px-2.5 sm:px-4 md:px-6 py-0.5 md:py-2 rounded-full text-[9px] sm:text-[11px] md:text-[13px] font-bold shadow-md">
-                  {plan.badge}
+                  Phổ biến nhất
                 </div>
               )}
 
-              <h3 className={`text-[14px] sm:text-[18px] md:text-[28px] font-bold mb-0.5 md:mb-2 ${plan.featured ? 'text-white' : 'text-[#1A1A1A]'}`}>
+              <h3 className={`text-[14px] sm:text-[18px] md:text-[28px] font-bold mb-0.5 md:mb-2 ${plan.popular ? 'text-white' : 'text-[#1A1A1A]'}`}>
                 {plan.name}
               </h3>
-              <p className={`text-[10px] sm:text-[12px] md:text-[15px] mb-3 sm:mb-4 md:mb-8 ${plan.featured ? 'text-blue-100/70' : 'text-gray-500'}`}>
-                {plan.desc}
+              <p className={`text-[10px] sm:text-[12px] md:text-[15px] mb-3 sm:mb-4 md:mb-8 ${plan.popular ? 'text-blue-100/70' : 'text-gray-500'}`}>
+                {plan.description}
               </p>
 
               {/* Price */}
               <div className="mb-3 sm:mb-5 md:mb-10 flex items-baseline gap-0.5 md:gap-1 flex-wrap">
-                <span className={`text-[18px] sm:text-[24px] md:text-[44px] font-extrabold leading-none ${plan.featured ? 'text-[#00D68F]' : 'text-[#FF6B00]'}`}>
-                  {billing === 'monthly' ? plan.price.monthly : plan.price.yearly}
+                <span className={`text-[18px] sm:text-[24px] md:text-[44px] font-extrabold leading-none ${plan.popular ? 'text-[#00D68F]' : 'text-[#FF6B00]'}`}>
+                  {formatPrice(billing === 'monthly' ? plan.price : (plan.yearlyPrice || plan.price))}
                 </span>
-                <span className={`font-medium text-[9px] sm:text-[11px] md:text-base ${plan.featured ? 'text-white/80' : 'text-gray-500'}`}>
-                  /{billing === 'monthly' ? 'tháng' : 'tháng'}
+                <span className={`font-medium text-[9px] sm:text-[11px] md:text-base ${plan.popular ? 'text-white/80' : 'text-gray-500'}`}>
+                  /tháng
                 </span>
               </div>
 
               {/* Features */}
               <ul className="space-y-2 sm:space-y-2.5 md:space-y-4 mb-4 sm:mb-5 md:mb-10 flex-1">
-                {plan.features.map((item) => (
-                  <li key={item} className={`flex items-start gap-1.5 sm:gap-2 md:gap-3 ${plan.featured ? 'text-white/90' : 'text-gray-600'}`}>
+                {plan.featuresList.map((item) => (
+                  <li key={item} className={`flex items-start gap-1.5 sm:gap-2 md:gap-3 ${plan.popular ? 'text-white/90' : 'text-gray-600'}`}>
                     <CheckCircle2 className="text-[#00D68F] shrink-0 mt-0.5" size={12} strokeWidth={2} aria-hidden="true" />
                     <span className="text-[10px] sm:text-[12px] md:text-[15px] leading-snug">{item}</span>
                   </li>
@@ -102,12 +116,12 @@ export default function PricingSection() {
               {/* CTA */}
               <button
                 className={`w-full py-2.5 sm:py-3 md:py-3.5 rounded-xl font-bold text-[11px] sm:text-[13px] md:text-[15px] mt-auto transition-colors ${
-                  plan.featured
+                  plan.popular
                     ? 'bg-[#00D68F] hover:bg-[#00c280] text-white'
                     : 'bg-white border border-[#0066FF] text-[#0066FF] hover:bg-blue-50'
                 }`}
               >
-                {plan.cta}
+                {plan.buttonText || 'Dùng thử 7 ngày'}
               </button>
             </div>
           ))}
@@ -115,8 +129,8 @@ export default function PricingSection() {
 
         {/* Footer link */}
         <div className="text-center">
-          <a href="/services" className="inline-flex items-center gap-1 text-[#0066FF] font-bold hover:underline text-[13px] md:text-[15px]">
-            Chi tiết giá thiết kế web tại MTIEN SOLUTION <span aria-hidden="true">→</span>
+          <a href={t('footerLink', '/services')} className="inline-flex items-center gap-1 text-[#0066FF] font-bold hover:underline text-[13px] md:text-[15px]">
+            {t('footerText', 'Chi tiết giá thiết kế web tại MTIEN SOLUTION')} <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>

@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { HelpCircle, Search, Command, PhoneCall, Mail, MessageSquare, Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/hooks/use-theme';
 
-const faqs = [
+const defaultFaqs = [
   { question: 'Thiết kế web là gì?', answer: 'Thiết kế web là công việc tạo ra một trang web cho cá nhân, công ty, doanh nghiệp hoặc tổ chức. Có 2 phương thức chính để thiết kế web đó là thiết kế web tĩnh và thiết kế web động.' },
   { question: 'Thiết kế website có những dạng nào?', answer: 'Có nhiều dạng website như web bán hàng, web doanh nghiệp, landing page, blog, v.v.' },
   { question: 'Giá thiết kế website là bao nhiêu?', answer: 'Giá thiết kế website phụ thuộc vào yêu cầu tính năng và giao diện cụ thể của bạn.' },
@@ -21,6 +22,8 @@ export default function FAQSection() {
   const reduced = useReducedMotion();
   const isMobile = useIsMobile();
   const skipAnim = reduced || isMobile;
+  const t = useTheme('home', 'faq');
+  const faqs = useMemo(() => t<Array<{question: string; answer: string}>>('faqs', defaultFaqs), [t]);
 
   return (
     <section className="py-12 md:py-32 bg-[#F8FAFC] relative overflow-hidden" aria-label="Câu hỏi thường gặp">
@@ -30,15 +33,15 @@ export default function FAQSection() {
           <div className="md:col-span-5 md:sticky md:top-28 flex flex-col">
             <div className="inline-flex items-center gap-1.5 px-2.5 md:px-3 py-1 md:py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-slate-500 text-[10px] md:text-[12px] font-bold mb-3 md:mb-6 w-fit">
               <HelpCircle size={12} className="text-[#0066FF]" aria-hidden="true" />
-              <span className="uppercase tracking-wider">Trung tâm trợ giúp</span>
+              <span className="uppercase tracking-wider">{t('badge', 'Trung tâm trợ giúp')}</span>
             </div>
 
             <h2 className="text-[22px] md:text-[44px] font-black text-slate-900 leading-[1.15] tracking-tight mb-2 md:mb-4">
-              Giải đáp nhanh <br className="hidden md:block" /><span className="text-[#0066FF]">mọi thắc mắc</span>
+              {t('title', 'Giải đáp nhanh mọi thắc mắc')}
             </h2>
 
             <p className="text-slate-500 text-[12px] md:text-[16px] leading-relaxed mb-3 md:mb-8">
-              Tìm hiểu chi tiết về quy trình triển khai, tính năng nền tảng và chính sách hỗ trợ.
+              {t('description', 'Tìm hiểu chi tiết về quy trình triển khai, tính năng nền tảng và chính sách hỗ trợ.')}
             </p>
 
             {/* Search */}
@@ -65,13 +68,13 @@ export default function FAQSection() {
                   </div>
                 </div>
                 <div className="min-w-0 md:mb-6">
-                  <h3 className="font-bold text-slate-900 text-[13px] md:text-lg mb-0 md:mb-2">Vẫn cần hỗ trợ thêm?</h3>
-                  <p className="text-slate-500 text-[10px] md:text-[14px] leading-snug">Đội ngũ chuyên gia sẵn sàng tư vấn 1:1.</p>
+                  <h3 className="font-bold text-slate-900 text-[13px] md:text-lg mb-0 md:mb-2">{t('helpTitle', 'Vẫn cần hỗ trợ thêm?')}</h3>
+                  <p className="text-slate-500 text-[10px] md:text-[14px] leading-snug">{t('helpDescription', 'Đội ngũ chuyên gia sẵn sàng tư vấn 1:1.')}</p>
                 </div>
               </div>
               <div className="flex gap-2 mt-3 md:mt-0 md:flex-col">
                 <button className="flex-1 md:w-full bg-slate-900 text-white py-2 md:py-3 rounded-xl font-bold text-[11px] md:text-[14px] flex items-center justify-center gap-1.5 md:gap-2">
-                  <PhoneCall size={12} className="md:hidden" aria-hidden="true" /><PhoneCall size={14} className="hidden md:block" aria-hidden="true" /> <span className="md:hidden">Gọi ngay</span><span className="hidden md:inline">Hotline: 1900 xxxx</span>
+                  <PhoneCall size={12} className="md:hidden" aria-hidden="true" /><PhoneCall size={14} className="hidden md:block" aria-hidden="true" /> <span className="md:hidden">Gọi ngay</span><span className="hidden md:inline">{t('hotline', 'Hotline: 1900 xxxx')}</span>
                 </button>
                 <button className="flex-1 md:w-full bg-slate-50 text-slate-700 border border-slate-200 py-2 md:py-3 rounded-xl font-bold text-[11px] md:text-[14px] flex items-center justify-center gap-1.5 md:gap-2">
                   <Mail size={12} className="text-slate-400 md:hidden" aria-hidden="true" /><Mail size={14} className="text-slate-400 hidden md:block" aria-hidden="true" /> <span className="md:hidden">Email</span><span className="hidden md:inline">Gửi yêu cầu qua Email</span>

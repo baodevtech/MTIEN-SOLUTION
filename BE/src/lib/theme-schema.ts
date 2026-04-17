@@ -208,6 +208,14 @@ const homePageSchema: PageSchema = {
         { key: 'showFloatingCards', label: 'Hiện thẻ nổi', type: 'toggle', defaultValue: true },
         { key: 'floatingCard1Text', label: 'Thẻ nổi 1', type: 'text', defaultValue: '+125% Tăng trưởng' },
         { key: 'floatingCard2Text', label: 'Thẻ nổi 2', type: 'text', defaultValue: '10,000+ Đơn hàng' },
+        { key: 'socialProofCount', label: 'Số social proof', type: 'text', defaultValue: '10,000+' },
+        { key: 'socialProofLabel', label: 'Nhãn social proof', type: 'text', defaultValue: 'doanh nghiệp' },
+        { key: 'supportBadges', label: 'Badges hỗ trợ (mỗi dòng)', type: 'textarea', defaultValue: 'Tối ưu SEO\nResponsive\nSSL 256-bit\nHosting nhanh' },
+        { key: 'floatingCard1Title', label: 'Tiêu đề thẻ nổi 1', type: 'text', defaultValue: 'Tốc độ tối đa' },
+        { key: 'floatingCard1Desc', label: 'Mô tả thẻ nổi 1', type: 'text', defaultValue: '99/100 Google Insights' },
+        { key: 'floatingCard2Title', label: 'Tiêu đề thẻ nổi 2', type: 'text', defaultValue: 'Doanh thu hôm nay' },
+        { key: 'floatingCard2Badge', label: 'Badge thẻ nổi 2', type: 'text', defaultValue: '+24.5%' },
+        { key: 'floatingCard2Value', label: 'Giá trị thẻ nổi 2', type: 'text', defaultValue: '124.500.000₫' },
       ],
     },
     {
@@ -236,6 +244,13 @@ const homePageSchema: PageSchema = {
       defaultVisible: true,
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Hệ sinh thái ứng dụng' },
+        { key: 'titleHighlight', label: 'Phần highlight', type: 'text', defaultValue: 'Không giới hạn tính năng.' },
+        { key: 'badge', label: 'Badge', type: 'text', defaultValue: 'Hệ sinh thái MTIEN SOLUTION' },
+        { key: 'badgeMobile', label: 'Badge mobile', type: 'text', defaultValue: 'Hệ sinh thái' },
+        { key: 'titleHighlightMobile', label: 'Highlight mobile', type: 'text', defaultValue: 'Không giới hạn.' },
+        { key: 'ctaCount', label: 'CTA count', type: 'text', defaultValue: 'Khám phá 100+' },
+        { key: 'ctaLabel', label: 'CTA label', type: 'text', defaultValue: 'Tiện ích tích hợp sẵn' },
+        { key: 'footerCta', label: 'Footer CTA', type: 'text', defaultValue: 'Dùng thử' },
         { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: 'Tất cả công cụ bạn cần trong một nền tảng duy nhất' },
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#F8FAFC' },
         { key: 'apps', label: 'Danh sách app', type: 'repeater', fields: [
@@ -253,7 +268,19 @@ const homePageSchema: PageSchema = {
       defaultVisible: true,
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Bảng điều khiển thông minh' },
+        { key: 'titleHighlight', label: 'Phần highlight', type: 'text', defaultValue: 'Quản trị tinh gọn.' },
+        { key: 'badge', label: 'Badge', type: 'text', defaultValue: 'TRÌNH KIẾN TẠO' },
         { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: 'Quản lý toàn bộ hoạt động kinh doanh từ một nơi' },
+        { key: 'ctaText', label: 'Nút CTA', type: 'text', defaultValue: 'Trải nghiệm miễn phí' },
+        { key: 'features', label: 'Tính năng stepper', type: 'repeater', fields: [
+          { key: 'title', label: 'Tiêu đề', type: 'text' },
+          { key: 'desc', label: 'Mô tả', type: 'textarea' },
+          { key: 'icon', label: 'Icon', type: 'icon', defaultValue: 'MousePointerClick' },
+        ], defaultValue: [
+          { title: 'Trình kiến tạo trực quan (No-code)', desc: 'Thao tác kéo thả đơn giản, chỉnh sửa nội dung, hình ảnh trực tiếp.', icon: 'MousePointerClick' },
+          { title: 'Dashboard All-in-One', desc: 'Đồng bộ quản lý sản phẩm, đơn hàng, khách hàng.', icon: 'LayoutDashboard' },
+          { title: 'Cá nhân hóa thương hiệu', desc: 'Thiết lập nhận diện thương hiệu chỉ với vài click.', icon: 'Palette' },
+        ]},
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#FFFFFF' },
         { key: 'image', label: 'Ảnh dashboard', type: 'image', defaultValue: '' },
         { key: 'showThemeSwitcher', label: 'Hiện chọn theme', type: 'toggle', defaultValue: true },
@@ -267,6 +294,7 @@ const homePageSchema: PageSchema = {
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Tính năng vượt trội' },
         { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: '' },
+        { key: 'ctaText', label: 'Nút CTA', type: 'text', defaultValue: 'Khám phá chi tiết' },
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#FBFBFC' },
         { key: 'tabs', label: 'Các tab', type: 'repeater', fields: [
           { key: 'name', label: 'Tên tab', type: 'text' },
@@ -284,6 +312,8 @@ const homePageSchema: PageSchema = {
       defaultVisible: true,
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Kho giao diện chuyên nghiệp' },
+        { key: 'badge', label: 'Badge', type: 'text', defaultValue: 'Kho giao diện' },
+        { key: 'ctaText', label: 'CTA text', type: 'text', defaultValue: 'Không tìm thấy mẫu phù hợp?' },
         { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: '400+ mẫu giao diện được thiết kế đẹp mắt' },
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#FFFFFF' },
         { key: 'templates', label: 'Danh sách template', type: 'repeater', fields: [
@@ -310,7 +340,10 @@ const homePageSchema: PageSchema = {
           { key: 'features', label: 'Tính năng (mỗi dòng)', type: 'textarea' },
           { key: 'popular', label: 'Phổ biến', type: 'toggle' },
           { key: 'buttonText', label: 'Nút', type: 'text' },
+          { key: 'yearlyPrice', label: 'Giá năm (VND/tháng)', type: 'number' },
         ]},
+        { key: 'footerText', label: 'Footer text', type: 'text', defaultValue: 'Chi tiết giá thiết kế web tại MTIEN SOLUTION' },
+        { key: 'footerLink', label: 'Footer link', type: 'link', defaultValue: '/services' },
       ],
     },
     {
@@ -320,7 +353,12 @@ const homePageSchema: PageSchema = {
       defaultVisible: true,
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Giải pháp cho mọi ngành' },
+        { key: 'titleHighlight', label: 'Phần highlight', type: 'text', defaultValue: 'Dành riêng cho bạn.' },
+        { key: 'badge', label: 'Badge', type: 'text', defaultValue: 'Giao diện đa ngành' },
         { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: '' },
+        { key: 'ctaText', label: 'CTA text', type: 'text', defaultValue: 'Khám phá thư viện +400 giao diện' },
+        { key: 'ctaLink', label: 'CTA link', type: 'link', defaultValue: '/projects' },
+        { key: 'ctaDescription', label: 'Mô tả CTA', type: 'text', defaultValue: 'Bạn muốn xem thêm nhiều hơn?' },
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#FFFFFF' },
         { key: 'industries', label: 'Ngành', type: 'repeater', fields: [
           { key: 'name', label: 'Tên ngành', type: 'text' },
@@ -336,6 +374,8 @@ const homePageSchema: PageSchema = {
       defaultVisible: true,
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Được tin dùng bởi hàng nghìn doanh nghiệp' },
+        { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: 'Tự hào là bệ phóng công nghệ cho hơn 230,000+ doanh nghiệp' },
+        { key: 'commitmentText', label: 'Cam kết', type: 'text', defaultValue: 'Cam kết đồng hành và hỗ trợ kỹ thuật trọn đời 24/7' },
         { key: 'rating', label: 'Đánh giá', type: 'text', defaultValue: '4.9/5' },
         { key: 'ratingCount', label: 'Số đánh giá', type: 'text', defaultValue: '230,000+' },
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#FBFBFC' },
@@ -352,6 +392,11 @@ const homePageSchema: PageSchema = {
       defaultVisible: true,
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Câu hỏi thường gặp' },
+        { key: 'badge', label: 'Badge', type: 'text', defaultValue: 'Trung tâm trợ giúp' },
+        { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: 'Tìm hiểu chi tiết về quy trình triển khai, tính năng nền tảng và chính sách hỗ trợ.' },
+        { key: 'hotline', label: 'Hotline', type: 'text', defaultValue: 'Hotline: 1900 xxxx' },
+        { key: 'helpTitle', label: 'Tiêu đề hỗ trợ', type: 'text', defaultValue: 'Vẫn cần hỗ trợ thêm?' },
+        { key: 'helpDescription', label: 'Mô tả hỗ trợ', type: 'text', defaultValue: 'Đội ngũ chuyên gia sẵn sàng tư vấn 1:1.' },
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#FFFFFF' },
         { key: 'showSearch', label: 'Hiện tìm kiếm', type: 'toggle', defaultValue: true },
         { key: 'showHelpCard', label: 'Hiện thẻ hỗ trợ', type: 'toggle', defaultValue: true },
@@ -369,7 +414,11 @@ const homePageSchema: PageSchema = {
       defaultVisible: true,
       fields: [
         { key: 'title', label: 'Tiêu đề', type: 'text', defaultValue: 'Sẵn sàng bắt đầu?' },
+        { key: 'titleHighlight', label: 'Phần highlight', type: 'text', defaultValue: 'Ngay hôm nay.' },
         { key: 'description', label: 'Mô tả', type: 'textarea', defaultValue: 'Đăng ký ngay để nhận ưu đãi đặc biệt' },
+        { key: 'placeholder', label: 'Placeholder form', type: 'text', defaultValue: 'Tên website của bạn...' },
+        { key: 'trustBadge1', label: 'Trust badge 1', type: 'text', defaultValue: 'No credit card' },
+        { key: 'trustBadge2', label: 'Trust badge 2', type: 'text', defaultValue: 'Setup in 5 mins' },
         { key: 'bgColor', label: 'Màu nền', type: 'color', defaultValue: '#0066FF' },
         { key: 'textColor', label: 'Màu chữ', type: 'color', defaultValue: '#FFFFFF' },
         { key: 'showEmailForm', label: 'Hiện form email', type: 'toggle', defaultValue: true },

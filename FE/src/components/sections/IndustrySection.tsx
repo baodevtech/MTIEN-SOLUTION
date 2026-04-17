@@ -6,6 +6,7 @@ import {
   Sparkles, Coffee, Laptop, Building2, Home as HomeIcon, MapPin, Sofa, BookOpen,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useTheme } from '@/hooks/use-theme';
 
 const industries = [
   { name: 'Mỹ phẩm & Beauty', subtitle: 'Sang trọng', icon: Sparkles, img: 'cosmetics_light' },
@@ -20,6 +21,7 @@ const industries = [
 
 export default function IndustrySection() {
   const [activeIndustry, setActiveIndustry] = useState(0);
+  const t = useTheme('home', 'industry');
 
   return (
     <section className="py-12 md:py-32 bg-[#FBFBFD] relative overflow-hidden" aria-label="Giao diện đa ngành">
@@ -27,13 +29,13 @@ export default function IndustrySection() {
         <div className="text-center max-w-3xl mx-auto mb-6 md:mb-24">
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[11px] md:text-[12px] font-bold mb-3 md:mb-6 shadow-sm">
             <LayoutTemplate size={12} className="text-[#00D68F]" aria-hidden="true" />
-            <span className="uppercase tracking-[0.1em]">Giao diện đa ngành</span>
+            <span className="uppercase tracking-[0.1em]">{t('badge', 'Giao diện đa ngành')}</span>
           </div>
           <h2 className="text-[22px] md:text-[60px] font-semibold text-[#1D1D1F] tracking-tight leading-[1.05] mb-3 md:mb-6">
-            Thiết kế độc bản. <br /><span className="text-slate-400">Dành riêng cho bạn.</span>
+            {t('title', 'Thiết kế độc bản.')} <br /><span className="text-slate-400">{t('titleHighlight', 'Dành riêng cho bạn.')}</span>
           </h2>
           <p className="text-[13px] md:text-[22px] text-[#86868B] tracking-tight leading-relaxed max-w-2xl mx-auto">
-            Hệ sinh thái giao diện được chế tác tinh xảo, tối ưu chuyển đổi cho từng mô hình kinh doanh đặc thù.
+            {t('description', 'Hệ sinh thái giao diện được chế tác tinh xảo, tối ưu chuyển đổi cho từng mô hình kinh doanh đặc thù.')}
           </p>
         </div>
 
@@ -117,9 +119,9 @@ export default function IndustrySection() {
         </div>
 
         <div className="mt-8 md:mt-24 text-center">
-          <p className="text-[#86868B] text-[14px] md:text-[17px] mb-2 md:mb-4 font-medium">Bạn muốn xem thêm nhiều hơn?</p>
-          <a href="/projects" className="text-[15px] md:text-[20px] font-semibold text-[#0066CC] hover:text-[#0044BB] transition-colors inline-flex items-center gap-1 group">
-            Khám phá thư viện +400 giao diện
+          <p className="text-[#86868B] text-[14px] md:text-[17px] mb-2 md:mb-4 font-medium">{t('ctaDescription', 'Bạn muốn xem thêm nhiều hơn?')}</p>
+          <a href={t('ctaLink', '/projects')} className="text-[15px] md:text-[20px] font-semibold text-[#0066CC] hover:text-[#0044BB] transition-colors inline-flex items-center gap-1 group">
+            {t('ctaText', 'Khám phá thư viện +400 giao diện')}
             <ChevronRight size={16} strokeWidth={2.5} aria-hidden="true" />
           </a>
         </div>

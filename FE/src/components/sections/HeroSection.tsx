@@ -131,7 +131,7 @@ export default function HeroSection() {
                       <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                     ))}
                   </div>
-                  <p className="text-sm font-medium text-slate-600"><span className="font-semibold text-slate-900">10,000+</span> doanh nghiệp</p>
+                  <p className="text-sm font-medium text-slate-600"><span className="font-semibold text-slate-900">{t('socialProofCount', '10,000+')}</span> {t('socialProofLabel', 'doanh nghiệp')}</p>
                 </div>
               </div>
             </motion.div>
@@ -153,7 +153,7 @@ export default function HeroSection() {
                 </div>
                 <div className="relative w-full h-[calc(100%-28px)]">
                   <Image
-                    src="https://picsum.photos/seed/yody2/800/500"
+                    src={t('heroImage', 'https://picsum.photos/seed/yody2/800/500')}
                     alt="Giao diện website mẫu MTIEN SOLUTION"
                     fill
                     className="object-cover object-top"
@@ -180,7 +180,7 @@ export default function HeroSection() {
                       <svg key={i} className="w-3 h-3 fill-current" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                     ))}
                   </div>
-                  <p className="text-[11px] font-medium text-slate-600"><span className="font-semibold text-slate-900">10,000+</span> doanh nghiệp</p>
+                  <p className="text-[11px] font-medium text-slate-600"><span className="font-semibold text-slate-900">{t('socialProofCount', '10,000+')}</span> {t('socialProofLabel', 'doanh nghiệp')}</p>
                 </div>
               </div>
             </div>
@@ -258,17 +258,17 @@ export default function HeroSection() {
                     <Zap size={20} className="text-[#0066FF] fill-[#0066FF]/20" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-900">Tốc độ tối đa</p>
-                    <p className="text-xs font-medium text-[#0066FF]">99/100 Google Insights</p>
+                    <p className="text-sm font-bold text-slate-900">{t('floatingCard1Title', 'Tốc độ tối đa')}</p>
+                    <p className="text-xs font-medium text-[#0066FF]">{t('floatingCard1Desc', '99/100 Google Insights')}</p>
                   </div>
                 </motion.div>
 
                 <motion.div {...floatDown} className="absolute -bottom-8 -right-10 bg-white/90 backdrop-blur-xl rounded-2xl p-5 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] border border-white w-[260px] z-30 hidden md:block">
                   <div className="flex justify-between items-center mb-4">
-                    <p className="text-sm font-bold text-slate-800">Doanh thu hôm nay</p>
-                    <span className="text-xs font-semibold px-2 py-1 rounded bg-[#00D68F]/10 text-[#00D68F]">+24.5%</span>
+                    <p className="text-sm font-bold text-slate-800">{t('floatingCard2Title', 'Doanh thu hôm nay')}</p>
+                    <span className="text-xs font-semibold px-2 py-1 rounded bg-[#00D68F]/10 text-[#00D68F]">{t('floatingCard2Badge', '+24.5%')}</span>
                   </div>
-                  <div className="text-2xl font-extrabold text-slate-900 mb-2">124.500.000₫</div>
+                  <div className="text-2xl font-extrabold text-slate-900 mb-2">{t('floatingCard2Value', '124.500.000₫')}</div>
                   <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <div className="h-full bg-[#0066FF] w-[75%] rounded-full"></div>
                   </div>
@@ -281,7 +281,7 @@ export default function HeroSection() {
         
         {/* Support badges */}
         <div className="mt-4 pt-3 md:pt-10 border-t border-slate-200/50 w-full flex flex-nowrap justify-center gap-3 md:gap-16 items-center opacity-60 cursor-default overflow-x-auto scrollbar-hide">
-           {['Tối ưu SEO', 'Responsive', 'SSL 256-bit', 'Hosting nhanh'].map((badge, i) => (
+           {(t('supportBadges', 'Tối ưu SEO\nResponsive\nSSL 256-bit\nHosting nhanh') as string).split('\n').map((badge: string, i: number) => (
              <div key={i} className="flex items-center gap-1.5 text-[11px] md:text-sm font-semibold text-slate-500 whitespace-nowrap shrink-0">
                <CheckCircle2 size={14} className="text-emerald-500 md:w-[18px] md:h-[18px]" />
                <span>{badge}</span>

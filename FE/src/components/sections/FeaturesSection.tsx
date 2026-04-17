@@ -9,6 +9,7 @@ import {
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/hooks/use-theme';
 
 const featuresData = [
   {
@@ -86,6 +87,7 @@ export default function FeaturesSection() {
   const isMobile = useIsMobile();
   const skipAnim = reduced || isMobile;
   const [activeTab, setActiveTab] = useState(0);
+  const t = useTheme('home', 'features');
 
   const activeData = featuresData[activeTab].content;
 
@@ -191,7 +193,7 @@ export default function FeaturesSection() {
                 </div>
 
                 <button className="group bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-full px-6 py-3 md:px-9 md:py-4 text-[12px] md:text-[15px] font-bold transition-all flex items-center justify-center gap-2 w-max shadow-lg">
-                  Khám phá chi tiết 
+                  {t('ctaText', 'Khám phá chi tiết')} 
                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>

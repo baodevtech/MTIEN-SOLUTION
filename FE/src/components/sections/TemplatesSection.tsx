@@ -5,6 +5,7 @@ import {
   Monitor, Smartphone, Star, Download, Zap, CheckCircle2, ArrowRight,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useTheme } from '@/hooks/use-theme';
 
 const templates = [
   { name: 'Dualeo Supermarket', category: 'Siêu thị / Tạp hóa', price: '1,500,000 đ', oldPrice: '2,500,000 đ', img: 'fashion', rating: 4.9, sales: '1.2k', tags: ['Bán chạy', 'Mới'] },
@@ -15,6 +16,7 @@ const templates = [
 const filters = ['Tất cả', 'Bán hàng', 'Doanh nghiệp', 'Landing Page', 'Blog/Tin tức'];
 
 export default function TemplatesSection() {
+  const t = useTheme('home', 'templates');
   return (
     <section className="py-12 md:py-24 bg-slate-50 relative border-t border-slate-200" aria-label="Kho giao diện">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
@@ -24,13 +26,13 @@ export default function TemplatesSection() {
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-100/80 text-blue-700 text-[10px] md:text-xs font-bold mb-3 md:mb-4 uppercase tracking-wider">
                 <LayoutTemplate size={12} aria-hidden="true" />
-                <span>Kho giao diện</span>
+                <span>{t('badge', 'Kho giao diện')}</span>
               </div>
               <h2 className="text-[22px] md:text-[40px] font-extrabold text-slate-900 mb-2 md:mb-4 leading-[1.2]">
-                Khám phá <span className="text-blue-600">+500</span> giao diện <br className="hidden md:block" /> chuẩn SEO, tối ưu chuyển đổi
+                {t('title', 'Khám phá +500 giao diện chuẩn SEO, tối ưu chuyển đổi')}
               </h2>
               <p className="text-slate-500 text-[13px] md:text-[16px] leading-relaxed">
-                Hệ sinh thái giao diện đa ngành nghề được thiết kế bởi các chuyên gia UX/UI hàng đầu.
+                {t('description', 'Hệ sinh thái giao diện đa ngành nghề được thiết kế bởi các chuyên gia UX/UI hàng đầu.')}
               </p>
               <div className="flex md:hidden items-center gap-3 mt-3 text-[11px] font-semibold">
                 <span className="inline-flex items-center gap-1 text-slate-700"><span className="text-blue-600 font-black">500+</span> giao diện</span>
@@ -137,7 +139,7 @@ export default function TemplatesSection() {
 
         {/* CTA */}
         <div className="flex items-center justify-center gap-3 md:gap-4 pt-6 md:pt-8 border-t border-slate-200">
-          <span className="text-slate-400 text-[12px] md:text-sm">Không tìm thấy mẫu phù hợp?</span>
+          <span className="text-slate-400 text-[12px] md:text-sm">{t('ctaText', 'Không tìm thấy mẫu phù hợp?')}</span>
           <button className="text-blue-600 font-bold text-[12px] md:text-sm hover:underline">Thiết kế riêng</button>
           <span className="w-1 h-1 rounded-full bg-slate-300" aria-hidden="true"></span>
           <button className="text-slate-700 font-bold text-[12px] md:text-sm hover:text-blue-600 transition-colors inline-flex items-center gap-1">

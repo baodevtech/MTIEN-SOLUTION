@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/hooks/use-theme';
 
 const themeColors: Record<string, { main: string; light: string }> = {
   blue: { main: '#0066FF', light: '#eff6ff' },
@@ -16,23 +17,25 @@ const themeColors: Record<string, { main: string; light: string }> = {
   amber: { main: '#f59e0b', light: '#fffbeb' },
 };
 
-const features = [
+const defaultFeatures = [
   {
-    icon: MousePointerClick,
     title: 'Trình kiến tạo trực quan (No-code)',
     desc: 'Thao tác kéo thả đơn giản, chỉnh sửa nội dung, hình ảnh trực tiếp ngay trên giao diện như đang sử dụng Word. Thay đổi áp dụng Real-time.',
+    icon: 'MousePointerClick',
   },
   {
-    icon: LayoutDashboard,
     title: 'Dashboard All-in-One',
     desc: 'Đồng bộ quản lý sản phẩm, đơn hàng, khách hàng và doanh thu từ đa kênh (Website, Shopee, Facebook) trên một màn hình duy nhất.',
+    icon: 'LayoutDashboard',
   },
   {
-    icon: Palette,
     title: 'Cá nhân hóa thương hiệu',
     desc: 'Thiết lập nhận diện thương hiệu (Màu sắc, Font chữ, Logo) chỉ với vài click chuột. Hệ thống tự động đồng bộ xuyên suốt toàn website.',
+    icon: 'Palette',
   },
 ];
+
+const featureIconMap: Record<string, typeof MousePointerClick> = { MousePointerClick, LayoutDashboard, Palette };
 
 /* ── Shared inner dashboard content (device mock) ── */
 function DashboardContent({ builderColor, deviceMode }: { builderColor: string; deviceMode: string }) {
@@ -163,6 +166,11 @@ export default function DashboardSection() {
   const reduced = useReducedMotion();
   const isMobile = useIsMobile();
   const skipAnim = reduced || isMobile;
+  const t = useTheme('home', 'dashboard');
+  const features = (t<typeof defaultFeatures>('features', defaultFeatures)).map(f => ({
+    ...f,
+    icon: featureIconMap[f.icon || ''] || MousePointerClick,
+  }));
 
   return (
     <section className="py-10 md:py-32 bg-white relative overflow-hidden" aria-label="Trình kiến tạo Dashboard">
@@ -450,20 +458,20 @@ export default function DashboardSection() {
                   className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide mb-3 md:mb-4 transition-colors duration-500"
                   style={{ backgroundColor: themeColors[builderColor].light, color: themeColors[builderColor].main }}
                 >
-                  <LayoutDashboard size={12} aria-hidden="true" /> TRÌNH KIẾN TẠO
+                  <LayoutDashboard size={12} aria-hidden="true" /> {t('badge', 'TRÌNH KIẾN TẠO')}
                 </div>
                 <h2 className="text-[24px] md:text-[48px] font-black text-slate-900 leading-[1.15] tracking-tight mb-3 md:mb-6">
-                  Sáng tạo không rào cản.{' '}
+                  {t('title', 'Sáng tạo không rào cản.')}{' '}
                   <span className="md:block" />
                   <span
                     className="text-transparent bg-clip-text transition-colors duration-500"
                     style={{ backgroundImage: `linear-gradient(135deg, ${themeColors[builderColor].main}, ${themeColors[builderColor].main}80)` }}
                   >
-                    Quản trị tinh gọn.
+                    {t('titleHighlight', 'Quản trị tinh gọn.')}
                   </span>
                 </h2>
                 <p className="text-slate-500 text-[13px] md:text-[18px] leading-[1.7] max-w-lg">
-                  Nền tảng được thiết kế tập trung vào tính hiệu quả. Bạn chỉ cần tập trung kinh doanh, công nghệ để chúng tôi lo.
+                  {t('description', 'Nền tảng được thiết kế tập trung vào tính hiệu quả. Bạn chỉ cần tập trung kinh doanh, công nghệ để chúng tôi lo.')}
                 </p>
               </div>
             ) : (
@@ -477,20 +485,20 @@ export default function DashboardSection() {
                   className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide mb-3 md:mb-4 transition-colors duration-500"
                   style={{ backgroundColor: themeColors[builderColor].light, color: themeColors[builderColor].main }}
                 >
-                  <LayoutDashboard size={12} aria-hidden="true" /> TRÌNH KIẾN TẠO
+                  <LayoutDashboard size={12} aria-hidden="true" /> {t('badge', 'TRÌNH KIẾN TẠO')}
                 </motion.div>
                 <h2 className="text-[24px] md:text-[48px] font-black text-slate-900 leading-[1.15] tracking-tight mb-3 md:mb-6">
-                  Sáng tạo không rào cản.{' '}
+                  {t('title', 'Sáng tạo không rào cản.')}{' '}
                   <span className="md:block" />
                   <motion.span
                     className="text-transparent bg-clip-text transition-colors duration-500"
                     style={{ backgroundImage: `linear-gradient(135deg, ${themeColors[builderColor].main}, ${themeColors[builderColor].main}80)` }}
                   >
-                    Quản trị tinh gọn.
+                    {t('titleHighlight', 'Quản trị tinh gọn.')}
                   </motion.span>
                 </h2>
                 <p className="text-slate-500 text-[13px] md:text-[18px] leading-[1.7] max-w-lg">
-                  Nền tảng được thiết kế tập trung vào tính hiệu quả. Bạn chỉ cần tập trung kinh doanh, công nghệ để chúng tôi lo.
+                  {t('description', 'Nền tảng được thiết kế tập trung vào tính hiệu quả. Bạn chỉ cần tập trung kinh doanh, công nghệ để chúng tôi lo.')}
                 </p>
               </motion.div>
             )}
@@ -564,7 +572,7 @@ export default function DashboardSection() {
                 className="mt-5 md:mt-12 w-full md:w-auto text-white rounded-2xl md:rounded-full px-5 md:px-8 py-3.5 md:py-4 font-bold text-[14px] md:text-[15px] shadow-lg transition-all duration-500 flex items-center justify-center gap-2"
                 style={{ backgroundColor: themeColors[builderColor].main, boxShadow: `0 10px 25px -5px ${themeColors[builderColor].main}60` }}
               >
-                Trải nghiệm miễn phí <ArrowRight size={18} aria-hidden="true" />
+                {t('ctaText', 'Trải nghiệm miễn phí')} <ArrowRight size={18} aria-hidden="true" />
               </button>
             ) : (
               <motion.button
@@ -573,7 +581,7 @@ export default function DashboardSection() {
                 className="mt-5 md:mt-12 w-full md:w-auto text-white rounded-2xl md:rounded-full px-5 md:px-8 py-3.5 md:py-4 font-bold text-[14px] md:text-[15px] shadow-lg transition-all duration-500 flex items-center justify-center gap-2"
                 style={{ backgroundColor: themeColors[builderColor].main, boxShadow: `0 10px 25px -5px ${themeColors[builderColor].main}60` }}
               >
-                Trải nghiệm miễn phí <ArrowRight size={18} aria-hidden="true" />
+                {t('ctaText', 'Trải nghiệm miễn phí')} <ArrowRight size={18} aria-hidden="true" />
               </motion.button>
             )}
           </div>

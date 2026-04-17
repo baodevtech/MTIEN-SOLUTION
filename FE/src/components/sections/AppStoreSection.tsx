@@ -9,6 +9,7 @@ import {
 import Image from 'next/image';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/hooks/use-theme';
 
 const apps = [
   { icon: MessageCircle, name: 'Messenger AI', tag: 'Hot', color: 'from-blue-500 to-cyan-400', size: 'large', desc: 'Tự động hóa CSKH 24/7 với trí tuệ nhân tạo.' },
@@ -25,6 +26,7 @@ export default function AppStoreRedesign() {
   const reduced = useReducedMotion();
   const isMobile = useIsMobile();
   const skipAnim = reduced || isMobile;
+  const t = useTheme('home', 'appstore');
 
   return (
     <section className="bg-[#FBFBFC] pt-6 md:pt-45 pb-16 md:pb-16 relative mt-0 md:-mt-35 z-10 border-y border-slate-200/60 overflow-hidden font-sans md:min-h-[80vh] flex items-center" aria-label="Hệ sinh thái ứng dụng">
@@ -44,11 +46,11 @@ export default function AppStoreRedesign() {
           <div className="md:col-span-6 flex flex-col order-2 md:order-1">
             <header className="hidden md:block mb-8">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-white shadow-sm border border-slate-100 rounded-full text-blue-600 text-[11px] font-bold mb-4 uppercase tracking-widest">
-                <Cpu size={12} /> <span>Hệ sinh thái MTIEN SOLUTION</span>
+                <Cpu size={12} /> <span>{t('badge', 'Hệ sinh thái MTIEN SOLUTION')}</span>
               </div>
               <h2 className="text-5xl font-bold text-slate-900 tracking-tighter leading-[1.1] mb-4">
-                Mở rộng sức mạnh. <br/>
-                <span className="text-slate-400">Không giới hạn tính năng.</span>
+                {t('title', 'Mở rộng sức mạnh.')} <br/>
+                <span className="text-slate-400">{t('titleHighlight', 'Không giới hạn tính năng.')}</span>
               </h2>
             </header>
 
@@ -85,8 +87,8 @@ export default function AppStoreRedesign() {
               {/* Special CTA Bento Card */}
               <div className="col-span-2 row-span-1 bg-slate-900 rounded-[1.2rem] md:rounded-[1.8rem] p-3 md:p-5 flex items-center justify-between group cursor-pointer hover:bg-blue-600 transition-all shadow-xl shadow-slate-900/10">
                  <div className="flex flex-col">
-                    <span className="text-white font-bold text-xs md:text-sm tracking-tight">Khám phá 100+</span>
-                    <span className="text-white/50 text-[8px] md:text-[10px] font-medium">Tiện ích tích hợp sẵn</span>
+                    <span className="text-white font-bold text-xs md:text-sm tracking-tight">{t('ctaCount', 'Khám phá 100+')}</span>
+                    <span className="text-white/50 text-[8px] md:text-[10px] font-medium">{t('ctaLabel', 'Tiện ích tích hợp sẵn')}</span>
                  </div>
                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white group-hover:translate-x-1 transition-transform">
                    <ArrowRight size={16} />
@@ -107,11 +109,11 @@ export default function AppStoreRedesign() {
             {/* Mobile Text Overlay — inside image */}
             <div className="absolute inset-x-0 bottom-0 z-20 px-5 pb-6 pt-24 bg-gradient-to-t from-black/70 via-black/40 to-transparent md:hidden">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/20 backdrop-blur-sm border border-white/20 rounded-full text-white text-[10px] font-bold mb-3 uppercase tracking-widest">
-                <Cpu size={11} /> <span>Hệ sinh thái</span>
+                <Cpu size={11} /> <span>{t('badgeMobile', 'Hệ sinh thái')}</span>
               </div>
               <h2 className="text-[28px] font-bold text-white tracking-tight leading-[1.08]">
-                Mở rộng sức mạnh.<br/>
-                <span className="text-white/60">Không giới hạn.</span>
+                {t('title', 'Mở rộng sức mạnh.')}<br/>
+                <span className="text-white/60">{t('titleHighlightMobile', 'Không giới hạn.')}</span>
               </h2>
             </div>
 
@@ -196,7 +198,7 @@ export default function AppStoreRedesign() {
               ))}
            </div>
            <button className="shrink-0 text-blue-600 font-semibold text-[12px] md:text-sm hover:text-blue-700 transition-colors inline-flex items-center gap-1">
-              Dùng thử <ArrowRight size={14} />
+              {t('footerCta', 'Dùng thử')} <ArrowRight size={14} />
            </button>
         </div>
       </div>
