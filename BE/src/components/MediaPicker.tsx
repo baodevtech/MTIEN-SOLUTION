@@ -61,7 +61,7 @@ export default function MediaPicker({ open, onClose, onSelect, accept = 'all', m
     setUploading(true)
     const formData = new FormData()
     Array.from(files).forEach(f => formData.append('files', f))
-    formData.append('folder', 'uploads')
+    formData.append('folder', 'general')
 
     try {
       const res = await fetch('/api/admin/media/upload', { method: 'POST', body: formData })
