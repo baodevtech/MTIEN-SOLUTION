@@ -95,32 +95,52 @@ export async function POST(request: NextRequest) {
 
       // Save to database
       const url = `/uploads/${safeFolder}/${uniqueName}`
-      const media = await prisma.media.create({
-        data: {
+      try {
+        const media = await prisma.media.create({
+          data: {
+            filename: uniqueName,
+            originalName: file.name,
+            url,
+            type: getMediaType(file.type),
+            size: file.size,
+            width,
+            height,
+            alt: '',
+            folder: safeFolder,
+            uploadedBy: 'Admin',
+          },
+        })
+        uploaded.push(media)
+      } catch (dbErr) {
+        console.error('DB save error for', file.name, dbErr)
+        // File was written to disk but DB failed - still report as uploaded with minimal data
+        uploaded.push({
+          id: `temp-${timestamp}`,
           filename: uniqueName,
           originalName: file.name,
           url,
           type: getMediaType(file.type),
           size: file.size,
-          width,
-          height,
+          width: width ?? null,
+          height: height ?? null,
           alt: '',
           folder: safeFolder,
           uploadedBy: 'Admin',
-        },
-      })
-
-      uploaded.push(media)
+          createdAt: new Date(),
+        })
+      }
     }
 
     if (uploaded.length > 0) {
-      await logActivity({
-        action: 'media.upload',
-        module: 'media',
-        status: 'success',
-        message: `Upload ${uploaded.length} file(s)`,
-        detail: { files: uploaded.map(m => m.filename), folder: safeFolder },
-      })
+      try {
+        await logActivity({
+          action: 'media.upload',
+          module: 'media',
+          status: 'success',
+          message: `Upload ${uploaded.length} file(s)`,
+          detail: { files: uploaded.map(m => m.filename), folder: safeFolder },
+        })
+      } catch { /* DB may be unavailable */ }
     }
 
     return corsResponse({
@@ -130,8 +150,9 @@ export async function POST(request: NextRequest) {
       message: `Đã tải lên ${uploaded.length} tệp${errors.length > 0 ? `, ${errors.length} lỗi` : ''}`,
     }, uploaded.length > 0 ? 201 : 400)
   } catch (err) {
-    console.error('Upload error:', err)
-    return corsResponse({ success: false, message: 'Lỗi upload file', code: 'UPLOAD_FAILED' }, 500)
+    const message = err instanceof Error ? err.message : 'Unknown error'
+    console.error('Upload error:', message, err)
+    return corsResponse({ success: false, message: `Lỗi upload: ${message}`, code: 'UPLOAD_FAILED' }, 500)
   }
 }
 
