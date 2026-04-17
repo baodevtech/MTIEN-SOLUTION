@@ -20,6 +20,23 @@ export interface SiteSettings {
     maintenance?: boolean
     shopMaintenance?: boolean
   }
+  company?: {
+    name?: string
+    phone?: string
+    email?: string
+    address?: string
+    taxId?: string
+    foundedYear?: string
+    ceo?: string
+  }
+  social?: {
+    facebook?: string
+    youtube?: string
+    instagram?: string
+    linkedin?: string
+    tiktok?: string
+    zalo?: string
+  }
   [key: string]: unknown
 }
 

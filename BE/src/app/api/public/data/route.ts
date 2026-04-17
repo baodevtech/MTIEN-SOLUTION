@@ -12,9 +12,10 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const type = searchParams.get('type')
 
-  // Validate API key
+  // Validate API key using ConnectionSetting from DB
   const apiKey = request.headers.get('x-api-key')
-  const expectedKey = process.env.REVALIDATION_SECRET
+  const conn = await prisma.connectionSetting.findFirst()
+  const expectedKey = conn?.secretKey || process.env.REVALIDATION_SECRET
   if (!expectedKey || apiKey !== expectedKey) {
     return corsResponse({ success: false, message: 'Unauthorized' }, 401)
   }

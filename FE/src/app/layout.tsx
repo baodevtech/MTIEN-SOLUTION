@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import { ThemeProvider } from '@/lib/theme-context';
 import { SettingsProvider } from '@/lib/settings-context';
 import { getTheme, getSettings } from '@/lib/theme-fetcher';
+import type { SiteSettings } from '@/lib/theme-fetcher';
 
 const BASE_URL = process.env.APP_URL || 'https://mtiensolution.vn';
 
@@ -29,75 +30,86 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
-  title: {
-    default: 'MTIEN SOLUTION - Giải pháp Công nghệ Toàn diện',
-    template: '%s | MTIEN SOLUTION',
-  },
-  description:
-    'Cung cấp dịch vụ lập trình phần mềm, thiết kế website, cloud server, marketing và thiết bị IT chuyên nghiệp. Hơn 230.000 khách hàng tin dùng.',
-  keywords: [
-    'thiết kế website',
-    'phần mềm quản lý bán hàng',
-    'cloud server',
-    'giải pháp IT',
-    'MTIEN SOLUTION',
-    'chuyển đổi số',
-    'phần mềm doanh nghiệp',
-  ],
-  authors: [{ name: 'MTIEN SOLUTION', url: BASE_URL }],
-  creator: 'MTIEN SOLUTION',
-  openGraph: {
-    type: 'website',
-    locale: 'vi_VN',
-    siteName: 'MTIEN SOLUTION',
-    title: 'MTIEN SOLUTION - Giải pháp Công nghệ Toàn diện',
-    description:
-      'Cung cấp dịch vụ lập trình, thiết kế, cloud, và thiết bị IT chuyên nghiệp cho hơn 230.000 doanh nghiệp.',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'MTIEN SOLUTION - Giải pháp Công nghệ Toàn diện',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'MTIEN SOLUTION - Giải pháp Công nghệ Toàn diện',
-    description:
-      'Cung cấp dịch vụ lập trình, thiết kế, cloud, và thiết bị IT chuyên nghiệp.',
-    images: ['/og-image.png'],
-  },
-  robots: { index: true, follow: true },
-  alternates: { canonical: BASE_URL },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings()
+  const siteName = settings?.general?.siteName || 'MTIEN SOLUTION'
+  const siteDescription = settings?.general?.siteDescription || 'Cung cấp dịch vụ lập trình phần mềm, thiết kế website, cloud server, marketing và thiết bị IT chuyên nghiệp. Hơn 230.000 khách hàng tin dùng.'
+  const siteUrl = settings?.general?.siteUrl || BASE_URL
+  const adminUrl = process.env.ADMIN_API_URL || ''
+  const logoPath = settings?.general?.logo
+  const ogImage = logoPath
+    ? (logoPath.startsWith('http') ? logoPath : `${adminUrl}${logoPath}`)
+    : '/og-image.png'
 
-function JsonLd() {
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: `${siteName} - Giải pháp Công nghệ Toàn diện`,
+      template: `%s | ${siteName}`,
+    },
+    description: siteDescription,
+    keywords: [
+      'thiết kế website',
+      'phần mềm quản lý bán hàng',
+      'cloud server',
+      'giải pháp IT',
+      siteName,
+      'chuyển đổi số',
+      'phần mềm doanh nghiệp',
+    ],
+    authors: [{ name: siteName, url: siteUrl }],
+    creator: siteName,
+    openGraph: {
+      type: 'website',
+      locale: 'vi_VN',
+      siteName,
+      title: `${siteName} - Giải pháp Công nghệ Toàn diện`,
+      description: siteDescription,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${siteName} - Giải pháp Công nghệ Toàn diện`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${siteName} - Giải pháp Công nghệ Toàn diện`,
+      description: siteDescription,
+      images: [ogImage],
+    },
+    robots: { index: true, follow: true },
+    alternates: { canonical: siteUrl },
+  }
+}
+
+function JsonLd({ settings }: { settings: SiteSettings | null }) {
+  const siteName = settings?.general?.siteName || 'MTIEN SOLUTION'
+  const siteUrl = settings?.general?.siteUrl || BASE_URL
+  const siteDescription = settings?.general?.siteDescription || 'Công ty TNHH Giải pháp Công nghệ Minh Tiến - Cung cấp dịch vụ IT toàn diện.'
+  const company = settings?.company || {}
+  const social = settings?.social || {}
+
+  const sameAs = [social.facebook, social.youtube, social.instagram, social.linkedin, social.tiktok].filter(Boolean)
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'MTIEN SOLUTION',
-    url: BASE_URL,
-    logo: `${BASE_URL}/logo.png`,
-    description:
-      'Công ty TNHH Giải pháp Công nghệ Minh Tiến - Cung cấp dịch vụ IT toàn diện.',
-    address: {
+    name: company.name || siteName,
+    url: siteUrl,
+    logo: `${siteUrl}/logo.png`,
+    description: siteDescription,
+    address: company.address ? {
       '@type': 'PostalAddress',
-      streetAddress: 'Tầng 6, tòa nhà Ladeco, 266 Đội Cấn',
-      addressLocality: 'Hà Nội',
+      streetAddress: company.address,
       addressCountry: 'VN',
-    },
-    contactPoint: [
-      { '@type': 'ContactPoint', telephone: '+84-1800-6750', contactType: 'customer service' },
-      { '@type': 'ContactPoint', telephone: '+84-1900-6750', contactType: 'technical support' },
-    ],
-    sameAs: [
-      'https://www.facebook.com/mtiensolution',
-      'https://www.youtube.com/mtiensolution',
-    ],
+    } : undefined,
+    contactPoint: company.phone ? [
+      { '@type': 'ContactPoint', telephone: company.phone, contactType: 'customer service' },
+    ] : undefined,
+    sameAs: sameAs.length > 0 ? sameAs : undefined,
   };
 
   return (
@@ -129,7 +141,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="icon" href={faviconUrl} />
         <link rel="dns-prefetch" href="https://picsum.photos" />
         <link rel="preconnect" href="https://picsum.photos" crossOrigin="anonymous" />
-        <JsonLd />
+        <JsonLd settings={settings} />
       </head>
       <body
         className="bg-white text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900"
