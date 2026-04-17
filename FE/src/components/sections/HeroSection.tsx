@@ -280,7 +280,7 @@ export default function HeroSection() {
         </div>
         
         {/* Support badges */}
-        <div className="mt-4 md:mt-32 pt-3 md:pt-10 border-t border-slate-200/50 w-full flex flex-nowrap justify-center gap-3 md:gap-16 items-center opacity-60 cursor-default overflow-x-auto scrollbar-hide">
+        <div className="mt-4 pt-3 md:pt-10 border-t border-slate-200/50 w-full flex flex-nowrap justify-center gap-3 md:gap-16 items-center opacity-60 cursor-default overflow-x-auto scrollbar-hide">
            {['Tối ưu SEO', 'Responsive', 'SSL 256-bit', 'Hosting nhanh'].map((badge, i) => (
              <div key={i} className="flex items-center gap-1.5 text-[11px] md:text-sm font-semibold text-slate-500 whitespace-nowrap shrink-0">
                <CheckCircle2 size={14} className="text-emerald-500 md:w-[18px] md:h-[18px]" />
