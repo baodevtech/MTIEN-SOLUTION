@@ -37,6 +37,17 @@ export interface SiteSettings {
     tiktok?: string
     zalo?: string
   }
+  globalSEO?: {
+    defaultTitle?: string
+    titleTemplate?: string
+    defaultDescription?: string
+    defaultKeywords?: string
+    ogImage?: string
+    googleAnalyticsId?: string
+    googleSearchConsoleId?: string
+    facebookPixelId?: string
+  }
+  robotsTxt?: string
   [key: string]: unknown
 }
 

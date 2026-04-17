@@ -32,52 +32,54 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings()
+  const seo = settings?.globalSEO
   const siteName = settings?.general?.siteName || 'MTIEN SOLUTION'
-  const siteDescription = settings?.general?.siteDescription || 'Cung cấp dịch vụ lập trình phần mềm, thiết kế website, cloud server, marketing và thiết bị IT chuyên nghiệp. Hơn 230.000 khách hàng tin dùng.'
   const siteUrl = settings?.general?.siteUrl || BASE_URL
   const adminUrl = process.env.ADMIN_API_URL || ''
-  const logoPath = settings?.general?.logo
-  const ogImage = logoPath
-    ? (logoPath.startsWith('http') ? logoPath : `${adminUrl}${logoPath}`)
+
+  // SEO fields: prioritize globalSEO from SEO settings page, fallback to general settings
+  const defaultTitle = seo?.defaultTitle || `${siteName} - Giải pháp Công nghệ Toàn diện`
+  const titleTemplate = seo?.titleTemplate || `%s | ${siteName}`
+  const description = seo?.defaultDescription || settings?.general?.siteDescription || 'Cung cấp dịch vụ lập trình phần mềm, thiết kế website, cloud server, marketing và thiết bị IT chuyên nghiệp.'
+  const keywords = seo?.defaultKeywords
+    ? seo.defaultKeywords.split(',').map(k => k.trim()).filter(Boolean)
+    : ['thiết kế website', 'phần mềm quản lý bán hàng', 'cloud server', 'giải pháp IT', siteName]
+
+  const ogImagePath = seo?.ogImage || settings?.general?.logo
+  const ogImage = ogImagePath
+    ? (ogImagePath.startsWith('http') ? ogImagePath : `${adminUrl}${ogImagePath}`)
     : '/og-image.png'
 
   return {
     metadataBase: new URL(siteUrl),
     title: {
-      default: `${siteName} - Giải pháp Công nghệ Toàn diện`,
-      template: `%s | ${siteName}`,
+      default: defaultTitle,
+      template: titleTemplate,
     },
-    description: siteDescription,
-    keywords: [
-      'thiết kế website',
-      'phần mềm quản lý bán hàng',
-      'cloud server',
-      'giải pháp IT',
-      siteName,
-      'chuyển đổi số',
-      'phần mềm doanh nghiệp',
-    ],
+    description,
+    keywords,
     authors: [{ name: siteName, url: siteUrl }],
     creator: siteName,
+    verification: seo?.googleSearchConsoleId ? { google: seo.googleSearchConsoleId } : undefined,
     openGraph: {
       type: 'website',
       locale: 'vi_VN',
       siteName,
-      title: `${siteName} - Giải pháp Công nghệ Toàn diện`,
-      description: siteDescription,
+      title: defaultTitle,
+      description,
       images: [
         {
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: `${siteName} - Giải pháp Công nghệ Toàn diện`,
+          alt: defaultTitle,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${siteName} - Giải pháp Công nghệ Toàn diện`,
-      description: siteDescription,
+      title: defaultTitle,
+      description,
       images: [ogImage],
     },
     robots: { index: true, follow: true },
@@ -131,6 +133,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     ? (settings.general.logo.startsWith('http') ? settings.general.logo : `${adminUrl}${settings.general.logo}`)
     : ''
 
+  const gaId = settings?.globalSEO?.googleAnalyticsId
+  const fbPixelId = settings?.globalSEO?.facebookPixelId
+
   return (
     <html
       lang="vi"
@@ -142,6 +147,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="dns-prefetch" href="https://picsum.photos" />
         <link rel="preconnect" href="https://picsum.photos" crossOrigin="anonymous" />
         <JsonLd settings={settings} />
+        {/* Google Analytics */}
+        {gaId && gaId !== 'G-XXXXXXXXXX' && (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`} />
+            <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId.replace(/'/g, "\\'")}');` }} />
+          </>
+        )}
+        {/* Facebook Pixel */}
+        {fbPixelId && fbPixelId !== 'Pixel ID' && (
+          <script dangerouslySetInnerHTML={{ __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${fbPixelId.replace(/'/g, "\\'")}');fbq('track','PageView');` }} />
+        )}
       </head>
       <body
         className="bg-white text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900"
