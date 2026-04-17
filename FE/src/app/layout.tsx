@@ -126,12 +126,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const theme = await getTheme()
   const settings = await getSettings()
   const adminUrl = process.env.ADMIN_API_URL || ''
-  const faviconUrl = settings?.general?.favicon
-    ? (settings.general.favicon.startsWith('http') ? settings.general.favicon : `${adminUrl}${settings.general.favicon}`)
-    : '/favicon.ico'
-  const logoUrl = settings?.general?.logo
-    ? (settings.general.logo.startsWith('http') ? settings.general.logo : `${adminUrl}${settings.general.logo}`)
-    : ''
+
+  const resolveUrl = (url: string | undefined, fallback: string) => {
+    if (!url) return fallback
+    if (url.startsWith('http') || url.startsWith('data:')) return url
+    return `${adminUrl}${url}`
+  }
+
+  const faviconUrl = resolveUrl(settings?.general?.favicon, '/favicon.ico')
+  const logoUrl = resolveUrl(settings?.general?.logo, '')
 
   const gaId = settings?.globalSEO?.googleAnalyticsId
   const fbPixelId = settings?.globalSEO?.facebookPixelId

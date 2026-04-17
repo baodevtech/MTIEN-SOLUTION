@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { PenTool, Palette, CheckCircle2 } from 'lucide-react';
 
@@ -28,7 +29,7 @@ export default function DesignServiceBrand() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex gap-3 h-[280px]">
           {/* Brand Identity — Tall left card */}
           <div className="flex-1 relative rounded-[20px] overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="Brand Identity" className="absolute inset-0 w-full h-full object-cover" />
+            <Image src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="Brand Identity" fill className="object-cover" sizes="50vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-purple-950/90 via-purple-900/40 to-black/10" />
             <div className="absolute inset-0 p-4 flex flex-col justify-end">
               <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-md flex items-center justify-center mb-2"><PenTool size={14} className="text-white" /></div>
@@ -45,7 +46,7 @@ export default function DesignServiceBrand() {
           <div className="flex-1 flex flex-col gap-3">
             {/* Top image card */}
             <div className="flex-1 relative rounded-[20px] overflow-hidden bg-neutral-900">
-              <img src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80" alt="Marketing Assets" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+              <Image src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80" alt="Marketing Assets" fill className="object-cover opacity-60" sizes="50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3">
                 <div className="flex items-center gap-1.5 mb-1">
@@ -70,7 +71,7 @@ export default function DesignServiceBrand() {
       <section className="hidden md:block py-32 px-6 bg-white overflow-hidden border-b border-neutral-100">
         <div className="max-w-7xl mx-auto flex flex-row items-center gap-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 relative h-[450px] w-full rounded-[40px] shadow-2xl border border-neutral-100 overflow-hidden group">
-             <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="Brand Identity" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none" />
+             <Image src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="Brand Identity" fill className="object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none" sizes="50vw" />
              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/60 to-transparent opacity-100 transition-opacity duration-700 pointer-events-none" />
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1">
@@ -88,7 +89,7 @@ export default function DesignServiceBrand() {
       <section className="hidden md:block py-32 px-6 bg-neutral-900 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-row-reverse items-center gap-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 relative h-[450px] w-full rounded-[40px] shadow-2xl border border-white/10 overflow-hidden group">
-             <img src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80" alt="Marketing Assets" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
+             <Image src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80" alt="Marketing Assets" fill className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" sizes="50vw" />
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-800 border border-neutral-700 text-cyan-400 font-bold mb-6"><Palette size={18} /> Marketing Assets</div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Quote, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -38,7 +39,7 @@ export default function DesignTestimonials() {
                   <p className="text-neutral-700 font-medium italic text-[15px] md:text-lg">&ldquo;{t.q}&rdquo;</p>
                   <div className="flex items-center justify-between">
                      <div className="flex items-center gap-4">
-                        <img src={t.img} alt={t.a} className="w-12 h-12 rounded-full object-cover shadow-sm" />
+                        <Image src={t.img} alt={t.a} width={48} height={48} className="w-12 h-12 rounded-full object-cover shadow-sm" />
                         <div>
                           <p className="font-bold text-neutral-900 text-sm">{t.a}</p>
                           <p className="text-xs text-neutral-500">{t.r}</p>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 
 /**
@@ -46,7 +47,7 @@ export default function DesignVision() {
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="relative h-[250px] md:h-[400px]">
              <div className="absolute inset-0 rounded-2xl md:rounded-[40px] border border-white/10 overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80" alt="Data Dashboard" className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500" />
+                <Image src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80" alt="Data Dashboard" fill className="object-cover opacity-80 hover:opacity-100 transition-opacity duration-500" sizes="50vw" />
              </div>
           </motion.div>
         </div>

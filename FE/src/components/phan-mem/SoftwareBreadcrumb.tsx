@@ -5,6 +5,7 @@
  * Bao gồm tiêu đề chính, đường dẫn breadcrumb và các hình ảnh trang trí.
  */
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Manrope } from 'next/font/google';
 
@@ -54,9 +55,9 @@ export default function SoftwareBreadcrumb() {
         </div>
 
         <div className="hidden md:block absolute right-0 top-0 w-1/2 h-full z-20 pointer-events-none">
-          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/circle.webp" className="absolute top-[20%] left-[20%] opacity-40" alt="" />
+          <Image src="https://inotek.themevally.com/wp-content/uploads/2025/11/circle.webp" width={100} height={100} className="absolute top-[20%] left-[20%] opacity-40" alt="" />
           <motion.img animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 15, ease: "linear" }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/star-1.webp" className="absolute top-[30%] right-[30%] opacity-80" alt="" />
-          <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/snake.webp" className="absolute bottom-[20%] left-[30%] opacity-40" alt="" />
+          <Image src="https://inotek.themevally.com/wp-content/uploads/2025/11/snake.webp" width={100} height={100} className="absolute bottom-[20%] left-[30%] opacity-40" alt="" />
           <motion.img animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} src="https://inotek.themevally.com/wp-content/uploads/2025/11/doot.webp" className="absolute bottom-[30%] right-[20%] opacity-80" alt="" />
         </div>
       </div>

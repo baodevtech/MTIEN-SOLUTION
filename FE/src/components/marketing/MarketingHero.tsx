@@ -9,6 +9,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { TrendingUp, ArrowRight, Target, Activity } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const fadeUp: any = {
@@ -26,7 +27,7 @@ export default function MarketingHero() {
 
   return (
       <section ref={containerRef} className="relative min-h-[70vh] md:min-h-[90vh] flex items-center pt-24 md:pt-32 pb-16 md:pb-20 px-4 md:px-6 overflow-hidden bg-neutral-950 text-white">
-        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=2000&q=80" alt="" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay" aria-hidden="true" />
+        <Image src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=2000&q=80" alt="" fill className="object-cover opacity-10 mix-blend-overlay" aria-hidden="true" sizes="100vw" priority />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(37,99,235,0.15),rgba(0,0,0,1))]"></div>
         
         <div className="max-w-7xl mx-auto w-full relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
@@ -55,9 +56,9 @@ export default function MarketingHero() {
                </Link>
                <div className="flex items-center gap-4 ml-2">
                  <div className="flex -space-x-3">
-                   <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop" alt="Chuyên gia marketing 1" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-30" />
-                   <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop" alt="Chuyên gia marketing 2" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-20" />
-                   <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop" alt="Chuyên gia marketing 3" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-10" />
+                   <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop" alt="Chuyên gia marketing 1" width={40} height={40} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-30" />
+                   <Image src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop" alt="Chuyên gia marketing 2" width={40} height={40} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-20" />
+                   <Image src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop" alt="Chuyên gia marketing 3" width={40} height={40} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-neutral-900 object-cover z-10" />
                  </div>
                  <div className="text-xs md:text-sm font-medium text-neutral-300">Scale up cho 300+ Brands</div>
                </div>
@@ -79,7 +80,7 @@ export default function MarketingHero() {
                  <div className="w-12 h-12 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center"><TrendingUp /></div>
                </div>
                <div className="flex-1 relative">
-                 <img src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=600&q=80" alt="Biểu đồ tăng trưởng tỷ lệ chuyển đổi" className="w-full h-full object-cover opacity-60 mix-blend-screen" />
+                 <Image src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=600&q=80" alt="Biểu đồ tăng trưởng tỷ lệ chuyển đổi" fill className="object-cover opacity-60 mix-blend-screen" sizes="420px" />
                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent" />
                </div>
             </motion.div>
@@ -93,7 +94,7 @@ export default function MarketingHero() {
                  <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400"><Target size={20} /></div>
                  <div><div className="text-xs text-neutral-400">Google Ads</div><div className="font-bold text-white">ROAS 6.2x</div></div>
                </div>
-               <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" alt="Dữ liệu hiệu suất chiến dịch quảng cáo" className="w-full h-24 object-cover rounded-lg opacity-80" />
+               <Image src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" alt="Dữ liệu hiệu suất chiến dịch quảng cáo" width={400} height={96} className="w-full h-24 object-cover rounded-lg opacity-80" />
             </motion.div>
 
             {/* Social Media Card */}
@@ -101,7 +102,7 @@ export default function MarketingHero() {
                initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1, rotate: 6 }} transition={{ duration: 1, delay: 0.6 }}
                className="absolute top-40 right-[-40px] w-[200px] h-[200px] rounded-3xl shadow-xl z-30 overflow-hidden group"
             >
-               <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80" alt="Chiến dịch mạng xã hội viral 12 triệu lượt tiếp cận" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+               <Image src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80" alt="Chiến dịch mạng xã hội viral 12 triệu lượt tiếp cận" fill className="object-cover group-hover:scale-110 transition-transform duration-700" sizes="200px" />
                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/40 to-transparent" />
                <div className="absolute bottom-0 left-0 p-5 text-white z-10 w-full">
                   <div className="text-xl font-bold mb-1 flex justify-between items-end">

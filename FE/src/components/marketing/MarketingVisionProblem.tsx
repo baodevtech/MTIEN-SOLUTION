@@ -6,6 +6,7 @@
  * 90% doanh nghiep "dot tien" sai cach voi hinh anh minh hoa va cac card van de.
  */
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Activity, TrendingUp } from 'lucide-react';
 
@@ -39,7 +40,7 @@ export default function MarketingVisionProblem() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex gap-3 h-[280px]">
           {/* Left — Image card */}
           <div className="flex-[1.1] relative rounded-[20px] overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1563986768609-322da135f6a3?auto=format&fit=crop&w=1000&q=80" alt="Wasted Budget" className="absolute inset-0 w-full h-full object-cover grayscale" />
+            <Image src="https://images.unsplash.com/photo-1563986768609-322da135f6a3?auto=format&fit=crop&w=1000&q=80" alt="Wasted Budget" fill className="object-cover grayscale" sizes="50vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-red-950/80 via-black/30 to-black/10" />
             <div className="absolute inset-0 p-4 flex flex-col justify-end">
               <span className="text-red-400 text-[10px] font-bold uppercase tracking-wider mb-1">Cảnh Báo</span>
@@ -67,7 +68,7 @@ export default function MarketingVisionProblem() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="relative h-[500px]">
              <div className="absolute inset-0 rounded-[40px] overflow-hidden shadow-2xl group border border-neutral-200">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da135f6a3?auto=format&fit=crop&w=1000&q=80" alt="Wasted Budget" className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700 filter grayscale" />
+                <Image src="https://images.unsplash.com/photo-1563986768609-322da135f6a3?auto=format&fit=crop&w=1000&q=80" alt="Wasted Budget" fill className="object-cover opacity-90 group-hover:scale-105 transition-transform duration-700 grayscale" sizes="50vw" />
                 <div className="absolute inset-0 bg-blue-600/10 mix-blend-multiply" />
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-md px-8 py-6 rounded-2xl shadow-xl text-center">
                    <div className="text-blue-700 font-bold text-xl mb-1">Cảnh Báo</div>

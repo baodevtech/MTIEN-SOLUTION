@@ -6,6 +6,7 @@
  * Moi dich vu trinh bay dang 2 cot (hinh anh + noi dung) voi layout xen ke.
  */
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Search, CheckCircle2, MousePointerClick, Megaphone, Mail } from 'lucide-react';
 
@@ -36,7 +37,7 @@ export default function MarketingServices() {
         {/* Row 1: SEO tall left + Ads right stacked */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex gap-3 h-[280px]">
           <div className="flex-1 relative rounded-[20px] overflow-hidden">
-            <img src={services[0].img} alt={services[0].label} className="absolute inset-0 w-full h-full object-cover" />
+            <Image src={services[0].img} alt={services[0].label} fill className="object-cover" sizes="50vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/90 via-black/30 to-black/10" />
             <div className="absolute inset-0 p-4 flex flex-col justify-end">
               <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-md flex items-center justify-center mb-2"><Search size={14} className="text-white" /></div>
@@ -50,7 +51,7 @@ export default function MarketingServices() {
           </div>
           <div className="flex-1 flex flex-col gap-3">
             <div className="flex-1 relative rounded-[20px] overflow-hidden bg-neutral-900">
-              <img src={services[1].img} alt={services[1].label} className="absolute inset-0 w-full h-full object-cover opacity-60" />
+              <Image src={services[1].img} alt={services[1].label} fill className="object-cover opacity-60" sizes="50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3">
                 <div className="flex items-center gap-1.5 mb-1">
@@ -71,7 +72,7 @@ export default function MarketingServices() {
         {/* Row 2: Social tall left + Email right stacked */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1} className="flex gap-3 h-[280px]">
           <div className="flex-1 relative rounded-[20px] overflow-hidden">
-            <img src={services[2].img} alt={services[2].label} className="absolute inset-0 w-full h-full object-cover" />
+            <Image src={services[2].img} alt={services[2].label} fill className="object-cover" sizes="50vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-black/30 to-black/10" />
             <div className="absolute inset-0 p-4 flex flex-col justify-end">
               <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-md flex items-center justify-center mb-2"><Megaphone size={14} className="text-white" /></div>
@@ -85,7 +86,7 @@ export default function MarketingServices() {
           </div>
           <div className="flex-1 flex flex-col gap-3">
             <div className="flex-1 relative rounded-[20px] overflow-hidden bg-neutral-900">
-              <img src={services[3].img} alt={services[3].label} className="absolute inset-0 w-full h-full object-cover opacity-60" />
+              <Image src={services[3].img} alt={services[3].label} fill className="object-cover opacity-60" sizes="50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3">
                 <div className="flex items-center gap-1.5 mb-1">
@@ -109,7 +110,7 @@ export default function MarketingServices() {
         <section key={idx} className={`hidden md:block py-32 px-6 ${s.bgSection}`}>
           <div className={`max-w-7xl mx-auto flex flex-col ${s.dir} items-center gap-16`}>
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 relative h-[500px] w-full rounded-[40px] shadow-2xl overflow-hidden group border border-neutral-200">
-               <img src={s.img} alt={s.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+               <Image src={s.img} alt={s.label} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
                {idx === 0 && <><div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" /><div className="absolute bottom-8 left-8 text-white"><Search size={40} className="mb-4 text-emerald-400"/><div className="text-2xl font-bold">Top 1 Google</div></div></>}
                {idx === 1 && <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay" />}
             </motion.div>

@@ -5,6 +5,7 @@
  * Bao gồm các bước: Khảo sát, Phân tích, Lập trình, Bàn giao với hiệu ứng glass card.
  */
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 
 const customEase: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
@@ -25,7 +26,7 @@ export default function SoftwareProcess() {
       
       {/* Top Shape */}
       <motion.div variants={slideInTop} initial="hidden" whileInView="visible" viewport={{ once: true }} className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-        <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-shape-01.webp" alt="Shape" className="drop-shadow-sm" />
+        <Image src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-shape-01.webp" alt="Shape" width={200} height={60} className="drop-shadow-sm" />
       </motion.div>
       
       {/* Main Navy Container */}
@@ -90,8 +91,9 @@ export default function SoftwareProcess() {
                     <div className="mb-4 md:mb-[30px] relative">
                       {/* Glow effect behind image */}
                       <div className="absolute inset-0 bg-[#1053F3] blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500 rounded-full scale-150"></div>
-                      <img 
+                      <Image 
                         src={`https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon${idx + 1}.webp`} 
+                        width={64} height={64}
                         className="w-[42px] h-[42px] md:w-[64px] md:h-[64px] relative z-10 group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500 drop-shadow-lg" 
                         alt="icon" 
                       />

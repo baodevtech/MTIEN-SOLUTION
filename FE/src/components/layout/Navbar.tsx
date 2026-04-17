@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X, ChevronDown, ArrowRight, Phone, Mail, Sparkles, Smartphone, Cloud, PenTool, Megaphone, Store, Users, CreditCard, Newspaper, MonitorPlay, Search, ShoppingCart } from 'lucide-react';
 import { useGlobal } from '@/lib/theme-context';
 import { useSiteSettings } from '@/lib/settings-context';
@@ -180,7 +181,7 @@ export default function Navbar() {
               <div className="flex items-center">
                 <Link href="/" className="flex items-center gap-2.5 group" aria-label="MTIEN SOLUTION - Trang chủ">
                   {logoImage ? (
-                    <img src={logoImage.startsWith('http') ? logoImage : `${process.env.NEXT_PUBLIC_ADMIN_API_URL || ''}${logoImage}`} alt={`${logoText} ${logoSubtext}`} className="h-10 md:h-12 w-auto object-contain" />
+                    <Image src={logoImage.startsWith('http') ? logoImage : `${process.env.NEXT_PUBLIC_ADMIN_API_URL || ''}${logoImage}`} alt={`${logoText} ${logoSubtext}`} width={120} height={48} className="h-10 md:h-12 w-auto object-contain" priority />
                   ) : (
                     <>
                       <div className="relative w-[38px] h-[38px] md:w-11 md:h-11">

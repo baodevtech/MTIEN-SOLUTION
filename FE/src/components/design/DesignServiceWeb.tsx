@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Monitor, Smartphone, CheckCircle2 } from 'lucide-react';
 
@@ -28,7 +29,7 @@ export default function DesignServiceWeb() {
         {/* Web UX/UI */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="space-y-5">
           <div className="relative aspect-[3/2] w-full rounded-[20px] overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" alt="Web UX UI" className="w-full h-full object-cover" />
+            <Image src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" alt="Web UX UI" fill className="object-cover" sizes="50vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-medium mb-2">
@@ -51,17 +52,17 @@ export default function DesignServiceWeb() {
         {/* Mobile App */}
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1} className="space-y-5">
           <div className="relative aspect-[3/2] w-full rounded-[20px] overflow-hidden bg-gradient-to-br from-neutral-900 to-indigo-950 flex items-center justify-center">
-            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" alt="Mobile App" className="absolute inset-0 w-full h-full object-cover opacity-25 blur-[2px] pointer-events-none" />
+            <Image src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" alt="Mobile App" fill className="object-cover opacity-25 blur-[2px] pointer-events-none" sizes="50vw" />
             <div className="relative z-10 flex items-end gap-3">
               <div className="w-[88px] h-[176px] bg-black rounded-[18px] border-2 border-neutral-700/60 overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.6)] -rotate-3 translate-y-2 opacity-50 scale-90">
-                <img src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App 1" className="w-full h-full object-cover" />
+                <Image src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App 1" fill className="object-cover" sizes="88px" />
               </div>
               <div className="w-[100px] h-[200px] bg-black rounded-[20px] border-[2.5px] border-neutral-600/60 overflow-hidden shadow-[0_24px_50px_rgba(0,0,0,0.7)] relative z-10">
                 <div className="w-12 h-[12px] bg-black mx-auto rounded-b-lg absolute top-0 left-1/2 -translate-x-1/2 z-20" />
-                <img src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App Interface" className="w-full h-full object-cover" />
+                <Image src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App Interface" fill className="object-cover" sizes="100px" />
               </div>
               <div className="w-[88px] h-[176px] bg-black rounded-[18px] border-2 border-neutral-700/60 overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.6)] rotate-3 translate-y-2 opacity-50 scale-90">
-                <img src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App 2" className="w-full h-full object-cover" />
+                <Image src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App 2" fill className="object-cover" sizes="88px" />
               </div>
             </div>
             <div className="absolute top-4 left-4">
@@ -87,7 +88,7 @@ export default function DesignServiceWeb() {
       <section className="hidden md:block py-32 px-6 bg-white border-y border-neutral-100 overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-row items-center gap-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 relative h-[450px] w-full rounded-[40px] shadow-2xl overflow-hidden group border border-neutral-200">
-             <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" alt="Web UX UI" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" alt="Web UX UI" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
              <Monitor className="absolute bottom-8 right-8 text-white/50 w-24 h-24 stroke-1" />
           </motion.div>
@@ -106,10 +107,10 @@ export default function DesignServiceWeb() {
       <section className="hidden md:block py-32 px-6 bg-[#FAFAFC] overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-row-reverse items-center gap-16">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 relative h-[500px] w-full rounded-[40px] flex items-center justify-center overflow-hidden group">
-             <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" alt="Mobile App Background" className="absolute inset-0 w-full h-full object-cover rounded-[40px] opacity-60 group-hover:scale-105 transition-transform duration-700 blur-sm pointer-events-none" />
+             <Image src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80" alt="Mobile App Background" fill className="object-cover rounded-[40px] opacity-60 group-hover:scale-105 transition-transform duration-700 blur-sm pointer-events-none" sizes="50vw" />
              <div className="w-[240px] h-[480px] bg-black rounded-[40px] shadow-[0_30px_60px_rgba(0,0,0,0.4)] border-[6px] border-neutral-900 overflow-hidden relative z-10 group-hover:-translate-y-4 transition-transform duration-700">
                 <div className="w-24 h-6 bg-neutral-900 mx-auto rounded-b-2xl absolute top-0 left-1/2 -translate-x-1/2 z-20" />
-                <img src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App Interface" className="w-full h-full object-cover" />
+                <Image src="https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=400&q=80" alt="App Interface" fill className="object-cover" sizes="240px" />
              </div>
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1">

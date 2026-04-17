@@ -11,6 +11,7 @@ import {
   Layers, RotateCcw,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import MediaPicker from '@/components/MediaPicker'
 import { allPageSchemas, globalThemeSchema, generateDefaultValues, generateGlobalDefaults } from '@/lib/theme-schema'
 import type { ThemeConfig, EditorState, FieldSchema, HistoryEntry } from '@/types/theme'
 
@@ -605,6 +606,7 @@ export default function ThemeEditorPage() {
 
 function FieldEditor({ field, value, onChange }: { field: FieldSchema; value: unknown; onChange: (val: unknown) => void }) {
   const v = value ?? field.defaultValue ?? ''
+  const [mediaOpen, setMediaOpen] = useState(false)
 
   switch (field.type) {
     case 'text':
@@ -652,25 +654,31 @@ function FieldEditor({ field, value, onChange }: { field: FieldSchema; value: un
             <div className="relative group">
               <img src={String(v)} alt="" className="w-full h-36 object-cover rounded-[14px] border border-black/5 shadow-sm" />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] transition-all rounded-[14px] flex items-center justify-center gap-2">
+                <button onClick={() => setMediaOpen(true)} className="p-2.5 bg-white/90 rounded-xl hover:bg-[#0066cc] hover:text-white transition-colors text-[#0066cc] shadow-lg">
+                  <Upload size={16} />
+                </button>
                 <button onClick={() => onChange('')} className="p-2.5 bg-white/90 rounded-xl hover:bg-[#ff3b30] hover:text-white transition-colors text-[#ff3b30] shadow-lg">
                   <Trash2 size={16} />
                 </button>
               </div>
             </div>
           ) : (
-            <div>
+            <div className="space-y-2.5">
               <input type="text" value="" onChange={e => onChange(e.target.value)} placeholder="Nhập URL hình ảnh..."
-                className="apple-input mb-2.5" />
-              <label className="flex items-center justify-center gap-2.5 px-3 py-5 border-2 border-dashed border-black/10 rounded-[14px] cursor-pointer hover:border-[#0066cc]/40 hover:bg-[#0066cc]/5 transition-all">
+                className="apple-input" />
+              <button type="button" onClick={() => setMediaOpen(true)}
+                className="flex items-center justify-center gap-2.5 w-full px-3 py-5 border-2 border-dashed border-black/10 rounded-[14px] cursor-pointer hover:border-[#0066cc]/40 hover:bg-[#0066cc]/5 transition-all">
                 <Upload size={18} className="text-[#86868b]" />
-                <span className="text-[13px] font-medium text-[#86868b]">Hoặc tải ảnh lên (Max 5MB)</span>
-                <input type="file" accept="image/*" className="hidden" onChange={e => {
-                  const file = e.target.files?.[0]
-                  if (file) { const r = new FileReader(); r.onload = ev => onChange(ev.target?.result); r.readAsDataURL(file) }
-                }} />
-              </label>
+                <span className="text-[13px] font-medium text-[#86868b]">Chọn từ Media</span>
+              </button>
             </div>
           )}
+          <MediaPicker
+            open={mediaOpen}
+            onClose={() => setMediaOpen(false)}
+            accept="image"
+            onSelect={(item) => { onChange(item.url); setMediaOpen(false) }}
+          />
         </div>
       )
     case 'toggle':

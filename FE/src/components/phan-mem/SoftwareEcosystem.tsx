@@ -6,6 +6,7 @@
  * auto-play interval, và AnimatePresence cho chuyển đổi nội dung.
  */
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Layers, Globe, Smartphone, Users, ShieldCheck, Sparkles, Cloud, Check, Cpu, BarChart3, Server, Activity } from 'lucide-react';
@@ -309,7 +310,7 @@ export default function SoftwareEcosystem() {
                   <div className="mt-auto flex items-center justify-between border-t border-slate-200/60 pt-3 md:pt-4">
                     <div className="flex -space-x-2">
                       {[1, 2, 3].map((num) => (
-                        <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" className="w-7 h-7 md:w-8 md:h-8 rounded-full border-[1.5px] border-white object-cover shadow-sm" />
+                        <Image key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" width={32} height={32} className="w-7 h-7 md:w-8 md:h-8 rounded-full border-[1.5px] border-white object-cover shadow-sm" />
                       ))}
                       <div className="w-7 h-7 md:w-8 md:h-8 rounded-full border-[1.5px] border-white bg-white flex items-center justify-center text-[8px] md:text-[9px] font-bold shadow-sm"
                            style={{ color: ecosystemData[activeService].hex }}>

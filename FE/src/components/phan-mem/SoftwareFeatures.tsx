@@ -5,6 +5,7 @@
  * Bao gồm bộ đếm số dự án, thông tin tư vấn & thiết kế, và chuyển đổi số.
  */
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
@@ -48,7 +49,7 @@ export default function SoftwareFeatures() {
             <div className="flex items-center mb-5 md:mb-[30px]">
               <div className="flex -space-x-3 md:-space-x-4">
                 {[1, 2, 3, 4].map((num) => (
-                  <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt={`Khách hàng ${num}`} className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full border-[3px] md:border-4 border-white object-cover shadow-sm group-hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${num * 50}ms` }} />
+                  <Image key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt={`Khách hàng ${num}`} width={52} height={52} className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full border-[3px] md:border-4 border-white object-cover shadow-sm group-hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${num * 50}ms` }} />
                 ))}
                 <div className="w-10 h-10 md:w-[52px] md:h-[52px] rounded-full bg-gradient-to-br from-[#1053F3] to-blue-700 border-[3px] md:border-4 border-white flex items-center justify-center text-white font-bold text-xs md:text-sm z-10 relative shadow-md">
                   +500
@@ -80,7 +81,7 @@ export default function SoftwareFeatures() {
               </div>
             </div>
             <div className="mb-4 md:mb-[40px]">
-              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon01.webp" alt="Biểu tượng tư vấn và thiết kế kiến trúc IT" className="h-9 md:h-[60px] group-hover:scale-110 transition-transform duration-500" />
+              <Image src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon01.webp" alt="Biểu tượng tư vấn và thiết kế kiến trúc IT" width={60} height={60} className="h-9 md:h-[60px] w-auto group-hover:scale-110 transition-transform duration-500" />
             </div>
             <h2 className="text-[15px] md:text-[24px] font-extrabold text-[#061153] mb-2 md:mb-4 leading-snug tracking-tight">Tư Vấn & Thiết Kế <br /> Kiến Trúc IT</h2>
             <p className="text-slate-500 leading-relaxed text-[11px] md:text-base">Phân tích quy trình kinh doanh, định hướng nền tảng công nghệ bền vững cho doanh nghiệp.</p>
@@ -93,7 +94,7 @@ export default function SoftwareFeatures() {
               </div>
             </div>
             <div className="mb-4 md:mb-[40px]">
-              <img src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon02.webp" alt="Biểu tượng chuyển đổi số và tự động hóa" className="h-9 md:h-[60px] brightness-0 invert group-hover:scale-110 transition-transform duration-500" />
+              <Image src="https://inotek.themevally.com/wp-content/uploads/2025/11/hm1-icon02.webp" alt="Biểu tượng chuyển đổi số và tự động hóa" width={60} height={60} className="h-9 md:h-[60px] w-auto brightness-0 invert group-hover:scale-110 transition-transform duration-500" />
             </div>
             <h2 className="text-[15px] md:text-[24px] font-extrabold text-white mb-2 md:mb-4 leading-snug tracking-tight">Chuyển Đổi Số & <br /> Tự Động Hóa</h2>
             <p className="text-blue-100/80 leading-relaxed text-[11px] md:text-base">Số hóa quy trình làm việc thủ công, nâng cao hiệu suất và bảo mật dữ liệu an toàn tuyệt đối.</p>

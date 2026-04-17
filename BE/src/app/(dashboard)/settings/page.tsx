@@ -9,6 +9,7 @@ import {
   RefreshCw, CheckCircle2, XCircle, Copy, Zap, Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import MediaPicker from '@/components/MediaPicker'
 
 const tabs = [
   { key: 'connection', label: 'Kết nối Frontend', icon: Link2 },
@@ -35,6 +36,7 @@ export default function SettingsPage() {
   const [connMessage, setConnMessage] = useState('')
   const [connSaving, setConnSaving] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [mediaPickerTarget, setMediaPickerTarget] = useState<'logo' | 'favicon' | null>(null)
 
   // Load connection settings on mount
   useEffect(() => {
@@ -418,24 +420,9 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                       )}
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
-                        <Upload size={12} /> Tải lên logo
-                        <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
-                          const file = e.target.files?.[0]
-                          if (!file) return
-                          const formData = new FormData()
-                          formData.append('files', file)
-                          formData.append('folder', 'logos')
-                          try {
-                            const res = await fetch('/api/admin/media/upload', { method: 'POST', body: formData })
-                            const json = await res.json()
-                            if (json.success && json.data?.[0]?.url) {
-                              setGeneral(prev => ({ ...prev, logo: json.data[0].url }))
-                            }
-                          } catch {}
-                          e.target.value = ''
-                        }} />
-                      </label>
+                      <button type="button" onClick={() => setMediaPickerTarget('logo')} className="text-xs text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                        <ImageIcon size={12} /> Chọn từ Media
+                      </button>
                       {general.logo && general.logo !== '/logo.svg' && (
                         <span className="text-[10px] text-slate-400 truncate max-w-[180px]">{general.logo}</span>
                       )}
@@ -453,24 +440,9 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                       )}
                     </div>
                     <div className="flex flex-col gap-1">
-                      <label className="text-xs text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
-                        <Upload size={12} /> Tải lên favicon
-                        <input type="file" accept="image/*,.ico" className="hidden" onChange={async (e) => {
-                          const file = e.target.files?.[0]
-                          if (!file) return
-                          const formData = new FormData()
-                          formData.append('files', file)
-                          formData.append('folder', 'logos')
-                          try {
-                            const res = await fetch('/api/admin/media/upload', { method: 'POST', body: formData })
-                            const json = await res.json()
-                            if (json.success && json.data?.[0]?.url) {
-                              setGeneral(prev => ({ ...prev, favicon: json.data[0].url }))
-                            }
-                          } catch {}
-                          e.target.value = ''
-                        }} />
-                      </label>
+                      <button type="button" onClick={() => setMediaPickerTarget('favicon')} className="text-xs text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                        <ImageIcon size={12} /> Chọn từ Media
+                      </button>
                       {general.favicon && general.favicon !== '/favicon.ico' && (
                         <span className="text-[10px] text-slate-400 truncate max-w-[180px]">{general.favicon}</span>
                       )}
@@ -769,6 +741,21 @@ REVALIDATION_SECRET=${connection.secretKey}`}
           </div>
         </div>
       </div>
+
+      {/* Media Picker Modal */}
+      <MediaPicker
+        open={mediaPickerTarget !== null}
+        onClose={() => setMediaPickerTarget(null)}
+        accept="image"
+        onSelect={(item) => {
+          if (mediaPickerTarget === 'logo') {
+            setGeneral(prev => ({ ...prev, logo: item.url }))
+          } else if (mediaPickerTarget === 'favicon') {
+            setGeneral(prev => ({ ...prev, favicon: item.url }))
+          }
+          setMediaPickerTarget(null)
+        }}
+      />
     </div>
   )
 }

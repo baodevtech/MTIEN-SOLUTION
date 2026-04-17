@@ -6,6 +6,7 @@
  * voi hinh anh dashboard, (2) Quy trinh 4 buoc: Audit, Setup, Test, Scale.
  */
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { BarChart3 } from 'lucide-react';
 import Link from 'next/link';
@@ -35,7 +36,7 @@ export default function MarketingTechProcess() {
       {/* SECTION 10: TECH STACK & SYSTEM */}
       <section className="py-16 md:py-32 px-4 md:px-6 bg-neutral-950">
         <div className="max-w-7xl mx-auto bg-neutral-900 rounded-[24px] md:rounded-[40px] p-6 md:p-20 text-white flex flex-col md:flex-row items-center gap-8 md:gap-16 border border-white/10 relative overflow-hidden">
-           <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Tech Stack Background" className="absolute inset-0 w-full h-full object-cover opacity-[0.03] pointer-events-none mix-blend-screen" />
+           <Image src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Tech Stack Background" fill className="object-cover opacity-[0.03] pointer-events-none mix-blend-screen" sizes="100vw" />
            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 blur-[100px] rounded-full pointer-events-none" />
            
            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1 relative z-10">
@@ -45,9 +46,9 @@ export default function MarketingTechProcess() {
               <Link href="/contact" className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-base hover:bg-blue-700 transition-colors shadow-lg">Khởi Tạo Tracking Audit</Link>
            </motion.div>
            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={scaleIn} className="flex-1 w-full bg-black/50 backdrop-blur-xl rounded-[16px] md:rounded-[24px] p-4 md:p-8 shadow-2xl border border-white/10 relative z-10 grid grid-cols-2 gap-3 md:gap-4">
-              <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=400&q=80" alt="GA4 Dashboard" className="rounded-xl w-full h-24 md:h-32 object-cover border border-white/5 opacity-80" />
-              <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" alt="Looker Studio" className="rounded-xl w-full h-24 md:h-32 object-cover border border-white/5 opacity-80" />
-              <img src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=400&q=80" alt="Meta Ads" className="rounded-xl w-full h-24 md:h-32 object-cover border border-white/5 opacity-80 col-span-2" />
+              <Image src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=400&q=80" alt="GA4 Dashboard" width={400} height={128} className="rounded-xl w-full h-24 md:h-32 object-cover border border-white/5 opacity-80" />
+              <Image src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" alt="Looker Studio" width={400} height={128} className="rounded-xl w-full h-24 md:h-32 object-cover border border-white/5 opacity-80" />
+              <Image src="https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=400&q=80" alt="Meta Ads" width={800} height={128} className="rounded-xl w-full h-24 md:h-32 object-cover border border-white/5 opacity-80 col-span-2" />
            </motion.div>
         </div>
       </section>

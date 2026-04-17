@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Component, Code2 } from 'lucide-react';
 import Link from 'next/link';
@@ -49,7 +50,7 @@ export default function DesignSystem() {
       {/* ===== MOBILE: DEV HANDOFF ===== */}
       <section className="md:hidden px-4 py-10 bg-[#FAFAFC]">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="bg-blue-600 rounded-[20px] overflow-hidden relative">
-          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80" alt="Code Background" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay pointer-events-none" />
+          <Image src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80" alt="Code Background" fill className="object-cover opacity-10 mix-blend-overlay pointer-events-none" sizes="100vw" />
           <div className="p-5 relative z-10">
             <Code2 className="w-10 h-10 text-blue-200 mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">Giao diện Sẵn sàng Code</h3>
@@ -82,7 +83,7 @@ export default function DesignSystem() {
       {/* ===== DESKTOP: DEV HANDOFF ===== */}
       <section className="hidden md:block py-32 px-6 bg-[#FAFAFC]">
         <div className="max-w-7xl mx-auto bg-blue-600 rounded-[40px] p-12 lg:p-20 text-white flex flex-row items-center gap-16 shadow-[0_30px_60px_rgba(37,99,235,0.2)] relative overflow-hidden">
-           <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80" alt="Code Background" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay pointer-events-none" />
+           <Image src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80" alt="Code Background" fill className="object-cover opacity-10 mix-blend-overlay pointer-events-none" sizes="100vw" />
            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1 relative z-10">
               <Code2 className="w-16 h-16 text-blue-200 mb-8" />
               <h2 className="text-4xl font-extrabold mb-6">Giao diện Sẵn sàng Code</h2>

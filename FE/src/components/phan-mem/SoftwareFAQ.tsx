@@ -6,6 +6,7 @@
  * và CTA section liên hệ ở cuối trang.
  */
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, ArrowRight, MessageCircle, ChevronRight } from 'lucide-react';
@@ -76,7 +77,7 @@ export default function SoftwareFAQ() {
                 <div className="flex items-center justify-between relative z-10">
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map((num) => (
-                      <img key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#061153] object-cover shadow-sm" />
+                      <Image key={num} src={`https://inotek.themevally.com/wp-content/uploads/2025/11/social-img0${num}.webp`} alt="team" width={40} height={40} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#061153] object-cover shadow-sm" />
                     ))}
                   </div>
                   
