@@ -127,6 +127,7 @@ export default function SettingsPage() {
     language: 'vi',
     timezone: 'Asia/Ho_Chi_Minh',
     maintenance: false,
+    shopMaintenance: false,
   })
 
   const [company, setCompany] = useState({
@@ -409,15 +410,71 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1">Logo</label>
                   <div className="flex items-center gap-3 p-3 border border-dashed border-slate-200 rounded-lg">
-                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center"><ImageIcon size={20} className="text-slate-400" /></div>
-                    <button className="text-xs text-blue-600 hover:underline flex items-center gap-1"><Upload size={12} /> Tải lên logo</button>
+                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden">
+                      {general.logo && general.logo !== '/logo.svg' ? (
+                        <img src={general.logo} alt="Logo" className="w-full h-full object-contain" />
+                      ) : (
+                        <ImageIcon size={20} className="text-slate-400" />
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                        <Upload size={12} /> Tải lên logo
+                        <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                          const file = e.target.files?.[0]
+                          if (!file) return
+                          const formData = new FormData()
+                          formData.append('files', file)
+                          formData.append('folder', 'logos')
+                          try {
+                            const res = await fetch('/api/admin/media/upload', { method: 'POST', body: formData })
+                            const json = await res.json()
+                            if (json.success && json.data?.[0]?.url) {
+                              setGeneral(prev => ({ ...prev, logo: json.data[0].url }))
+                            }
+                          } catch {}
+                          e.target.value = ''
+                        }} />
+                      </label>
+                      {general.logo && general.logo !== '/logo.svg' && (
+                        <span className="text-[10px] text-slate-400 truncate max-w-[180px]">{general.logo}</span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1">Favicon</label>
                   <div className="flex items-center gap-3 p-3 border border-dashed border-slate-200 rounded-lg">
-                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-xs font-bold text-slate-400">ICO</div>
-                    <button className="text-xs text-blue-600 hover:underline flex items-center gap-1"><Upload size={12} /> Tải lên favicon</button>
+                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center overflow-hidden">
+                      {general.favicon && general.favicon !== '/favicon.ico' ? (
+                        <img src={general.favicon} alt="Favicon" className="w-full h-full object-contain" />
+                      ) : (
+                        <span className="text-xs font-bold text-slate-400">ICO</span>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs text-blue-600 hover:underline flex items-center gap-1 cursor-pointer">
+                        <Upload size={12} /> Tải lên favicon
+                        <input type="file" accept="image/*,.ico" className="hidden" onChange={async (e) => {
+                          const file = e.target.files?.[0]
+                          if (!file) return
+                          const formData = new FormData()
+                          formData.append('files', file)
+                          formData.append('folder', 'logos')
+                          try {
+                            const res = await fetch('/api/admin/media/upload', { method: 'POST', body: formData })
+                            const json = await res.json()
+                            if (json.success && json.data?.[0]?.url) {
+                              setGeneral(prev => ({ ...prev, favicon: json.data[0].url }))
+                            }
+                          } catch {}
+                          e.target.value = ''
+                        }} />
+                      </label>
+                      {general.favicon && general.favicon !== '/favicon.ico' && (
+                        <span className="text-[10px] text-slate-400 truncate max-w-[180px]">{general.favicon}</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -445,6 +502,15 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                 </div>
                 <button onClick={() => setGeneral({ ...general, maintenance: !general.maintenance })} className={cn('w-12 h-7 rounded-full transition-colors relative', general.maintenance ? 'bg-amber-500' : 'bg-slate-200')}>
                   <span className={cn('absolute top-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', general.maintenance ? 'left-6' : 'left-1')} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <div>
+                  <p className="text-sm font-semibold text-orange-800">Tắt trang Shop</p>
+                  <p className="text-xs text-orange-600">Khi bật, trang cửa hàng và tất cả liên kết shop sẽ bị ẩn hoàn toàn</p>
+                </div>
+                <button onClick={() => setGeneral({ ...general, shopMaintenance: !general.shopMaintenance })} className={cn('w-12 h-7 rounded-full transition-colors relative', general.shopMaintenance ? 'bg-orange-500' : 'bg-slate-200')}>
+                  <span className={cn('absolute top-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', general.shopMaintenance ? 'left-6' : 'left-1')} />
                 </button>
               </div>
             </div>

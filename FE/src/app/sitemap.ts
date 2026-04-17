@@ -1,9 +1,13 @@
 import type { MetadataRoute } from 'next';
+import { getSettings } from '@/lib/theme-fetcher';
 
 const BASE_URL = process.env.APP_URL || 'https://mtiensolution.vn';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const settings = await getSettings();
+  const shopHidden = settings?.general?.shopMaintenance === true;
+
+  const routes: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
     { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/services`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
@@ -14,6 +18,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/dich-vu/cloud-server`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/dich-vu/marketing-design`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/dich-vu/marketing`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE_URL}/shop`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
   ];
+
+  if (!shopHidden) {
+    routes.push({ url: `${BASE_URL}/shop`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 });
+  }
+
+  return routes;
 }

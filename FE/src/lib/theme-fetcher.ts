@@ -8,6 +8,21 @@ export interface ThemeConfig {
   >
 }
 
+export interface SiteSettings {
+  general?: {
+    siteName?: string
+    siteDescription?: string
+    siteUrl?: string
+    logo?: string
+    favicon?: string
+    language?: string
+    timezone?: string
+    maintenance?: boolean
+    shopMaintenance?: boolean
+  }
+  [key: string]: unknown
+}
+
 async function fetchThemeData(): Promise<ThemeConfig | null> {
   const adminUrl = process.env.ADMIN_API_URL
   const apiKey = process.env.REVALIDATION_SECRET
@@ -45,5 +60,27 @@ async function fetchThemeData(): Promise<ThemeConfig | null> {
   return null
 }
 
+async function fetchSiteSettings(): Promise<SiteSettings | null> {
+  const adminUrl = process.env.ADMIN_API_URL
+  const apiKey = process.env.REVALIDATION_SECRET
+
+  if (adminUrl && apiKey) {
+    try {
+      const res = await fetch(`${adminUrl}/api/public/data?type=settings`, {
+        headers: { 'x-api-key': apiKey },
+        next: { tags: ['settings'], revalidate: 300 },
+      })
+      if (res.ok) {
+        const json = await res.json()
+        return json.data || null
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return null
+}
+
 // React.cache deduplicates within a single request/render
 export const getTheme = cache(fetchThemeData)
+export const getSettings = cache(fetchSiteSettings)

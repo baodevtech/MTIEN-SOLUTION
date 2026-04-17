@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Menu, X, ChevronDown, ArrowRight, Phone, Mail, Sparkles, Smartphone, Cloud, PenTool, Megaphone, Store, Users, CreditCard, Newspaper, MonitorPlay, Search, ShoppingCart } from 'lucide-react';
 import { useGlobal } from '@/lib/theme-context';
+import { useSiteSettings } from '@/lib/settings-context';
 
 // Icon map for dynamic icon resolution from theme
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>> = {
@@ -82,9 +83,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  // Site settings
+  const siteSettings = useSiteSettings();
+
   // Theme values with fallbacks
   const logoText = useGlobal('navbar', 'logoText', 'MTIEN') as string;
   const logoSubtext = useGlobal('navbar', 'logoSubtext', 'Solution') as string;
+  const logoImage = useGlobal('navbar', 'logoImage', '') as string;
   const ctaButton = useGlobal('navbar', 'ctaButton', 'Nhận báo giá') as string;
   const ctaButtonLink = useGlobal('navbar', 'ctaButtonLink', '#') as string;
   const showTopBanner = useGlobal('navbar', 'showTopBanner', true) as boolean;
@@ -101,8 +106,13 @@ export default function Navbar() {
   const rawMenuItems = useGlobal('navbar', 'menuItems', null);
   const mainLinks = useMemo(() => {
     const parsed = parseMenuItems(rawMenuItems);
-    return parsed.length > 0 ? parsed : defaultMenuItems;
-  }, [rawMenuItems]);
+    let items = parsed.length > 0 ? parsed : defaultMenuItems;
+    // Hide shop links when shop maintenance is on
+    if (siteSettings.shopMaintenance) {
+      items = items.filter(item => item.href !== '/shop' && !item.href.startsWith('/shop/'));
+    }
+    return items;
+  }, [rawMenuItems, siteSettings.shopMaintenance]);
 
   // Right menu items
   const rawRightMenu = useGlobal('navbar', 'rightMenuItems', null) as Array<Record<string, unknown>> | null;
@@ -169,18 +179,24 @@ export default function Navbar() {
               {/* Left Logo */}
               <div className="flex items-center">
                 <Link href="/" className="flex items-center gap-2.5 group" aria-label="MTIEN SOLUTION - Trang chủ">
-                  <div className="relative w-[38px] h-[38px] md:w-11 md:h-11">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#0066FF] to-[#00D68F] rounded-2xl opacity-20 blur group-hover:opacity-40 transition-opacity duration-500"></div>
-                    <div className="relative w-full h-full bg-gradient-to-br from-[#0066FF] to-[#00D68F] rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shadow-lg border border-white/20">
-                      M
-                    </div>
-                  </div>
-                  <div className="flex flex-col justify-center hidden sm:flex">
-                    <span className="font-extrabold text-xl text-gray-900 tracking-tight leading-none">
-                      {logoText}<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0066FF] to-[#0052CC]">{logoSubtext.toUpperCase()}</span>
-                    </span>
-                    <span className="text-[10px] text-gray-500 font-medium tracking-widest uppercase mt-0.5">Technology Group</span>
-                  </div>
+                  {logoImage ? (
+                    <img src={logoImage.startsWith('http') ? logoImage : `${process.env.NEXT_PUBLIC_ADMIN_API_URL || ''}${logoImage}`} alt={`${logoText} ${logoSubtext}`} className="h-10 md:h-12 w-auto object-contain" />
+                  ) : (
+                    <>
+                      <div className="relative w-[38px] h-[38px] md:w-11 md:h-11">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#0066FF] to-[#00D68F] rounded-2xl opacity-20 blur group-hover:opacity-40 transition-opacity duration-500"></div>
+                        <div className="relative w-full h-full bg-gradient-to-br from-[#0066FF] to-[#00D68F] rounded-2xl flex items-center justify-center text-white font-extrabold text-xl shadow-lg border border-white/20">
+                          M
+                        </div>
+                      </div>
+                      <div className="hidden sm:flex flex-col justify-center">
+                        <span className="font-extrabold text-xl text-gray-900 tracking-tight leading-none">
+                          {logoText}<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0066FF] to-[#0052CC]">{logoSubtext.toUpperCase()}</span>
+                        </span>
+                        <span className="text-[10px] text-gray-500 font-medium tracking-widest uppercase mt-0.5">Technology Group</span>
+                      </div>
+                    </>
+                  )}
                 </Link>
               </div>
 
@@ -270,11 +286,13 @@ export default function Navbar() {
                   <Search size={18} strokeWidth={2.5} />
                 </button>
 
-                {/* Cart Button */}
+                {/* Cart Button — hidden when shop maintenance is on */}
+                {!siteSettings.shopMaintenance && (
                 <Link href="/cart" className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-[12px] transition-colors border border-gray-100/80 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20" aria-label="Giỏ hàng">
                   <ShoppingCart size={18} strokeWidth={2.5} />
                   <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-extrabold w-4 h-4 md:w-4.5 md:h-4.5 flex items-center justify-center rounded-full shadow-sm border border-white">2</span>
                 </Link>
+                )}
                 
                 {/* CTA Button (Tư vấn) */}
                 <Link href={`tel:${topbarPhone.replace(/\s/g, '')}`} className="text-[13px] font-bold text-white bg-gray-900 hover:bg-[#0066FF] px-3.5 py-[9px] rounded-[14px] shadow-sm transition-all flex items-center gap-1.5 focus:ring-2 focus:ring-[#0066FF]/20 ml-1">

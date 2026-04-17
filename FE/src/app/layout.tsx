@@ -4,7 +4,8 @@ import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ThemeProvider } from '@/lib/theme-context';
-import { getTheme } from '@/lib/theme-fetcher';
+import { SettingsProvider } from '@/lib/settings-context';
+import { getTheme, getSettings } from '@/lib/theme-fetcher';
 
 const BASE_URL = process.env.APP_URL || 'https://mtiensolution.vn';
 
@@ -109,6 +110,14 @@ function JsonLd() {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = await getTheme()
+  const settings = await getSettings()
+  const adminUrl = process.env.ADMIN_API_URL || ''
+  const faviconUrl = settings?.general?.favicon
+    ? (settings.general.favicon.startsWith('http') ? settings.general.favicon : `${adminUrl}${settings.general.favicon}`)
+    : '/favicon.ico'
+  const logoUrl = settings?.general?.logo
+    ? (settings.general.logo.startsWith('http') ? settings.general.logo : `${adminUrl}${settings.general.logo}`)
+    : ''
 
   return (
     <html
@@ -117,6 +126,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <head>
+        <link rel="icon" href={faviconUrl} />
         <link rel="dns-prefetch" href="https://picsum.photos" />
         <link rel="preconnect" href="https://picsum.photos" crossOrigin="anonymous" />
         <JsonLd />
@@ -133,11 +143,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           Bỏ qua điều hướng
         </a>
         <ThemeProvider initialTheme={theme}>
-          <Navbar />
-          <main id="main-content" className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
+          <SettingsProvider settings={{
+            shopMaintenance: settings?.general?.shopMaintenance === true,
+            maintenance: settings?.general?.maintenance === true,
+          }}>
+            <Navbar />
+            <main id="main-content" className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </SettingsProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Upload, Search, Grid3X3, List, Image as ImageIcon, FileText, Film,
   Trash2, Download, Eye, X, Check, Folder, Filter, Loader2, CheckCircle2, XCircle,
@@ -209,21 +209,11 @@ export default function MediaPage() {
 
       {/* Upload modal */}
       {showUpload && (
-        <>
-          <div className="fixed inset-0 bg-black/30 z-50" onClick={() => setShowUpload(false)} />
-          <div className="fixed inset-x-4 top-[10%] max-w-lg mx-auto bg-white rounded-2xl shadow-2xl z-50 p-6 animate-fade-in">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-800">Tải tệp lên</h2>
-              <button onClick={() => setShowUpload(false)} className="p-2 rounded-lg hover:bg-slate-100 text-slate-400"><X size={18} /></button>
-            </div>
-            <div className="border-2 border-dashed border-slate-200 rounded-xl p-12 text-center hover:border-blue-400 transition-colors cursor-pointer">
-              <Upload size={40} className="mx-auto text-slate-300 mb-3" />
-              <p className="font-medium text-slate-600">Kéo thả tệp vào đây</p>
-              <p className="text-sm text-slate-400 mt-1">hoặc click để chọn tệp từ máy tính</p>
-              <p className="text-xs text-slate-400 mt-3">JPG, PNG, PDF, DOCX — Tối đa 10MB</p>
-            </div>
-          </div>
-        </>
+        <UploadModal
+          onClose={() => setShowUpload(false)}
+          onUploaded={() => { setShowUpload(false); fetchMedia() }}
+          showMsg={showMsg}
+        />
       )}
 
       {/* Preview panel */}
@@ -282,5 +272,149 @@ export default function MediaPage() {
         </>
       )}
     </div>
+  )
+}
+
+// ─── Upload Modal Component ───────────────────────────
+function UploadModal({ onClose, onUploaded, showMsg }: { onClose: () => void; onUploaded: () => void; showMsg: (type: 'success' | 'error', text: string) => void }) {
+  const [files, setFiles] = useState<File[]>([])
+  const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState<Record<string, 'pending' | 'done' | 'error'>>({})
+  const [folder, setFolder] = useState('uploads')
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [dragActive, setDragActive] = useState(false)
+
+  const addFiles = (newFiles: FileList | File[]) => {
+    const arr = Array.from(newFiles)
+    setFiles(prev => [...prev, ...arr])
+  }
+
+  const removeFile = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragActive(false)
+    if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files)
+  }
+
+  const handleUpload = async () => {
+    if (files.length === 0) return
+    setUploading(true)
+    const prog: Record<string, 'pending' | 'done' | 'error'> = {}
+    files.forEach(f => (prog[f.name] = 'pending'))
+    setProgress(prog)
+
+    const formData = new FormData()
+    files.forEach(f => formData.append('files', f))
+    formData.append('folder', folder)
+
+    try {
+      const res = await fetch('/api/admin/media/upload', { method: 'POST', body: formData })
+      const json = await res.json()
+      if (json.success) {
+        const doneNames = (json.data || []).map((m: { originalName: string }) => m.originalName)
+        const errorNames = (json.errors || []).map((e: { name: string }) => e.name)
+        const newProg: Record<string, 'pending' | 'done' | 'error'> = {}
+        files.forEach(f => {
+          if (doneNames.includes(f.name)) newProg[f.name] = 'done'
+          else if (errorNames.includes(f.name)) newProg[f.name] = 'error'
+          else newProg[f.name] = 'done'
+        })
+        setProgress(newProg)
+        showMsg('success', json.message || `Đã tải lên ${doneNames.length} tệp!`)
+        setTimeout(onUploaded, 800)
+      } else {
+        showMsg('error', json.message || 'Upload thất bại')
+        setUploading(false)
+      }
+    } catch {
+      showMsg('error', 'Lỗi kết nối server')
+      setUploading(false)
+    }
+  }
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black/30 z-50" onClick={onClose} />
+      <div className="fixed inset-x-4 top-[8%] max-w-xl mx-auto bg-white rounded-2xl shadow-2xl z-50 p-6 animate-fade-in max-h-[80vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-slate-800">Tải tệp lên</h2>
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-100 text-slate-400"><X size={18} /></button>
+        </div>
+
+        {/* Folder selector */}
+        <div className="mb-4">
+          <label className="block text-xs font-medium text-slate-600 mb-1">Thư mục</label>
+          <select value={folder} onChange={(e) => setFolder(e.target.value)} className="px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none w-full">
+            {['uploads', 'banners', 'products', 'blog', 'about', 'seo', 'documents', 'logos'].map(f => (
+              <option key={f} value={f}>{f}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Dropzone */}
+        <div
+          className={cn('border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer', dragActive ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-blue-400')}
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDragActive(true) }}
+          onDragLeave={() => setDragActive(false)}
+          onDrop={handleDrop}
+        >
+          <Upload size={36} className="mx-auto text-slate-300 mb-3" />
+          <p className="font-medium text-slate-600">Kéo thả tệp vào đây</p>
+          <p className="text-sm text-slate-400 mt-1">hoặc click để chọn tệp từ máy tính</p>
+          <p className="text-xs text-slate-400 mt-3">JPG, PNG, GIF, WEBP, SVG, ICO, PDF, DOC, XLS, MP4 — Tối đa 10MB</p>
+          <input
+            ref={inputRef}
+            type="file"
+            multiple
+            accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ico"
+            className="hidden"
+            onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = '' }}
+          />
+        </div>
+
+        {/* File list */}
+        {files.length > 0 && (
+          <div className="mt-4 space-y-2 max-h-48 overflow-y-auto">
+            {files.map((file, i) => (
+              <div key={`${file.name}-${i}`} className="flex items-center gap-3 p-2.5 bg-slate-50 rounded-lg">
+                <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                  {file.type.startsWith('image/') ? (
+                    <img src={URL.createObjectURL(file)} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <FileText size={16} className="text-slate-400" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-700 truncate">{file.name}</p>
+                  <p className="text-xs text-slate-400">{formatFileSize(file.size)}</p>
+                </div>
+                {progress[file.name] === 'done' && <CheckCircle2 size={16} className="text-green-500 shrink-0" />}
+                {progress[file.name] === 'error' && <XCircle size={16} className="text-red-500 shrink-0" />}
+                {progress[file.name] === 'pending' && <Loader2 size={16} className="text-blue-500 animate-spin shrink-0" />}
+                {!uploading && (
+                  <button onClick={() => removeFile(i)} className="p-1 rounded text-slate-400 hover:text-red-500 shrink-0"><X size={14} /></button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex items-center justify-between mt-5 pt-4 border-t border-slate-100">
+          <p className="text-xs text-slate-500">{files.length} tệp đã chọn</p>
+          <div className="flex gap-2">
+            <button onClick={onClose} className="px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">Huỷ</button>
+            <button onClick={handleUpload} disabled={files.length === 0 || uploading} className="flex items-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold disabled:opacity-50">
+              {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+              {uploading ? 'Đang tải...' : 'Tải lên'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }

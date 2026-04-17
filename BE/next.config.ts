@@ -8,11 +8,12 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'picsum.photos' },
       { protocol: 'https', hostname: 'i.pravatar.cc' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'http', hostname: 'localhost' },
     ],
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '2mb',
+      bodySizeLimit: '12mb',
     },
   },
 }

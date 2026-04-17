@@ -20,6 +20,12 @@ export async function GET(request: NextRequest) {
   }
 
   switch (type) {
+    case 'settings': {
+      const settings = await prisma.setting.findMany()
+      const data: Record<string, unknown> = {}
+      for (const s of settings) data[s.key] = s.value
+      return corsResponse({ success: true, data })
+    }
     case 'services': {
       const data = await prisma.service.findMany({
         where: { status: 'active' },
