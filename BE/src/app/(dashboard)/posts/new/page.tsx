@@ -1,15 +1,17 @@
 'use client'
 
-import { useState, useEffect, useCallback, Suspense } from 'react'
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft, Save, Eye, Clock, Image as ImageIcon, X, Plus,
   Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon,
-  Quote, Code, Heading1, Heading2, AlignLeft, AlignCenter, Upload,
+  Quote, Code, Heading1, Heading2, Heading3, AlignLeft, AlignCenter, AlignRight, AlignJustify, Upload,
   ChevronDown, Loader2, Target, AlertTriangle,
   CheckCircle2, XCircle, Info, Search as SearchIcon, ChevronRight,
-  ExternalLink, Link2,
+  ExternalLink, Link2, Strikethrough, Subscript, Superscript,
+  Undo2, Redo2, RemoveFormatting, Minus, Table, Type, Palette,
+  Highlighter, Indent, Outdent, Pilcrow,
 } from 'lucide-react'
 import { cn, slugify } from '@/lib/utils'
 import MediaPicker from '@/components/MediaPicker'
@@ -78,6 +80,101 @@ function PostEditorInner() {
   const [seoKeywordInput, setSeoKeywordInput] = useState('')
   const [canonicalUrl, setCanonicalUrl] = useState('')
   const [ogImage, setOgImage] = useState('')
+
+  // Ref for the content editor (contentEditable div)
+  const editorRef = useRef<HTMLDivElement>(null)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [showBgColorPicker, setShowBgColorPicker] = useState(false)
+  const [showFontSize, setShowFontSize] = useState(false)
+  const [showHeadingMenu, setShowHeadingMenu] = useState(false)
+  const [showTableMenu, setShowTableMenu] = useState(false)
+  const [editorReady, setEditorReady] = useState(false)
+
+  const FONT_SIZES = ['12px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '36px', '48px']
+  const COLORS = ['#000000', '#374151', '#6b7280', '#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#ffffff']
+
+  // Sync contentEditable HTML → content state
+  const syncContent = useCallback(() => {
+    if (editorRef.current) {
+      const html = editorRef.current.innerHTML
+      if (html !== content) setContent(html)
+    }
+  }, [content])
+
+  // Initialize editor content when loading a post for editing
+  useEffect(() => {
+    if (editorRef.current && content && !editorReady) {
+      editorRef.current.innerHTML = content
+      setEditorReady(true)
+    }
+  }, [content, editorReady])
+
+  // execCommand helper
+  const exec = useCallback((cmd: string, value?: string) => {
+    editorRef.current?.focus()
+    document.execCommand(cmd, false, value)
+    syncContent()
+  }, [syncContent])
+
+  // Format block (heading, paragraph)
+  const formatBlock = useCallback((tag: string) => {
+    editorRef.current?.focus()
+    document.execCommand('formatBlock', false, tag)
+    syncContent()
+    setShowHeadingMenu(false)
+  }, [syncContent])
+
+  // Insert link
+  const insertLink = useCallback(() => {
+    const url = prompt('Nhập URL:', 'https://')
+    if (url) exec('createLink', url)
+  }, [exec])
+
+  // Insert image (from URL or MediaPicker)
+  const [showEditorMediaPicker, setShowEditorMediaPicker] = useState(false)
+  const insertImageFromUrl = useCallback(() => {
+    const url = prompt('Nhập URL ảnh:', 'https://')
+    if (url) exec('insertImage', url)
+  }, [exec])
+
+  // Insert table
+  const insertTable = useCallback((rows: number, cols: number) => {
+    let html = '<table style="border-collapse:collapse;width:100%;margin:12px 0"><tbody>'
+    for (let r = 0; r < rows; r++) {
+      html += '<tr>'
+      for (let c = 0; c < cols; c++) {
+        html += `<td style="border:1px solid #d1d5db;padding:8px 12px;min-width:60px">${r === 0 ? `Cột ${c + 1}` : '&nbsp;'}</td>`
+      }
+      html += '</tr>'
+    }
+    html += '</tbody></table><p><br></p>'
+    editorRef.current?.focus()
+    document.execCommand('insertHTML', false, html)
+    syncContent()
+    setShowTableMenu(false)
+  }, [syncContent])
+
+  // Font size via insertHTML span
+  const setFontSize = useCallback((size: string) => {
+    editorRef.current?.focus()
+    const sel = window.getSelection()
+    if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+      document.execCommand('insertHTML', false, `<span style="font-size:${size}">${sel.toString()}</span>`)
+    }
+    syncContent()
+    setShowFontSize(false)
+  }, [syncContent])
+
+  // Color
+  const setTextColor = useCallback((color: string) => {
+    exec('foreColor', color)
+    setShowColorPicker(false)
+  }, [exec])
+
+  const setBgColor = useCallback((color: string) => {
+    exec('hiliteColor', color)
+    setShowBgColorPicker(false)
+  }, [exec])
   const [noIndex, setNoIndex] = useState(false)
 
   // SEO Analysis
@@ -324,49 +421,190 @@ function PostEditorInner() {
               </button>
             </div>
             {activeTab === 'editor' && (
-              <div className="flex items-center gap-0.5 px-4 py-2 border-b border-slate-100 flex-wrap">
-                {[
-                  { icon: <Heading1 size={16} />, title: 'Heading 1' },
-                  { icon: <Heading2 size={16} />, title: 'Heading 2' },
-                  null,
-                  { icon: <Bold size={16} />, title: 'Bold' },
-                  { icon: <Italic size={16} />, title: 'Italic' },
-                  { icon: <Underline size={16} />, title: 'Underline' },
-                  null,
-                  { icon: <List size={16} />, title: 'Bullet list' },
-                  { icon: <ListOrdered size={16} />, title: 'Numbered list' },
-                  { icon: <Quote size={16} />, title: 'Quote' },
-                  { icon: <Code size={16} />, title: 'Code' },
-                  null,
-                  { icon: <LinkIcon size={16} />, title: 'Link' },
-                  { icon: <ImageIcon size={16} />, title: 'Image' },
-                  null,
-                  { icon: <AlignLeft size={16} />, title: 'Align left' },
-                  { icon: <AlignCenter size={16} />, title: 'Align center' },
-                ].map((item, i) =>
-                  item === null ? (
-                    <div key={`sep-${i}`} className="w-px h-5 bg-slate-200 mx-1" />
-                  ) : (
-                    <button key={item.title} title={item.title} className="p-2 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors">
-                      {item.icon}
+              <div className="border-b border-slate-100">
+                {/* Row 1: Undo/Redo, Heading, Font Size, Colors */}
+                <div className="flex items-center gap-0.5 px-3 py-1.5 border-b border-slate-50 flex-wrap">
+                  {/* Undo / Redo */}
+                  <button type="button" title="Hoàn tác (Ctrl+Z)" onClick={() => exec('undo')} className="p-1.5 rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"><Undo2 size={15} /></button>
+                  <button type="button" title="Làm lại (Ctrl+Y)" onClick={() => exec('redo')} className="p-1.5 rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"><Redo2 size={15} /></button>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Heading dropdown */}
+                  <div className="relative">
+                    <button type="button" onClick={() => { setShowHeadingMenu(!showHeadingMenu); setShowFontSize(false); setShowColorPicker(false); setShowBgColorPicker(false); setShowTableMenu(false) }}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-100 transition-colors border border-slate-200">
+                      <Pilcrow size={13} /> Đoạn văn <ChevronDown size={12} />
                     </button>
-                  )
-                )}
+                    {showHeadingMenu && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 w-48 py-1">
+                        <button type="button" onClick={() => formatBlock('p')} className="w-full text-left px-3 py-2 text-sm text-slate-600 hover:bg-slate-50">Đoạn văn</button>
+                        <button type="button" onClick={() => formatBlock('h1')} className="w-full text-left px-3 py-2 text-xl font-bold text-slate-800 hover:bg-slate-50">Heading 1</button>
+                        <button type="button" onClick={() => formatBlock('h2')} className="w-full text-left px-3 py-2 text-lg font-bold text-slate-800 hover:bg-slate-50">Heading 2</button>
+                        <button type="button" onClick={() => formatBlock('h3')} className="w-full text-left px-3 py-2 text-base font-semibold text-slate-700 hover:bg-slate-50">Heading 3</button>
+                        <button type="button" onClick={() => formatBlock('h4')} className="w-full text-left px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Heading 4</button>
+                        <button type="button" onClick={() => formatBlock('pre')} className="w-full text-left px-3 py-2 text-sm font-mono text-slate-600 hover:bg-slate-50">Code block</button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Font Size */}
+                  <div className="relative">
+                    <button type="button" onClick={() => { setShowFontSize(!showFontSize); setShowHeadingMenu(false); setShowColorPicker(false); setShowBgColorPicker(false); setShowTableMenu(false) }}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded text-xs font-medium text-slate-600 hover:bg-slate-100 transition-colors border border-slate-200">
+                      <Type size={13} /> Cỡ chữ <ChevronDown size={12} />
+                    </button>
+                    {showFontSize && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 w-32 py-1 max-h-52 overflow-y-auto">
+                        {FONT_SIZES.map(s => (
+                          <button key={s} type="button" onClick={() => setFontSize(s)} className="w-full text-left px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50" style={{ fontSize: s }}>
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Text Color */}
+                  <div className="relative">
+                    <button type="button" title="Màu chữ" onClick={() => { setShowColorPicker(!showColorPicker); setShowBgColorPicker(false); setShowHeadingMenu(false); setShowFontSize(false); setShowTableMenu(false) }}
+                      className="p-1.5 rounded text-slate-500 hover:bg-slate-100 transition-colors">
+                      <div className="flex flex-col items-center gap-0.5">
+                        <Type size={14} />
+                        <div className="w-3.5 h-1 rounded-full bg-red-500" />
+                      </div>
+                    </button>
+                    {showColorPicker && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 grid grid-cols-6 gap-1 w-36">
+                        {COLORS.map(c => (
+                          <button key={c} type="button" onClick={() => setTextColor(c)}
+                            className="w-5 h-5 rounded border border-slate-200 hover:scale-125 transition-transform" style={{ backgroundColor: c }} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Highlight Color */}
+                  <div className="relative">
+                    <button type="button" title="Tô nền" onClick={() => { setShowBgColorPicker(!showBgColorPicker); setShowColorPicker(false); setShowHeadingMenu(false); setShowFontSize(false); setShowTableMenu(false) }}
+                      className="p-1.5 rounded text-slate-500 hover:bg-slate-100 transition-colors">
+                      <Highlighter size={15} />
+                    </button>
+                    {showBgColorPicker && (
+                      <div className="absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 grid grid-cols-6 gap-1 w-36">
+                        {['transparent', '#fef08a', '#bbf7d0', '#bfdbfe', '#fecaca', '#e9d5ff', '#fed7aa', '#f3f4f6'].map(c => (
+                          <button key={c} type="button" onClick={() => setBgColor(c)}
+                            className={cn('w-5 h-5 rounded border border-slate-200 hover:scale-125 transition-transform', c === 'transparent' && 'bg-white relative after:absolute after:inset-0 after:bg-[repeating-conic-gradient(#d1d5db_0%_25%,transparent_0%_50%)] after:bg-[length:6px_6px] after:rounded')}
+                            style={c !== 'transparent' ? { backgroundColor: c } : undefined} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Clear formatting */}
+                  <button type="button" title="Xóa định dạng" onClick={() => exec('removeFormat')} className="p-1.5 rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"><RemoveFormatting size={15} /></button>
+                </div>
+
+                {/* Row 2: Text formatting, Lists, Alignment, Insert */}
+                <div className="flex items-center gap-0.5 px-3 py-1.5 flex-wrap">
+                  {/* Text format */}
+                  <button type="button" title="Đậm (Ctrl+B)" onClick={() => exec('bold')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Bold size={15} /></button>
+                  <button type="button" title="Nghiêng (Ctrl+I)" onClick={() => exec('italic')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Italic size={15} /></button>
+                  <button type="button" title="Gạch chân (Ctrl+U)" onClick={() => exec('underline')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Underline size={15} /></button>
+                  <button type="button" title="Gạch ngang" onClick={() => exec('strikeThrough')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Strikethrough size={15} /></button>
+                  <button type="button" title="Chỉ số trên" onClick={() => exec('superscript')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Superscript size={15} /></button>
+                  <button type="button" title="Chỉ số dưới" onClick={() => exec('subscript')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Subscript size={15} /></button>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Lists & indent */}
+                  <button type="button" title="Danh sách" onClick={() => exec('insertUnorderedList')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><List size={15} /></button>
+                  <button type="button" title="Đánh số" onClick={() => exec('insertOrderedList')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><ListOrdered size={15} /></button>
+                  <button type="button" title="Thụt lề" onClick={() => exec('indent')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Indent size={15} /></button>
+                  <button type="button" title="Bớt thụt lề" onClick={() => exec('outdent')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Outdent size={15} /></button>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Alignment */}
+                  <button type="button" title="Căn trái" onClick={() => exec('justifyLeft')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><AlignLeft size={15} /></button>
+                  <button type="button" title="Căn giữa" onClick={() => exec('justifyCenter')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><AlignCenter size={15} /></button>
+                  <button type="button" title="Căn phải" onClick={() => exec('justifyRight')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><AlignRight size={15} /></button>
+                  <button type="button" title="Căn đều" onClick={() => exec('justifyFull')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><AlignJustify size={15} /></button>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Insert items */}
+                  <button type="button" title="Trích dẫn" onClick={() => formatBlock('blockquote')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Quote size={15} /></button>
+                  <button type="button" title="Code inline" onClick={() => {
+                    const sel = window.getSelection()
+                    if (sel && !sel.isCollapsed) {
+                      document.execCommand('insertHTML', false, `<code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:0.9em">${sel.toString()}</code>`)
+                      syncContent()
+                    }
+                  }} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Code size={15} /></button>
+                  <button type="button" title="Đường kẻ ngang" onClick={() => exec('insertHorizontalRule')} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Minus size={15} /></button>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Link */}
+                  <button type="button" title="Chèn liên kết" onClick={insertLink} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><LinkIcon size={15} /></button>
+                  <button type="button" title="Bỏ liên kết" onClick={() => exec('unlink')} className="p-1.5 rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"><ExternalLink size={14} /></button>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Image */}
+                  <button type="button" title="Chèn ảnh từ thư viện" onClick={() => setShowEditorMediaPicker(true)} className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><ImageIcon size={15} /></button>
+                  <button type="button" title="Chèn ảnh từ URL" onClick={insertImageFromUrl} className="p-1.5 rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"><Upload size={14} /></button>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                  {/* Table */}
+                  <div className="relative">
+                    <button type="button" title="Chèn bảng" onClick={() => { setShowTableMenu(!showTableMenu); setShowHeadingMenu(false); setShowFontSize(false); setShowColorPicker(false); setShowBgColorPicker(false) }}
+                      className="p-1.5 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"><Table size={15} /></button>
+                    {showTableMenu && (
+                      <div className="absolute top-full right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-3 w-44">
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase mb-2">Chọn kích thước</p>
+                        <div className="grid grid-cols-5 gap-1">
+                          {Array.from({ length: 25 }, (_, i) => {
+                            const r = Math.floor(i / 5) + 1, c = (i % 5) + 1
+                            return <button key={i} type="button" onClick={() => insertTable(r, c)}
+                              className="w-6 h-6 border border-slate-200 rounded hover:bg-blue-100 hover:border-blue-400 transition-colors text-[9px] text-slate-400"
+                              title={`${r}×${c}`} />
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
-            <div className="p-5">
+            <div className="p-5" onClick={() => { setShowColorPicker(false); setShowBgColorPicker(false); setShowFontSize(false); setShowHeadingMenu(false); setShowTableMenu(false) }}>
               {activeTab === 'editor' ? (
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Bắt đầu viết nội dung bài viết tại đây...&#10;&#10;Hỗ trợ Markdown, HTML và rich text."
-                  className="w-full editor-content resize-none outline-none text-slate-700 placeholder:text-slate-300"
-                  rows={20}
-                />
+                <>
+                  <div
+                    ref={editorRef}
+                    contentEditable
+                    suppressContentEditableWarning
+                    onInput={syncContent}
+                    onBlur={syncContent}
+                    className="w-full editor-content min-h-[480px] outline-none text-slate-700 prose prose-slate max-w-none prose-headings:font-bold prose-a:text-blue-600 prose-img:rounded-lg prose-img:max-w-full prose-blockquote:border-l-4 prose-blockquote:border-blue-400 prose-blockquote:bg-blue-50/50 prose-blockquote:py-2 prose-blockquote:px-4 prose-pre:bg-slate-50 prose-pre:rounded-lg prose-table:border-collapse [&_td]:border [&_td]:border-slate-200 [&_td]:p-2 [&_th]:border [&_th]:border-slate-200 [&_th]:p-2 [&_th]:bg-slate-50 focus:outline-none"
+                    data-placeholder="Bắt đầu viết nội dung bài viết tại đây..."
+                    style={{ minHeight: '480px' }}
+                  />
+                  {/* MediaPicker for inline image insertion */}
+                  <MediaPicker
+                    open={showEditorMediaPicker}
+                    onClose={() => setShowEditorMediaPicker(false)}
+                    onSelect={(item) => {
+                      editorRef.current?.focus()
+                      document.execCommand('insertHTML', false, `<img src="${item.url}" alt="${item.originalName || ''}" style="max-width:100%;border-radius:8px;margin:8px 0" />`)
+                      syncContent()
+                      setShowEditorMediaPicker(false)
+                    }}
+                    accept="image"
+                  />
+                </>
               ) : (
-                <div className="editor-content prose prose-slate max-w-none">
+                <div className="editor-content prose prose-slate max-w-none min-h-[480px]">
                   {content ? (
-                    <div dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br>') }} />
+                    <div dangerouslySetInnerHTML={{ __html: content }} />
                   ) : (
                     <p className="text-slate-400 italic">Chưa có nội dung để xem trước...</p>
                   )}
