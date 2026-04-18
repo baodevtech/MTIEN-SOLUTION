@@ -49,8 +49,8 @@ export default function BlogSidebar({ categories, tags, recentPosts }: BlogSideb
 
   return (
     <aside className="space-y-8" aria-label="Blog sidebar">
-      {/* Search */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up">
+      {/* Search — desktop only */}
+      <div className="hidden lg:block bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up">
         <h3 className="font-bold text-slate-900 text-lg mb-4">Tìm kiếm</h3>
         <form onSubmit={handleSearch} className="relative">
           <label htmlFor="sidebar-search" className="sr-only">Tìm kiếm bài viết</label>
@@ -68,7 +68,7 @@ export default function BlogSidebar({ categories, tags, recentPosts }: BlogSideb
 
       {/* Categories */}
       {categories.length > 0 && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+        <div className="hidden lg:block bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up" style={{ animationDelay: '50ms' }}>
           <h3 className="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
             <TrendingUp size={18} className="text-blue-600" aria-hidden="true" />
             Danh mục
@@ -93,7 +93,7 @@ export default function BlogSidebar({ categories, tags, recentPosts }: BlogSideb
 
       {/* Popular Tags */}
       {tags.length > 0 && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <div className="hidden lg:block bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up" style={{ animationDelay: '100ms' }}>
           <h3 className="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
             <Hash size={18} className="text-blue-600" aria-hidden="true" />
             Tags phổ biến
@@ -112,26 +112,27 @@ export default function BlogSidebar({ categories, tags, recentPosts }: BlogSideb
         </div>
       )}
 
-      {/* Recent Posts */}
+      {/* Recent / Featured Posts */}
       {recentPosts.length > 0 && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up" style={{ animationDelay: '150ms' }}>
-          <h3 className="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
+        <div className="bg-white p-4 md:p-6 rounded-2xl border border-slate-100 shadow-sm animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+          <h3 className="font-bold text-slate-900 text-base md:text-lg mb-4 flex items-center gap-2">
             <Clock size={18} className="text-blue-600" aria-hidden="true" />
-            Bài viết gần đây
+            <span className="md:hidden">Bài viết nổi bật</span>
+            <span className="hidden md:inline">Bài viết gần đây</span>
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {recentPosts.map((post) => {
               const imageUrl = getImageUrl(post.coverImage);
 
               return (
-                <Link key={post.id} href={`/blog/${post.slug}`} className="flex gap-3 group items-start">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 relative shrink-0">
+                <Link key={post.id} href={`/blog/${post.slug}`} className="flex gap-3 group items-center md:items-start">
+                  <div className="w-20 h-20 md:w-16 md:h-16 rounded-xl overflow-hidden bg-slate-100 relative shrink-0">
                     {imageUrl ? (
                       <Image
                         src={imageUrl}
                         alt={post.title}
                         fill
-                        sizes="64px"
+                        sizes="(max-width: 768px) 80px, 64px"
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
@@ -139,11 +140,14 @@ export default function BlogSidebar({ categories, tags, recentPosts }: BlogSideb
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
+                    {post.category && (
+                      <p className="md:hidden text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-0.5">{post.category}</p>
+                    )}
                     <h4 className="text-sm font-bold text-slate-800 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug">
                       {post.title}
                     </h4>
                     {post.publishedAt && (
-                      <time dateTime={post.publishedAt} className="text-xs text-slate-400 mt-1 block">
+                      <time dateTime={post.publishedAt} className="hidden md:block text-xs text-slate-400 mt-1">
                         {new Date(post.publishedAt).toLocaleDateString('vi-VN')}
                       </time>
                     )}
@@ -155,8 +159,8 @@ export default function BlogSidebar({ categories, tags, recentPosts }: BlogSideb
         </div>
       )}
 
-      {/* CTA Box */}
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+      {/* CTA Box — desktop only */}
+      <div className="hidden lg:block bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white relative overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
         <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500 rounded-full blur-2xl -mr-10 -mt-10 opacity-50" />
         <h4 className="font-bold text-lg mb-2 relative z-10">Cần tư vấn ngay?</h4>
         <p className="text-slate-300 text-sm mb-4 relative z-10 leading-relaxed">

@@ -149,9 +149,9 @@ export default async function BlogPage({ searchParams }: Props) {
       {/* Featured Post — only on first unfiltered page */}
       {featuredPost && <FeaturedPost post={featuredPost} />}
 
-      {/* Active filters indicator */}
+      {/* Active filters indicator — desktop only (mobile shows in header filter bar) */}
       {(category || tag || search) && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+        <div className="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="text-slate-500">Đang lọc:</span>
             {category && (
