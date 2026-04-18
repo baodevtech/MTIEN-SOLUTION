@@ -129,7 +129,10 @@ export default function BlogListClient({
             </div>
 
             {allTags.length > 0 && (
-                <div className="flex gap-1.5 overflow-x-auto pb-1 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden items-center">
+                <div className="flex gap-1.5 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden items-center">
+                    <div className="text-[10px] font-bold uppercase text-slate-400 shrink-0 flex items-center gap-1">
+                        <Tag size={12}/> Tags
+                    </div>
                     {allTags.map(tag => {
                         const isActive = selectedTag === tag;
                         return (
