@@ -35,6 +35,7 @@ export default function MediaPicker({ open, onClose, onSelect, accept = 'all', m
   const [search, setSearch] = useState('')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const [tab, setTab] = useState<'library' | 'upload'>('library')
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -44,8 +45,11 @@ export default function MediaPicker({ open, onClose, onSelect, accept = 'all', m
       const params = accept !== 'all' ? `?type=${accept}` : ''
       const res = await fetch(`/api/admin/media${params}`)
       const json = await res.json()
-      if (json.success) setMedia(json.data)
-    } catch {} finally {
+      if (json.success) setMedia(json.data || [])
+      else setMedia([])
+    } catch {
+      setMedia([])
+    } finally {
       setLoading(false)
     }
   }, [accept])
@@ -54,14 +58,16 @@ export default function MediaPicker({ open, onClose, onSelect, accept = 'all', m
     if (open) {
       fetchMedia()
       setSelectedIds([])
+      setUploadError(null)
     }
   }, [open, fetchMedia])
 
   const handleUpload = async (files: FileList) => {
     setUploading(true)
+    setUploadError(null)
     const formData = new FormData()
     Array.from(files).forEach(f => formData.append('files', f))
-    formData.append('folder', 'general')
+    formData.append('folder', 'uploads')
 
     try {
       const res = await fetch('/api/admin/media/upload', { method: 'POST', body: formData })
@@ -74,8 +80,12 @@ export default function MediaPicker({ open, onClose, onSelect, accept = 'all', m
           onSelect(json.data[0])
           onClose()
         }
+      } else {
+        setUploadError(json.message || 'Lỗi tải lên. Vui lòng thử lại.')
       }
-    } catch {} finally {
+    } catch {
+      setUploadError('Lỗi kết nối server. Vui lòng kiểm tra kết nối.')
+    } finally {
       setUploading(false)
     }
   }
@@ -169,9 +179,15 @@ export default function MediaPicker({ open, onClose, onSelect, accept = 'all', m
               )}
             </>
           ) : (
+            <>
             <div
               className="border-2 border-dashed border-slate-200 rounded-xl p-12 text-center hover:border-blue-400 transition-colors cursor-pointer"
               onClick={() => inputRef.current?.click()}
+              onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
+              onDrop={(e) => {
+                e.preventDefault(); e.stopPropagation()
+                if (e.dataTransfer.files?.length) handleUpload(e.dataTransfer.files)
+              }}
             >
               {uploading ? (
                 <Loader2 size={40} className="mx-auto text-blue-500 animate-spin mb-3" />
@@ -189,6 +205,13 @@ export default function MediaPicker({ open, onClose, onSelect, accept = 'all', m
                 onChange={(e) => { if (e.target.files) handleUpload(e.target.files); e.target.value = '' }}
               />
             </div>
+            {uploadError && (
+              <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+                <X size={14} className="shrink-0" />
+                {uploadError}
+              </div>
+            )}
+            </>
           )}
         </div>
 

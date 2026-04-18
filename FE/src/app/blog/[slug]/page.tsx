@@ -175,27 +175,23 @@ export default async function BlogDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       
-      <header className="relative overflow-hidden pt-24 md:pt-32 pb-10 md:pb-14 px-4 sm:px-6 lg:px-8">
-           {/* Gradient background */}
-           <div className="absolute inset-0 bg-gradient-to-br from-[#001440] via-[#002f90] to-[#0066FF]" />
-           
-           {/* Decorative blobs — desktop only, no backdrop-blur for perf */}
-           <div className="absolute top-[-15%] left-[-5%] w-[400px] h-[400px] bg-cyan-400/15 rounded-full blur-3xl hidden md:block" />
-           <div className="absolute bottom-[-20%] right-[-5%] w-[350px] h-[350px] bg-[#0066FF]/25 rounded-full blur-3xl hidden md:block" />
+      <header className="relative overflow-hidden pt-20 md:pt-32 pb-6 md:pb-14 px-4 sm:px-6 lg:px-8">
+           {/* Solid monochrome background */}
+           <div className="absolute inset-0 bg-slate-900" />
            
            {/* Bottom fade */}
-           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
 
            <div className="relative z-10 max-w-7xl mx-auto">
-               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs text-blue-200/70 mb-4 md:mb-6 uppercase tracking-wider font-medium">
+               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs text-slate-400 mb-4 md:mb-6 uppercase tracking-wider font-medium">
                   <Link href="/" className="hover:text-white transition-colors">Trang chủ</Link>
-                  <ChevronRight size={12} className="text-blue-300/40" aria-hidden="true" />
+                  <ChevronRight size={12} className="text-slate-600" aria-hidden="true" />
                   <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
                   {post.category && (
                     <>
-                      <ChevronRight size={12} className="text-blue-300/40" aria-hidden="true" />
-                      <Link href={`/blog?category=${encodeURIComponent(post.category)}`} className="text-cyan-300 hover:text-white transition-colors">
+                      <ChevronRight size={12} className="text-slate-600" aria-hidden="true" />
+                      <Link href={`/blog?category=${encodeURIComponent(post.category)}`} className="text-white/80 hover:text-white transition-colors">
                           {post.category}
                       </Link>
                     </>
@@ -207,31 +203,31 @@ export default async function BlogDetailPage({ params }: Props) {
                </h1>
                
                {/* Metadata — lightweight pills */}
-               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-blue-100/80">
+               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-slate-300">
                    <div className="flex items-center gap-2 md:gap-3">
-                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 shadow-sm overflow-hidden bg-white/10 shrink-0 flex items-center justify-center text-white font-bold text-sm">
+                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 shadow-sm overflow-hidden bg-white/10 shrink-0 flex items-center justify-center text-white font-bold text-sm">
                            {post.author ? post.author.charAt(0).toUpperCase() : 'A'}
                        </div>
                        <div>
                            <p className="font-bold text-white leading-tight">{post.author || 'Admin'}</p>
-                           <p className="text-[10px] md:text-xs text-blue-200/60">Tác giả</p>
+                           <p className="text-[10px] md:text-xs text-slate-500">Tác giả</p>
                        </div>
                    </div>
                    
                    <div className="hidden md:block w-px h-6 bg-white/15" aria-hidden="true"></div>
                    
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10">
-                       <Calendar size={14} className="text-cyan-300 md:w-4 md:h-4" aria-hidden="true" /> 
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                       <Calendar size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
                        <time dateTime={post.publishedAt || post.createdAt}>{formatDate(post.publishedAt || post.createdAt)}</time>
                    </div>
                    
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10">
-                       <Clock size={14} className="text-cyan-300 md:w-4 md:h-4" aria-hidden="true" /> 
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                       <Clock size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
                        <span>{readTime}</span>
                    </div>
 
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10">
-                       <Eye size={14} className="text-cyan-300 md:w-4 md:h-4" aria-hidden="true" /> 
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                       <Eye size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
                        <span>{post.views} lượt xem</span>
                    </div>
                </div>
@@ -252,7 +248,8 @@ export default async function BlogDetailPage({ params }: Props) {
                             fill
                             priority
                             fetchPriority="high"
-                            sizes="(max-width: 1200px) 100vw, 900px"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 900px"
+                            quality={60}
                             className="object-cover" 
                         />
                     </div>

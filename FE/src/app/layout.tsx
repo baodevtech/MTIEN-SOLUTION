@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Manrope, Noto_Sans } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -16,12 +16,7 @@ const manrope = Manrope({
   variable: '--font-manrope',
 });
 
-const notoSans = Noto_Sans({
-  subsets: ['latin', 'vietnamese'],
-  weight: ['400', '600', '700'],
-  display: 'swap',
-  variable: '--font-noto-sans',
-});
+
 
 export const viewport: Viewport = {
   themeColor: '#0066FF',
@@ -142,13 +137,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="vi"
-      className={`scroll-smooth ${manrope.variable} ${notoSans.variable}`}
+      className={`scroll-smooth ${manrope.variable}`}
       suppressHydrationWarning
     >
       <head>
         <link rel="icon" href={faviconUrl} />
-        <link rel="dns-prefetch" href="https://picsum.photos" />
-        <link rel="preconnect" href="https://picsum.photos" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://portal.minhtiensolutions.cloud" />
+        <link rel="preconnect" href="https://portal.minhtiensolutions.cloud" crossOrigin="anonymous" />
         <JsonLd settings={settings} />
         {/* Google Analytics */}
         {gaId && gaId !== 'G-XXXXXXXXXX' && (

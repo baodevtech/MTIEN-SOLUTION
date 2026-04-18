@@ -9,10 +9,12 @@ import {
   Quote, Code, Heading1, Heading2, AlignLeft, AlignCenter, Upload,
   ChevronDown, Loader2, Target, AlertTriangle,
   CheckCircle2, XCircle, Info, Search as SearchIcon, ChevronRight,
+  ExternalLink, Link2,
 } from 'lucide-react'
 import { cn, slugify } from '@/lib/utils'
+import MediaPicker from '@/components/MediaPicker'
 
-const categories = ['Thiết kế', 'Cloud', 'Marketing', 'E-commerce', 'AI', 'Bảo mật', 'Chuyển đổi số', 'Phần mềm']
+const DEFAULT_CATEGORIES = ['Thiết kế', 'Cloud', 'Marketing', 'E-commerce', 'AI', 'Bảo mật', 'Chuyển đổi số', 'Phần mềm']
 
 interface SEOIssue {
   type: 'error' | 'warning' | 'good' | 'info'
@@ -50,6 +52,7 @@ function PostEditorInner() {
   const [content, setContent] = useState('')
   const [excerpt, setExcerpt] = useState('')
   const [category, setCategory] = useState('')
+  const [newCategory, setNewCategory] = useState('')
   const [tags, setTags] = useState<string[]>([])
   const [tagInput, setTagInput] = useState('')
   const [status, setStatus] = useState<'draft' | 'published' | 'scheduled'>('draft')
@@ -57,6 +60,15 @@ function PostEditorInner() {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor')
   const [saving, setSaving] = useState(false)
   const [author, setAuthor] = useState('')
+  const [showMediaPicker, setShowMediaPicker] = useState(false)
+
+  // Dynamic categories/tags from DB
+  const [dbCategories, setDbCategories] = useState<{ name: string; count: number }[]>([])
+  const [dbTags, setDbTags] = useState<string[]>([])
+
+  // Link counts
+  const [internalLinks, setInternalLinks] = useState(0)
+  const [externalLinks, setExternalLinks] = useState(0)
 
   // SEO fields
   const [seoTitle, setSeoTitle] = useState('')
@@ -103,6 +115,53 @@ function PostEditorInner() {
       })
       .catch(() => {})
   }, [editId])
+
+  // Auto-fill author from localStorage (current logged-in user)
+  useEffect(() => {
+    if (editId) return // Don't overwrite when editing
+    try {
+      const stored = localStorage.getItem('admin_user')
+      if (stored) {
+        const user = JSON.parse(stored)
+        if (user.name) setAuthor(user.name)
+      }
+    } catch {}
+  }, [editId])
+
+  // Fetch existing categories/tags from DB
+  useEffect(() => {
+    fetch('/api/admin/posts/meta')
+      .then(r => r.json())
+      .then(json => {
+        if (json.success) {
+          setDbCategories(json.categories || [])
+          setDbTags(json.tags || [])
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  // Count internal/external links in content (debounced)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!content) { setInternalLinks(0); setExternalLinks(0); return }
+      const hrefRegex = /href=["']([^"']+)["']/gi
+      let intCount = 0, extCount = 0
+      let match
+      while ((match = hrefRegex.exec(content)) !== null) {
+        const url = match[1]
+        if (url.startsWith('#') || url.startsWith('mailto:') || url.startsWith('tel:')) continue
+        if (url.startsWith('/') || url.includes('mtiensolution') || url.includes('localhost')) {
+          intCount++
+        } else if (url.startsWith('http')) {
+          extCount++
+        }
+      }
+      setInternalLinks(intCount)
+      setExternalLinks(extCount)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [content])
 
   // Auto-analyze SEO (debounced)
   const runSeoAnalysis = useCallback(async () => {
@@ -589,26 +648,61 @@ function PostEditorInner() {
                 <button onClick={() => setFeaturedImage(null)} className="absolute top-2 right-2 w-7 h-7 bg-black/50 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
                   <X size={14} />
                 </button>
+                <button onClick={() => setShowMediaPicker(true)} className="absolute bottom-2 right-2 px-3 py-1.5 bg-black/50 rounded-lg text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  Đổi ảnh
+                </button>
               </div>
             ) : (
-              <button onClick={() => setFeaturedImage('https://picsum.photos/seed/featured/600/300')} className="w-full h-40 border-2 border-dashed border-slate-200 rounded-lg flex flex-col items-center justify-center gap-2 text-slate-400 hover:border-blue-400 hover:text-blue-500 transition-colors">
+              <button onClick={() => setShowMediaPicker(true)} className="w-full h-40 border-2 border-dashed border-slate-200 rounded-lg flex flex-col items-center justify-center gap-2 text-slate-400 hover:border-blue-400 hover:text-blue-500 transition-colors">
                 <Upload size={24} />
                 <span className="text-sm font-medium">Chọn hoặc tải ảnh lên</span>
-                <span className="text-xs">JPG, PNG, WebP — Tối đa 5MB</span>
+                <span className="text-xs">JPG, PNG, WebP — Tối đa 10MB</span>
               </button>
             )}
           </div>
+          <MediaPicker
+            open={showMediaPicker}
+            onClose={() => setShowMediaPicker(false)}
+            onSelect={(item) => setFeaturedImage(item.url)}
+            accept="image"
+          />
 
           {/* Category */}
           <div className="bg-white rounded-xl border border-slate-200 p-5">
             <h3 className="text-sm font-semibold text-slate-700 mb-3">Chuyên mục</h3>
-            <div className="space-y-2">
-              {categories.map((cat) => (
-                <label key={cat} className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="category" value={cat} checked={category === cat} onChange={() => setCategory(cat)} className="w-4 h-4 text-blue-500 border-slate-300 focus:ring-blue-500" />
-                  <span className="text-sm text-slate-600">{cat}</span>
-                </label>
-              ))}
+            <div className="space-y-2 max-h-48 overflow-y-auto mb-3">
+              {(() => {
+                const allCats = Array.from(new Set([
+                  ...dbCategories.map(c => c.name),
+                  ...DEFAULT_CATEGORIES,
+                ]))
+                return allCats.map((cat) => {
+                  const dbCat = dbCategories.find(c => c.name === cat)
+                  return (
+                    <label key={cat} className="flex items-center gap-2 cursor-pointer group">
+                      <input type="radio" name="category" value={cat} checked={category === cat} onChange={() => setCategory(cat)} className="w-4 h-4 text-blue-500 border-slate-300 focus:ring-blue-500" />
+                      <span className="text-sm text-slate-600 group-hover:text-slate-800">{cat}</span>
+                      {dbCat && <span className="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">{dbCat.count}</span>}
+                    </label>
+                  )
+                })
+              })()}
+            </div>
+            <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+              <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const val = newCategory.trim()
+                    if (val) { setCategory(val); setNewCategory('') }
+                  }
+                }}
+                placeholder="Thêm chuyên mục mới..."
+                className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+              <button onClick={() => {
+                const val = newCategory.trim()
+                if (val) { setCategory(val); setNewCategory('') }
+              }} className="p-2 bg-slate-100 rounded-lg text-slate-500 hover:bg-slate-200 transition-colors"><Plus size={16} /></button>
             </div>
           </div>
 
@@ -622,13 +716,27 @@ function PostEditorInner() {
               <button onClick={addTag} className="p-2 bg-slate-100 rounded-lg text-slate-500 hover:bg-slate-200 transition-colors"><Plus size={16} /></button>
             </div>
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 mb-3">
                 {tags.map((tag) => (
                   <span key={tag} className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 text-xs font-medium px-2 py-1 rounded-md">
                     {tag}
                     <button onClick={() => removeTag(tag)} className="text-blue-400 hover:text-blue-700"><X size={12} /></button>
                   </span>
                 ))}
+              </div>
+            )}
+            {/* Existing tags from DB as quick-add suggestions */}
+            {dbTags.length > 0 && (
+              <div className="pt-3 border-t border-slate-100">
+                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Gợi ý từ bài viết cũ</p>
+                <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+                  {dbTags.filter(t => !tags.includes(t)).slice(0, 20).map(tag => (
+                    <button key={tag} onClick={() => setTags(prev => [...prev, tag])}
+                      className="text-[11px] px-2 py-1 bg-slate-50 border border-slate-200 rounded-md text-slate-500 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-colors">
+                      + {tag}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -638,6 +746,33 @@ function PostEditorInner() {
             <h3 className="text-sm font-semibold text-slate-700 mb-3">Tác giả</h3>
             <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)}
               placeholder="Tên tác giả..." className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+            {author && <p className="text-[10px] text-slate-400 mt-1.5">Tự động lấy từ tài khoản đăng nhập</p>}
+          </div>
+
+          {/* Link Analysis */}
+          <div className="bg-white rounded-xl border border-slate-200 p-5">
+            <h3 className="text-sm font-semibold text-slate-700 mb-3">Phân tích liên kết</h3>
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <Link2 size={14} className="text-blue-500" />
+                  <span>Internal links</span>
+                </div>
+                <span className={cn('text-sm font-bold tabular-nums', internalLinks > 0 ? 'text-green-600' : 'text-slate-400')}>{internalLinks}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <ExternalLink size={14} className="text-orange-500" />
+                  <span>External links</span>
+                </div>
+                <span className={cn('text-sm font-bold tabular-nums', externalLinks > 0 ? 'text-green-600' : 'text-slate-400')}>{externalLinks}</span>
+              </div>
+              {internalLinks === 0 && content.length > 100 && (
+                <p className="text-[11px] text-amber-600 bg-amber-50 px-2.5 py-1.5 rounded-lg">
+                  ⚠ Chưa có internal link. Nên thêm liên kết nội bộ để cải thiện SEO.
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Quick SEO Checklist */}
