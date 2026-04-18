@@ -52,6 +52,25 @@ export default function UsersPage() {
         ? { id: editUser.id, name: form.name, email: form.email, role: form.role, ...(form.password ? { password: form.password } : {}) }
         : { name: form.name, email: form.email, password: form.password, role: form.role }
       await fetch('/api/admin/users', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      
+      // Cập nhật localStorage nếu đang sửa chính user đang đăng nhập
+      if (editUser) {
+        try {
+          const stored = localStorage.getItem('admin_user')
+          if (stored) {
+            const current = JSON.parse(stored)
+            if (current.id === editUser.id || current.email === editUser.email) {
+              localStorage.setItem('admin_user', JSON.stringify({
+                ...current,
+                name: form.name,
+                email: form.email,
+                role: form.role,
+              }))
+            }
+          }
+        } catch {}
+      }
+      
       setShowModal(false)
       fetchUsers()
     } catch { /* ignore */ }

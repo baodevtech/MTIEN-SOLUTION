@@ -187,13 +187,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo credentials */}
-          <div className="mt-6 p-3 bg-slate-100 rounded-lg">
-            <p className="text-[10px] text-slate-400 uppercase font-semibold mb-1">Tài khoản demo</p>
-            <p className="text-xs text-slate-500">Email: <code className="text-slate-700 bg-white px-1 py-0.5 rounded">admin@mtiensolution.vn</code></p>
-            <p className="text-xs text-slate-500">Mật khẩu: <code className="text-slate-700 bg-white px-1 py-0.5 rounded">admin123</code></p>
-          </div>
-
           <p className="text-center text-xs text-slate-400 mt-8">
             &copy; 2025 MTIEN Solution. Bảo lưu mọi quyền.
           </p>
