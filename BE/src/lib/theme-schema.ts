@@ -216,8 +216,6 @@ const homePageSchema: PageSchema = {
         { key: 'floatingCard2Title', label: 'Tiêu đề thẻ nổi 2', type: 'text', defaultValue: 'Doanh thu hôm nay' },
         { key: 'floatingCard2Badge', label: 'Badge thẻ nổi 2', type: 'text', defaultValue: '+24.5%' },
         { key: 'floatingCard2Value', label: 'Giá trị thẻ nổi 2', type: 'text', defaultValue: '124.500.000₫' },
-        { key: 'avatarBadge', label: 'Badge avatar (vd: 230k+)', type: 'text', defaultValue: '230k+' },
-        { key: 'mockupUrl', label: 'URL thanh trình duyệt', type: 'text', defaultValue: 'mtien-solution.com' },
       ],
     },
     {

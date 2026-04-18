@@ -122,7 +122,7 @@ export default function HeroSection() {
                     </div>
                   ))}
                   <div className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 shadow-sm z-10">
-                    {t('avatarBadge', '230k+')}
+                    230k+
                   </div>
                 </div>
                 <div>
@@ -147,7 +147,7 @@ export default function HeroSection() {
                   <div className="w-2 h-2 rounded-full bg-[#27C93F]"></div>
                   <div className="flex-1 mx-2">
                     <div className="h-4 rounded bg-slate-100 flex items-center justify-center">
-                      <span className="text-[8px] text-slate-400 font-medium">{t('mockupUrl', 'mtien-solution.com')}</span>
+                      <span className="text-[8px] text-slate-400 font-medium">mtien-solution.com</span>
                     </div>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default function HeroSection() {
                     <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 border-2 border-white flex items-center justify-center text-white text-[8px] font-bold">M</div>
                     <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 border-2 border-white flex items-center justify-center text-white text-[8px] font-bold">T</div>
                     <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[8px] font-bold text-slate-600 z-10">
-                      {t('avatarBadge', '230k+')}
+                      230k+
                     </div>
                   </div>
                 </div>
@@ -201,13 +201,13 @@ export default function HeroSection() {
                       <div className="flex-1 px-4 max-w-sm">
                         <div className="h-7 rounded-md bg-white border border-slate-200 flex items-center justify-center gap-2 px-3">
                            <ShieldCheck size={12} className="text-green-500" />
-                           <span className="text-xs text-slate-400 font-medium">{t('mockupUrl', 'mtien-solution.com')}</span>
+                           <span className="text-xs text-slate-400 font-medium">mtien-solution.com</span>
                         </div>
                       </div>
                       <div className="flex gap-3 text-slate-400"><Monitor size={14} /></div>
                     </div>
                     <div className="relative w-full flex-1 bg-slate-100">
-                      <Image src={t('heroImage', 'https://picsum.photos/seed/yody2/800/500')} alt="Giao diện website mẫu MTIEN SOLUTION" fill className="object-cover" priority sizes="50vw" />
+                      <Image src="https://picsum.photos/seed/yody2/800/500" alt="Giao diện website mẫu MTIEN SOLUTION" fill className="object-cover" priority sizes="50vw" />
                     </div>
                   </div>
                 </div>
@@ -231,7 +231,7 @@ export default function HeroSection() {
                       <div className="flex-1 px-4 max-w-sm">
                         <div className="h-5 md:h-7 rounded-md bg-white border border-slate-200 flex items-center justify-center gap-2 px-3">
                            <ShieldCheck size={12} className="text-green-500" />
-                           <span className="text-[10px] md:text-xs text-slate-400 font-medium">{t('mockupUrl', 'mtien-solution.com')}</span>
+                           <span className="text-[10px] md:text-xs text-slate-400 font-medium">mtien-solution.com</span>
                         </div>
                       </div>
                       <div className="hidden sm:flex gap-3 text-slate-400">
@@ -240,7 +240,7 @@ export default function HeroSection() {
                     </div>
                     <div className="relative w-full flex-1 bg-slate-100">
                       <Image
-                        src={t('heroImage', 'https://picsum.photos/seed/yody2/800/500')}
+                        src="https://picsum.photos/seed/yody2/800/500"
                         alt="Giao diện website mẫu MTIEN SOLUTION"
                         fill
                         className="object-cover"

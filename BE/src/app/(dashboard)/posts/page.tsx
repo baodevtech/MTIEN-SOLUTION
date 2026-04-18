@@ -200,6 +200,7 @@ export default function PostsPage() {
                 <th className="text-center">Trạng thái</th>
                 <th className="text-left">Tác giả</th>
                 <th className="text-right">Lượt xem</th>
+                <th className="text-center">SEO</th>
                 <th className="text-right">Ngày tạo</th>
                 <th className="w-16"></th>
               </tr>
@@ -258,6 +259,19 @@ export default function PostsPage() {
                       <span className="text-sm text-slate-600">{post.author || '—'}</span>
                     </td>
                     <td className="text-right text-sm text-slate-500">{formatNumber(post.views)}</td>
+                    <td className="text-center">
+                      {(post as Record<string, unknown>).seoScore != null ? (
+                        <span className={cn('inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold',
+                          Number((post as Record<string, unknown>).seoScore) >= 80 ? 'bg-green-100 text-green-700'
+                          : Number((post as Record<string, unknown>).seoScore) >= 50 ? 'bg-amber-100 text-amber-700'
+                          : 'bg-red-100 text-red-700'
+                        )}>
+                          {String((post as Record<string, unknown>).seoScore)}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-300">—</span>
+                      )}
+                    </td>
                     <td className="text-right text-sm text-slate-400">{formatDate(post.createdAt)}</td>
                     <td>
                       <div className="flex items-center justify-end gap-1">

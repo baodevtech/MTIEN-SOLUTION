@@ -59,6 +59,16 @@ export async function POST(request: NextRequest) {
         author: body.author?.name || body.author || '',
         status: body.status || 'draft',
         publishedAt: body.status === 'published' ? new Date() : null,
+        // SEO fields
+        seoTitle: body.seoTitle || null,
+        seoDescription: body.seoDescription || null,
+        seoKeywords: body.seoKeywords || [],
+        focusKeyword: body.focusKeyword || null,
+        canonicalUrl: body.canonicalUrl || null,
+        ogImage: body.ogImage || null,
+        noIndex: body.noIndex || false,
+        seoScore: body.seoScore || 0,
+        seoIssues: body.seoIssues || null,
       },
     })
     await logActivity({ action: 'post.create', module: 'post', status: 'success', message: `Tạo bài viết: ${post.title}`, detail: { id: post.id, slug: post.slug } })
@@ -89,6 +99,16 @@ export async function PUT(request: NextRequest) {
         ...(rest.author !== undefined && { author: rest.author }),
         ...(rest.status !== undefined && { status: rest.status }),
         ...(rest.status === 'published' && { publishedAt: new Date() }),
+        // SEO fields
+        ...(rest.seoTitle !== undefined && { seoTitle: rest.seoTitle }),
+        ...(rest.seoDescription !== undefined && { seoDescription: rest.seoDescription }),
+        ...(rest.seoKeywords !== undefined && { seoKeywords: rest.seoKeywords }),
+        ...(rest.focusKeyword !== undefined && { focusKeyword: rest.focusKeyword }),
+        ...(rest.canonicalUrl !== undefined && { canonicalUrl: rest.canonicalUrl }),
+        ...(rest.ogImage !== undefined && { ogImage: rest.ogImage }),
+        ...(rest.noIndex !== undefined && { noIndex: rest.noIndex }),
+        ...(rest.seoScore !== undefined && { seoScore: rest.seoScore }),
+        ...(rest.seoIssues !== undefined && { seoIssues: rest.seoIssues }),
       },
     })
     await logActivity({ action: 'post.update', module: 'post', status: 'success', message: `Cập nhật bài viết: ${post.title}`, detail: { id: post.id } })

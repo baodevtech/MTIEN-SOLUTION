@@ -41,17 +41,28 @@ model Product {
 
 // ─── Posts / Blog ────────────────────────────────────
 model Post {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  excerpt     String?
-  content     String?
-  coverImage  String?
-  category    String?
-  tags        String[] @default([])
-  author      String?
-  status      String   @default("draft")
-  views       Int      @default(0)
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  excerpt         String?
+  content         String?
+  coverImage      String?
+  category        String?
+  tags            String[] @default([])
+  author          String?
+  status          String   @default("draft")
+  views           Int      @default(0)
+  // SEO fields
+  seoTitle        String?
+  seoDescription  String?
+  seoKeywords     String[] @default([])
+  focusKeyword    String?
+  canonicalUrl    String?
+  ogImage         String?
+  noIndex         Boolean  @default(false)
+  seoScore        Int      @default(0)
+  seoIssues       Json?    // Store last analysis result
+
   publishedAt DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
