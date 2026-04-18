@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Calendar, Clock, Facebook, Twitter, Linkedin, Share2, Tag, ChevronRight, Eye } from 'lucide-react';
+import { Calendar, Clock, Facebook, Twitter, Linkedin, Share2, Tag, ChevronRight } from 'lucide-react';
 import { TableOfContents } from '@/components/blog/TableOfContents';
 import type { BlogDetailResponse, BlogPost } from '@/types';
 
@@ -175,60 +175,44 @@ export default async function BlogDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       
-      <header className="relative overflow-hidden pt-20 md:pt-32 pb-6 md:pb-14 px-4 sm:px-6 lg:px-8">
-           {/* Solid monochrome background */}
-           <div className="absolute inset-0 bg-slate-900" />
-           
-           {/* Bottom fade */}
-           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
-           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
-
-           <div className="relative z-10 max-w-7xl mx-auto">
-               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs text-slate-400 mb-4 md:mb-6 uppercase tracking-wider font-medium">
-                  <Link href="/" className="hover:text-white transition-colors">Trang chủ</Link>
-                  <ChevronRight size={12} className="text-slate-600" aria-hidden="true" />
-                  <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
+      <header className="bg-white pt-24 md:pt-36 pb-8 md:pb-14 px-4 sm:px-6 lg:px-8 border-b border-gray-100">
+           <div className="max-w-7xl mx-auto">
+               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs mb-5 md:mb-8 uppercase tracking-wider font-semibold">
+                  <Link href="/blog" className="text-slate-500 hover:text-slate-800 transition-colors">Blog</Link>
                   {post.category && (
                     <>
-                      <ChevronRight size={12} className="text-slate-600" aria-hidden="true" />
-                      <Link href={`/blog?category=${encodeURIComponent(post.category)}`} className="text-white/80 hover:text-white transition-colors">
+                      <ChevronRight size={12} className="text-slate-300" aria-hidden="true" />
+                      <Link href={`/blog?category=${encodeURIComponent(post.category)}`} className="text-amber-600 hover:text-amber-700 transition-colors">
                           {post.category}
                       </Link>
                     </>
                   )}
                </nav>
 
-               <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-5 md:mb-6 leading-snug md:leading-tight max-w-4xl">
+               <h1 className="text-2xl sm:text-3xl md:text-[2.75rem] font-bold text-slate-900 mb-6 md:mb-8 leading-snug md:leading-tight max-w-4xl">
                   {post.title}
                </h1>
                
-               {/* Metadata — lightweight pills */}
-               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-slate-300">
+               {/* Metadata */}
+               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-slate-500">
                    <div className="flex items-center gap-2 md:gap-3">
-                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 shadow-sm overflow-hidden bg-white/10 shrink-0 flex items-center justify-center text-white font-bold text-sm">
+                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full shadow-sm overflow-hidden bg-slate-100 shrink-0 flex items-center justify-center text-slate-500 font-bold text-sm">
                            {post.author ? post.author.charAt(0).toUpperCase() : 'A'}
                        </div>
                        <div>
-                           <p className="font-bold text-white leading-tight">{post.author || 'Admin'}</p>
-                           <p className="text-[10px] md:text-xs text-slate-500">Tác giả</p>
+                           <p className="font-bold text-slate-900 leading-tight">{post.author || 'Admin'}</p>
+                           <p className="text-[10px] md:text-xs text-slate-400">Tác giả</p>
                        </div>
                    </div>
                    
-                   <div className="hidden md:block w-px h-6 bg-white/15" aria-hidden="true"></div>
-                   
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white">
                        <Calendar size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
                        <time dateTime={post.publishedAt || post.createdAt}>{formatDate(post.publishedAt || post.createdAt)}</time>
                    </div>
                    
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white">
                        <Clock size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
                        <span>{readTime}</span>
-                   </div>
-
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
-                       <Eye size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
-                       <span>{post.views} lượt xem</span>
                    </div>
                </div>
            </div>
