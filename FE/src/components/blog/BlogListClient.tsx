@@ -225,6 +225,7 @@ export default function BlogListClient({
 
                     <div className="flex items-center justify-between mt-auto">
                       <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden bg-gradient-to-br from-amber-400 to-orange-500 relative shrink-0" />
                         {post.author && (
                           <span className="text-xs md:text-sm font-bold text-slate-900">{post.author}</span>
                         )}
