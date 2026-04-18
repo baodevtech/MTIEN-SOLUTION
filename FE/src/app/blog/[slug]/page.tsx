@@ -175,10 +175,10 @@ export default async function BlogDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       
-      <header className="bg-white pt-24 md:pt-36 pb-8 md:pb-14 px-4 sm:px-6 lg:px-8 border-b border-gray-100">
+      <header className="bg-[#f8f8f8] pt-24 md:pt-36 pb-8 md:pb-14 px-4 sm:px-6 lg:px-8 border-b border-gray-200/60">
            <div className="max-w-7xl mx-auto">
                <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs mb-5 md:mb-8 uppercase tracking-wider font-semibold">
-                  <Link href="/blog" className="text-slate-500 hover:text-slate-800 transition-colors">Blog</Link>
+                  <Link href="/blog" className="text-slate-400 hover:text-slate-700 transition-colors">Blog</Link>
                   {post.category && (
                     <>
                       <ChevronRight size={12} className="text-slate-300" aria-hidden="true" />
@@ -189,30 +189,32 @@ export default async function BlogDetailPage({ params }: Props) {
                   )}
                </nav>
 
-               <h1 className="text-2xl sm:text-3xl md:text-[2.75rem] font-bold text-slate-900 mb-6 md:mb-8 leading-snug md:leading-tight max-w-4xl">
+               <h1 className="text-2xl sm:text-3xl md:text-[2.75rem] font-extrabold text-slate-800 mb-6 md:mb-8 leading-snug md:leading-tight max-w-4xl">
                   {post.title}
                </h1>
                
                {/* Metadata */}
-               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-slate-500">
-                   <div className="flex items-center gap-2 md:gap-3">
-                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full shadow-sm overflow-hidden bg-slate-100 shrink-0 flex items-center justify-center text-slate-500 font-bold text-sm">
+               <div className="flex flex-wrap items-center gap-3 md:gap-5">
+                   <div className="flex items-center gap-2.5 md:gap-3">
+                       <div className="w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden bg-gradient-to-br from-amber-400 to-orange-500 shrink-0 flex items-center justify-center text-white font-bold text-sm shadow-sm">
                            {post.author ? post.author.charAt(0).toUpperCase() : 'A'}
                        </div>
                        <div>
-                           <p className="font-bold text-slate-900 leading-tight">{post.author || 'Admin'}</p>
-                           <p className="text-[10px] md:text-xs text-slate-400">Tác giả</p>
+                           <p className="font-bold text-slate-800 leading-tight text-sm">{post.author || 'admin'}</p>
+                           <p className="text-[10px] md:text-xs text-slate-400 font-medium">Tác giả</p>
                        </div>
                    </div>
                    
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white">
-                       <Calendar size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
-                       <time dateTime={post.publishedAt || post.createdAt}>{formatDate(post.publishedAt || post.createdAt)}</time>
+                   <div className="hidden sm:block w-px h-5 bg-slate-300/60" aria-hidden="true" />
+                   
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white/80 text-slate-500 text-xs md:text-sm">
+                       <Calendar size={14} className="text-amber-500 md:w-4 md:h-4" aria-hidden="true" /> 
+                       <time dateTime={post.publishedAt || post.createdAt} className="font-medium">{formatDate(post.publishedAt || post.createdAt)}</time>
                    </div>
                    
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white">
-                       <Clock size={14} className="text-slate-400 md:w-4 md:h-4" aria-hidden="true" /> 
-                       <span>{readTime}</span>
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white/80 text-slate-500 text-xs md:text-sm">
+                       <Clock size={14} className="text-blue-500 md:w-4 md:h-4" aria-hidden="true" /> 
+                       <span className="font-medium">{readTime}</span>
                    </div>
                </div>
            </div>
