@@ -142,7 +142,7 @@ export default async function BlogPage({ searchParams }: Props) {
       {/* Hero + Header */}
       <div className="bg-white pt-28 md:pt-36 pb-10 md:pb-14">
         <Suspense fallback={null}>
-          <BlogHeader categories={categoryNames} activeCategory={category} />
+          <BlogHeader categories={categoryNames} activeCategory={category} tags={tags} activeTag={tag} />
         </Suspense>
       </div>
 
