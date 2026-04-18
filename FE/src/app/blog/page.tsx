@@ -105,14 +105,14 @@ export default async function BlogPage({ searchParams }: Props) {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans">
+    <div className="bg-white min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
       {/* Hero Header */}
-      <div className="bg-white pt-28 md:pt-36 pb-10 md:pb-14">
+      <div className="bg-slate-50 pt-28 md:pt-36 pb-10 md:pb-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
             <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-2 md:mb-4 tracking-tight">

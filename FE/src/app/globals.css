@@ -16,8 +16,7 @@ html, body, * {
   /* Kill ALL infinite CSS animations — major CPU/battery drain */
   .animate-ping,
   .animate-pulse,
-  .animate-bounce,
-  .animate-spin {
+  .animate-bounce {
     animation: none !important;
   }
 
