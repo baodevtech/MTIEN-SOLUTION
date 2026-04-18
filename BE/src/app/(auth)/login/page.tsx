@@ -25,24 +25,27 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      // Demo login - in production, this would call the API
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      const result = await res.json()
 
-      if (email === 'admin@mtiensolution.vn' && password === 'admin123') {
-        const token = 'demo_jwt_token_xxx'
-        // Set cookie so middleware can read it server-side
+      if (result.success && result.data) {
+        const { token, user } = result.data
         document.cookie = `admin_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
         localStorage.setItem('admin_token', token)
         localStorage.setItem('admin_user', JSON.stringify({
-          id: '1',
-          name: 'Nguyễn Minh Tiến',
-          email: 'admin@mtiensolution.vn',
-          role: 'admin',
-          avatar: 'https://i.pravatar.cc/150?img=11',
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          avatar: user.avatar || '',
         }))
         router.push('/')
       } else {
-        setError('Email hoặc mật khẩu không đúng')
+        setError(result.message || 'Email hoặc mật khẩu không đúng')
       }
     } catch {
       setError('Đã xảy ra lỗi. Vui lòng thử lại.')
