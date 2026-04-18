@@ -3,10 +3,18 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Send, CheckCircle2, Loader2 } from 'lucide-react';
+import { useThemeValue } from '@/lib/theme-context';
 
 const ADMIN_API = process.env.NEXT_PUBLIC_ADMIN_API_URL || (typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'https://localhost:3001' : 'http://localhost:3001');
 
 export default function ContactForm() {
+  const formTitle = useThemeValue('contact', 'form', 'title', 'Gửi yêu cầu tư vấn') as string;
+  const buttonText = useThemeValue('contact', 'form', 'buttonText', 'Gửi tin nhắn') as string;
+  const successMessage = useThemeValue('contact', 'form', 'successMessage', 'Chúng tôi đã nhận tin nhắn. Sẽ phản hồi trong 24h!') as string;
+  const showCompanyField = useThemeValue('contact', 'form', 'showCompanyField', true) as boolean;
+  const showPhoneField = useThemeValue('contact', 'form', 'showPhoneField', true) as boolean;
+  const showServiceField = useThemeValue('contact', 'form', 'showServiceField', true) as boolean;
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -52,7 +60,7 @@ export default function ContactForm() {
       transition={{ duration: 0.5, delay: 0.4 }}
       className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100"
     >
-      <h2 className="text-3xl font-bold text-slate-900 mb-2">Gửi Tin Nhắn</h2>
+      <h2 className="text-3xl font-bold text-slate-900 mb-2">{formTitle}</h2>
       <p className="text-slate-500 mb-8">
         Điền thông tin bên dưới, chúng tôi sẽ phản hồi trong vòng 24h làm việc.
       </p>
@@ -69,7 +77,7 @@ export default function ContactForm() {
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-2">Gửi thành công!</h3>
           <p className="text-slate-600 mb-6">
-            Cảm ơn bạn đã liên hệ. Đội ngũ TechNova sẽ sớm gọi lại cho bạn.
+            {successMessage}
           </p>
           <button
             onClick={() => setIsSubmitted(false)}
@@ -95,6 +103,7 @@ export default function ContactForm() {
                 placeholder="Nguyễn Văn A"
               />
             </div>
+            {showPhoneField && (
             <div className="space-y-2">
               <label htmlFor="phone" className="text-sm font-semibold text-slate-700">
                 Số điện thoại *
@@ -108,7 +117,23 @@ export default function ContactForm() {
                 placeholder="09xx xxx xxx"
               />
             </div>
+            )}
           </div>
+
+          {showCompanyField && (
+          <div className="space-y-2">
+            <label htmlFor="company" className="text-sm font-semibold text-slate-700">
+              Công ty
+            </label>
+            <input
+              type="text"
+              id="company"
+              name="company"
+              className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+              placeholder="Tên công ty"
+            />
+          </div>
+          )}
 
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-semibold text-slate-700">
@@ -124,6 +149,7 @@ export default function ContactForm() {
             />
           </div>
 
+          {showServiceField && (
           <div className="space-y-2">
             <label htmlFor="service" className="text-sm font-semibold text-slate-700">
               Dịch vụ quan tâm
@@ -142,6 +168,7 @@ export default function ContactForm() {
               <option value="other">Khác</option>
             </select>
           </div>
+          )}
 
           <div className="space-y-2">
             <label htmlFor="message" className="text-sm font-semibold text-slate-700">
@@ -169,7 +196,7 @@ export default function ContactForm() {
             {isLoading ? (
               <><Loader2 className="w-5 h-5 animate-spin" /> Đang gửi...</>
             ) : (
-              <>Gửi Yêu Cầu <Send className="w-5 h-5" /></>
+              <>{buttonText} <Send className="w-5 h-5" /></>
             )}
           </button>
           <p className="text-xs text-slate-400 text-center mt-4">
