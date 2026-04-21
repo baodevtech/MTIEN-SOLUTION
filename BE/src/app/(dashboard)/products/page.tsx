@@ -72,6 +72,28 @@ export default function ProductsPage() {
     fetchProducts()
   }
 
+  const handleBulkArchive = async () => {
+    if (selectedIds.length === 0) return
+    for (const id of selectedIds) {
+      try { await fetch('/api/admin/products', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, status: 'draft' }) }) } catch {}
+    }
+    showMsg('success', `Đã lưu trữ ${selectedIds.length} sản phẩm!`)
+    setSelectedIds([])
+    fetchProducts()
+  }
+
+  const exportCSV = () => {
+    const rows = [['Tên sản phẩm', 'SKU', 'Giá bán', 'Tồn kho', 'Trạng thái', 'Danh mục', 'Đã bán']]
+    for (const p of products) {
+      rows.push([p.name, p.sku || '', String(p.price), String(p.stock ?? 0), p.status, p.category || '', String(p.sold ?? 0)])
+    }
+    const csv = rows.map(r => r.map(v => `"${v.replace(/"/g, '""')}"`).join(',')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a'); a.href = url; a.download = `products-${new Date().toISOString().slice(0, 10)}.csv`; a.click()
+    URL.revokeObjectURL(url)
+  }
+
   const filtered = products.filter((p) => {
     if (statusFilter !== 'all' && p.status !== statusFilter) return false
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false
@@ -99,7 +121,7 @@ export default function ProductsPage() {
           <p className="text-sm text-slate-500 mt-0.5">Quản lý kho hàng và sản phẩm</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+          <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
             <Download size={16} />
             Xuất Excel
           </button>
@@ -172,7 +194,7 @@ export default function ProductsPage() {
             <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
               <span className="text-sm text-slate-500">{selectedIds.length} đã chọn</span>
               <button onClick={handleBulkDelete} className="p-2 rounded-lg text-red-500 hover:bg-red-50"><Trash2 size={16} /></button>
-              <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100"><Archive size={16} /></button>
+              <button onClick={handleBulkArchive} className="p-2 rounded-lg text-slate-500 hover:bg-slate-100" title="Lưu trữ"><Archive size={16} /></button>
             </div>
           )}
         </div>

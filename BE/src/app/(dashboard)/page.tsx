@@ -51,7 +51,7 @@ export default function DashboardPage() {
   const fetchData = useCallback(async () => {
     try {
       const [dashRes, ordersRes, contactsRes] = await Promise.all([
-        fetch('/api/admin/dashboard'),
+        fetch(`/api/admin/dashboard?period=${chartPeriod}`),
         fetch('/api/admin/orders'),
         fetch('/api/admin/contacts'),
       ])
@@ -66,7 +66,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [chartPeriod])
 
   useEffect(() => { fetchData() }, [fetchData])
 
@@ -124,7 +124,7 @@ export default function DashboardPage() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 apple-card rounded-[12px] text-[#1d1d1f] px-3 py-2 text-sm text-[#424245]">
             <Calendar size={16} />
-            <span>Hôm nay, 10/04/2026</span>
+            <span>{new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
           </div>
         </div>
       </div>

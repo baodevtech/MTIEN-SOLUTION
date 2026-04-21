@@ -18,6 +18,7 @@ export default function SitePagesPage() {
   const [editPage, setEditPage] = useState<PageData | null>(null)
   const [form, setForm] = useState({ title: '', slug: '', template: 'default', status: 'published', content: '' })
   const [saving, setSaving] = useState(false)
+  const [frontendUrl, setFrontendUrl] = useState('http://localhost:3000')
 
   const fetchPages = useCallback(async () => {
     try {
@@ -28,6 +29,13 @@ export default function SitePagesPage() {
   }, [])
 
   useEffect(() => { fetchPages() }, [fetchPages])
+
+  useEffect(() => {
+    fetch('/api/admin/settings').then(r => r.json()).then(json => {
+      const url = json.data?.connection?.frontendUrl || json.data?.general?.siteUrl
+      if (url) setFrontendUrl(url.replace(/\/$/, ''))
+    }).catch(() => {})
+  }, [])
 
   const openNew = () => {
     setEditPage(null)
@@ -129,7 +137,7 @@ export default function SitePagesPage() {
                   <td className="text-right text-sm text-slate-400">{formatDate(page.updatedAt)}</td>
                   <td>
                     <div className="flex items-center justify-end gap-1">
-                      <a href={`http://localhost:3000${page.slug}`} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"><ExternalLink size={14} /></a>
+                      <a href={`${frontendUrl}${page.slug}`} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"><ExternalLink size={14} /></a>
                       <button onClick={() => openEdit(page)} className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600"><Edit size={14} /></button>
                       <button onClick={() => handleDelete(page.id, page.title)} className="p-1.5 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
                     </div>

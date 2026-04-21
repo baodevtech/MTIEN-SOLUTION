@@ -45,12 +45,21 @@ export default function UsersPage() {
 
   const filtered = users
 
+  const handleDelete = async (user: UserData) => {
+    if (!confirm(`Xoá người dùng "${user.name}"?`)) return
+    try {
+      const res = await fetch(`/api/admin/users?id=${user.id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (json.success) fetchUsers()
+    } catch { /* ignore */ }
+  }
+
   const handleSave = async () => {
     try {
       const method = editUser ? 'PUT' : 'POST'
       const body = editUser
-        ? { id: editUser.id, name: form.name, email: form.email, role: form.role, ...(form.password ? { password: form.password } : {}) }
-        : { name: form.name, email: form.email, password: form.password, role: form.role }
+        ? { id: editUser.id, name: form.name, email: form.email, role: form.role, status: form.status, ...(form.password ? { password: form.password } : {}) }
+        : { name: form.name, email: form.email, password: form.password, role: form.role, status: form.status }
       await fetch('/api/admin/users', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       
       // Cập nhật localStorage nếu đang sửa chính user đang đăng nhập
@@ -177,7 +186,7 @@ export default function UsersPage() {
                   <td>
                     <div className="flex items-center justify-end gap-1">
                       <button onClick={() => openEdit(user)} className="p-2 rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600"><Pencil size={14} /></button>
-                      <button className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
+                      <button onClick={() => handleDelete(user)} className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
                     </div>
                   </td>
                 </tr>
@@ -207,7 +216,13 @@ export default function UsersPage() {
               {!editUser && (
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1">Mật khẩu *</label>
-                  <input type="password" className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Tối thiểu 8 ký tự" />
+                  <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Tối thiểu 8 ký tự" />
+                </div>
+              )}
+              {editUser && (
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Đổi mật khẩu <span className="text-slate-400">(để trống nếu không đổi)</span></label>
+                  <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Tối thiểu 8 ký tự" />
                 </div>
               )}
               <div>

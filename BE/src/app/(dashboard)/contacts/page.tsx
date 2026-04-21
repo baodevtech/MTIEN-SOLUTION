@@ -63,6 +63,28 @@ export default function ContactsPage() {
     } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
   }
 
+  const [replySending, setReplySending] = useState(false)
+
+  const handleReply = async () => {
+    if (!selected || !replyText.trim()) return
+    setReplySending(true)
+    try {
+      const res = await fetch('/api/admin/contacts/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selected.id, to: selected.email, name: selected.name, subject: selected.subject, message: replyText }),
+      })
+      const json = await res.json()
+      if (json.success) {
+        setReplyText('')
+        showMsg('success', `Đã gửi trả lời tới ${selected.email}!`)
+        fetchContacts()
+        setSelected({ ...selected, status: 'replied' })
+      } else showMsg('error', json.message || 'REPLY_FAILED')
+    } catch { showMsg('error', 'NETWORK_ERROR: Lỗi kết nối') }
+    finally { setReplySending(false) }
+  }
+
   const handleDelete = async (id: string) => {
     if (!confirm('Xoá liên hệ này?')) return
     try {
@@ -186,8 +208,9 @@ export default function ContactsPage() {
                 <textarea value={replyText} onChange={(e) => setReplyText(e.target.value)} placeholder="Nhập nội dung trả lời..." className="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500/20" rows={4} />
                 <div className="flex items-center justify-between mt-3">
                   <p className="text-xs text-slate-400">Trả lời qua email: {selected.email}</p>
-                  <button onClick={() => handleUpdateStatus(selected.id, 'replied')} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold">
-                    <Send size={14} /> Gửi trả lời
+                  <button onClick={handleReply} disabled={replySending || !replyText.trim()} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                    {replySending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                    {replySending ? 'Đang gửi...' : 'Gửi trả lời'}
                   </button>
                 </div>
               </div>

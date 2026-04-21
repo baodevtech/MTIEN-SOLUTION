@@ -35,7 +35,7 @@ export default function ProjectsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [showModal, setShowModal] = useState(false)
   const [editProject, setEditProject] = useState<ProjectData | null>(null)
-  const [form, setForm] = useState({ title: '', client: '', description: '', category: 'Web Application', status: 'planned', url: '', technologies: '' })
+  const [form, setForm] = useState({ title: '', client: '', description: '', category: 'Web Application', status: 'planned', url: '', technologies: '', featured: false, completedAt: '' })
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
@@ -56,13 +56,13 @@ export default function ProjectsPage() {
 
   const openNew = () => {
     setEditProject(null)
-    setForm({ title: '', client: '', description: '', category: 'Web Application', status: 'planned', url: '', technologies: '' })
+    setForm({ title: '', client: '', description: '', category: 'Web Application', status: 'planned', url: '', technologies: '', featured: false, completedAt: '' })
     setShowModal(true)
   }
 
   const openEdit = (p: ProjectData) => {
     setEditProject(p)
-    setForm({ title: p.title, client: p.client, description: p.description || '', category: p.category, status: p.status, url: p.url || '', technologies: p.technologies.join(', ') })
+    setForm({ title: p.title, client: p.client, description: p.description || '', category: p.category, status: p.status, url: p.url || '', technologies: p.technologies.join(', '), featured: p.featured, completedAt: p.completedAt ? p.completedAt.slice(0, 10) : '' })
     setShowModal(true)
   }
 
@@ -79,6 +79,8 @@ export default function ProjectsPage() {
         category: form.category,
         status: form.status,
         url: form.url,
+        featured: form.featured,
+        completedAt: form.completedAt || null,
         technologies: form.technologies.split(',').map(s => s.trim()).filter(Boolean),
       }
       const res = await fetch('/api/admin/projects', {
@@ -197,7 +199,7 @@ export default function ProjectsPage() {
                     <span className={cn('text-xs px-2 py-0.5 rounded-md font-medium', categoryColors[project.category] || 'bg-slate-100 text-slate-600')}>{project.category}</span>
                     <div className="flex items-center gap-1">
                       <button onClick={() => openEdit(project)} className="p-2 rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600"><Pencil size={14} /></button>
-                      <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-100"><ExternalLink size={14} /></button>
+                      {project.url && <a href={project.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg text-slate-400 hover:bg-slate-100"><ExternalLink size={14} /></a>}
                       <button onClick={() => handleDelete(project.id, project.title)} className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
                     </div>
                   </div>
@@ -299,6 +301,30 @@ export default function ProjectsPage() {
                   <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     {Object.entries(statusMap).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                   </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Ngày hoàn thành</label>
+                  <input type="date" value={form.completedAt} onChange={e => setForm(f => ({ ...f, completedAt: e.target.value }))} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div className="flex items-end pb-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={form.featured} onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))} className="w-4 h-4 rounded border-slate-300 text-amber-500 accent-amber-500" />
+                    <span className="text-sm font-medium text-slate-700">Dự án nổi bật ⭐</span>
+                  </label>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Ngày hoàn thành</label>
+                  <input type="date" value={form.completedAt} onChange={e => setForm(f => ({ ...f, completedAt: e.target.value }))} className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div className="flex items-end pb-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={form.featured} onChange={e => setForm(f => ({ ...f, featured: e.target.checked }))} className="w-4 h-4 rounded border-slate-300 text-amber-500 accent-amber-500" />
+                    <span className="text-sm font-medium text-slate-700">Dự án nổi bật ⭐</span>
+                  </label>
                 </div>
               </div>
             </div>

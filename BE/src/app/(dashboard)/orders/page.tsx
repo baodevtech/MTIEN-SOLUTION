@@ -32,6 +32,18 @@ export default function OrdersPage() {
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
 
+  const exportCSV = () => {
+    const rows = [['Mã đơn', 'Khách hàng', 'SĐT', 'Email', 'Địa chỉ', 'Tổng tiền', 'Trạng thái', 'Thanh toán', 'Ngày đặt']]
+    for (const o of orders) {
+      rows.push([o.orderNumber, o.customer.name, o.customer.phone, o.customer.email, o.customer.address || '', String(o.total), o.status, o.paymentStatus, o.createdAt])
+    }
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a'); a.href = url; a.download = `orders-${new Date().toISOString().slice(0, 10)}.csv`; a.click()
+    URL.revokeObjectURL(url)
+  }
+
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true)
@@ -102,7 +114,7 @@ export default function OrdersPage() {
           <h1 className="text-2xl font-bold text-slate-800">Đơn hàng</h1>
           <p className="text-sm text-slate-500 mt-0.5">Quản lý và theo dõi đơn hàng</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
+        <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
           <Download size={16} /> Xuất báo cáo
         </button>
       </div>
@@ -165,11 +177,11 @@ export default function OrdersPage() {
                       <td>
                         <div className="flex items-center gap-2">
                           <div className="flex -space-x-2">
-                            {order.items.slice(0, 2).map((item: { image: string; name: string; quantity: number; total: number }, i: number) => (
+                            {order.items.slice(0, 2).map((item: { image: string; name: string; quantity: number; price: number }, i: number) => (
                               <div key={i} className="w-8 h-8 rounded-md bg-slate-100 border-2 border-white overflow-hidden">
                                 <Image src={item.image} alt="" width={32} height={32} className="w-full h-full object-cover" />
                               </div>
-                            ))}
+                            ))})
                           </div>
                           <span className="text-xs text-slate-500">{order.items.length} sản phẩm</span>
                         </div>
@@ -216,29 +228,36 @@ export default function OrdersPage() {
                 <div className="flex items-center gap-2 text-sm"><span className="font-medium">{selectedOrder.customer.name}</span></div>
                 <div className="flex items-center gap-2 text-sm text-slate-500"><Phone size={13} />{selectedOrder.customer.phone}</div>
                 <div className="flex items-center gap-2 text-sm text-slate-500"><Mail size={13} />{selectedOrder.customer.email}</div>
-                <div className="flex items-center gap-2 text-sm text-slate-500"><MapPin size={13} />{selectedOrder.shippingAddress}</div>
+                <div className="flex items-center gap-2 text-sm text-slate-500"><MapPin size={13} />{selectedOrder.customer.address}</div>
               </div>
             </div>
             {/* Items */}
             <div className="space-y-2">
               <h4 className="text-xs font-semibold text-slate-500 uppercase">Sản phẩm</h4>
-              {selectedOrder.items.map((item: { image: string; name: string; quantity: number; total: number }, i: number) => (
+              {selectedOrder.items.map((item: { image: string; name: string; price: number; quantity: number }, i: number) => (
                 <div key={i} className="flex items-center gap-3 p-2 bg-slate-50 rounded-lg">
                   <Image src={item.image} alt="" width={40} height={40} className="w-10 h-10 rounded-md object-cover" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-700 truncate">{item.name}</p>
                     <p className="text-xs text-slate-400">x{item.quantity}</p>
                   </div>
-                  <span className="text-sm font-semibold">{formatCurrency(item.total)}</span>
+                  <span className="text-sm font-semibold">{formatCurrency(item.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
             {/* Summary */}
             <div className="space-y-2 pt-3 border-t border-slate-100">
-              <div className="flex justify-between text-sm"><span className="text-slate-500">Tạm tính</span><span>{formatCurrency(selectedOrder.subtotal)}</span></div>
-              <div className="flex justify-between text-sm"><span className="text-slate-500">Phí ship</span><span>{formatCurrency(selectedOrder.shippingFee)}</span></div>
-              {selectedOrder.discount > 0 && <div className="flex justify-between text-sm"><span className="text-slate-500">Giảm giá</span><span className="text-red-500">-{formatCurrency(selectedOrder.discount)}</span></div>}
-              <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-100"><span>Tổng cộng</span><span className="text-blue-600">{formatCurrency(selectedOrder.total)}</span></div>
+              {(() => {
+                const subtotal = (selectedOrder.items as { price: number; quantity: number }[]).reduce((s, i) => s + i.price * i.quantity, 0)
+                const shippingFee = selectedOrder.shippingFee ?? 0
+                const discount = selectedOrder.discount ?? 0
+                return (<>
+                  <div className="flex justify-between text-sm"><span className="text-slate-500">Tạm tính</span><span>{formatCurrency(subtotal)}</span></div>
+                  <div className="flex justify-between text-sm"><span className="text-slate-500">Phí ship</span><span>{formatCurrency(shippingFee)}</span></div>
+                  {discount > 0 && <div className="flex justify-between text-sm"><span className="text-slate-500">Giảm giá</span><span className="text-red-500">-{formatCurrency(discount)}</span></div>}
+                  <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-100"><span>Tổng cộng</span><span className="text-blue-600">{formatCurrency(selectedOrder.total)}</span></div>
+                </>)
+              })()}
             </div>
             {selectedOrder.notes && (
               <div className="p-3 bg-amber-50 rounded-lg">
@@ -249,7 +268,7 @@ export default function OrdersPage() {
               <button onClick={handleUpdateStatus} disabled={updating} className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-blue-500 text-white rounded-lg text-sm font-semibold hover:bg-blue-600 disabled:opacity-50">
                 <CheckCircle size={14} /> {updating ? 'Đang cập nhật...' : 'Cập nhật'}
               </button>
-              <button className="p-2.5 border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50"><Printer size={16} /></button>
+              <button onClick={() => window.print()} className="p-2.5 border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50"><Printer size={16} /></button>
             </div>
           </div>
         )}

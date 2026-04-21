@@ -161,8 +161,35 @@ export default function SettingsPage() {
     fromEmail: 'noreply@mtiensolution.vn',
   })
 
+  const [appearance, setAppearance] = useState({ primaryColor: '#3B82F6', font: 'Inter', layout: 'default' })
+  const [security, setSecurity] = useState({ twoFactor: false, loginLock: true, sessionTimeout: true, activityLog: true, ipFilter: false })
+  const [notifications, setNotifications] = useState({ newOrder: true, newContact: true, newRegistration: false, outOfStock: true, weeklyReport: true, systemUpdate: false })
+
   const [settingsSaving, setSettingsSaving] = useState(false)
   const [settingsMsg, setSettingsMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  const [testEmailTo, setTestEmailTo] = useState('')
+  const [testEmailSending, setTestEmailSending] = useState(false)
+  const [testEmailMsg, setTestEmailMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  const sendTestEmail = useCallback(async () => {
+    if (!testEmailTo) return
+    setTestEmailSending(true)
+    setTestEmailMsg(null)
+    try {
+      const res = await fetch('/api/admin/settings/test-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to: testEmailTo }),
+      })
+      const json = await res.json()
+      setTestEmailMsg({ type: json.success ? 'success' : 'error', text: json.message })
+    } catch {
+      setTestEmailMsg({ type: 'error', text: 'Không thể kết nối tới server' })
+    } finally {
+      setTestEmailSending(false)
+    }
+  }, [testEmailTo])
 
   const showSettingsMsg = (type: 'success' | 'error', text: string) => {
     setSettingsMsg({ type, text })
@@ -179,6 +206,9 @@ export default function SettingsPage() {
         if (d.company) setCompany(prev => ({ ...prev, ...d.company }))
         if (d.social) setSocial(prev => ({ ...prev, ...d.social }))
         if (d.email) setEmail(prev => ({ ...prev, ...d.email }))
+        if (d.appearance) setAppearance(prev => ({ ...prev, ...d.appearance }))
+        if (d.security) setSecurity(prev => ({ ...prev, ...d.security }))
+        if (d.notifications) setNotifications(prev => ({ ...prev, ...d.notifications }))
       })
       .catch(() => {})
   }, [])
@@ -186,7 +216,7 @@ export default function SettingsPage() {
   const saveSettings = useCallback(async (keys?: string[]) => {
     setSettingsSaving(true)
     try {
-      const allData: Record<string, unknown> = { general, company, social, email }
+      const allData: Record<string, unknown> = { general, company, social, email, appearance, security, notifications }
       const payload = keys ? Object.fromEntries(keys.map(k => [k, allData[k]])) : allData
       const res = await fetch('/api/admin/settings', {
         method: 'PUT',
@@ -201,7 +231,7 @@ export default function SettingsPage() {
     } finally {
       setSettingsSaving(false)
     }
-  }, [general, company, social, email])
+  }, [general, company, social, email, appearance, security, notifications])
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -606,9 +636,34 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                   <input type="email" value={email.fromEmail} onChange={(e) => setEmail({ ...email, fromEmail: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none font-mono focus:ring-2 focus:ring-blue-500/20" />
                 </div>
               </div>
-              <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 text-white rounded-lg text-sm font-semibold hover:bg-slate-700">
-                <Send size={14} /> Gửi email test
-              </button>
+              <hr className="border-slate-100" />
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-slate-700">Gửi email test</h3>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={testEmailTo}
+                    onChange={(e) => setTestEmailTo(e.target.value)}
+                    placeholder="Nhập email nhận test..."
+                    className="flex-1 px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none font-mono focus:ring-2 focus:ring-blue-500/20"
+                    onKeyDown={(e) => e.key === 'Enter' && sendTestEmail()}
+                  />
+                  <button
+                    onClick={sendTestEmail}
+                    disabled={testEmailSending || !testEmailTo}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 text-white rounded-lg text-sm font-semibold hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {testEmailSending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                    {testEmailSending ? 'Đang gửi...' : 'Gửi test'}
+                  </button>
+                </div>
+                {testEmailMsg && (
+                  <div className={cn('flex items-center gap-2 p-3 rounded-lg text-xs border', testEmailMsg.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200')}>
+                    {testEmailMsg.type === 'success' ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
+                    {testEmailMsg.text}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -621,14 +676,14 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                   <label className="block text-xs font-medium text-slate-600 mb-2">Màu chính (Primary)</label>
                   <div className="flex items-center gap-3">
                     {['#3B82F6', '#10B981', '#8B5CF6', '#EF4444', '#F59E0B', '#EC4899'].map((c) => (
-                      <button key={c} className="w-9 h-9 rounded-lg border-2 border-white shadow-md ring-1 ring-slate-200 hover:scale-110 transition-transform" style={{ background: c }} />
+                      <button key={c} onClick={() => setAppearance(a => ({ ...a, primaryColor: c }))} className={cn('w-9 h-9 rounded-lg border-2 shadow-md ring-1 ring-slate-200 hover:scale-110 transition-transform', appearance.primaryColor === c ? 'border-slate-700 scale-110' : 'border-white')} style={{ background: c }} />
                     ))}
-                    <input type="color" defaultValue="#3B82F6" className="w-9 h-9 rounded-lg cursor-pointer" />
+                    <input type="color" value={appearance.primaryColor} onChange={e => setAppearance(a => ({ ...a, primaryColor: e.target.value }))} className="w-9 h-9 rounded-lg cursor-pointer" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-2">Font chữ</label>
-                  <select defaultValue="Inter" className="w-full max-w-xs px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none">
+                  <select value={appearance.font} onChange={e => setAppearance(a => ({ ...a, font: e.target.value }))} className="w-full max-w-xs px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20">
                     <option value="Inter">Inter</option>
                     <option value="Roboto">Roboto</option>
                     <option value="Open Sans">Open Sans</option>
@@ -638,9 +693,9 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-2">Layout</label>
                   <div className="grid grid-cols-3 gap-3 max-w-md">
-                    {['Mặc định', 'Rộng', 'Thu gọn'].map((layout, i) => (
-                      <button key={layout} className={cn('p-3 border rounded-lg text-xs font-medium text-center transition-all', i === 0 ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-500 hover:border-slate-300')}>
-                        {layout}
+                    {[{ key: 'default', label: 'Mặc định' }, { key: 'wide', label: 'Rộng' }, { key: 'compact', label: 'Thu gọn' }].map(({ key, label }) => (
+                      <button key={key} onClick={() => setAppearance(a => ({ ...a, layout: key }))} className={cn('p-3 border rounded-lg text-xs font-medium text-center transition-all', appearance.layout === key ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-500 hover:border-slate-300')}>
+                        {label}
                       </button>
                     ))}
                   </div>
@@ -653,20 +708,20 @@ REVALIDATION_SECRET=${connection.secretKey}`}
           {tab === 'security' && (
             <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5 animate-fade-in">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Shield size={18} /> Bảo mật</h2>
-              {[
-                { label: 'Bắt buộc 2FA', description: 'Yêu cầu xác thực hai yếu tố cho tất cả admin', enabled: false },
-                { label: 'Khoá sau 5 lần đăng nhập sai', description: 'Tạm khoá tài khoản sau 5 lần nhập sai mật khẩu', enabled: true },
-                { label: 'Session timeout (30 phút)', description: 'Tự động đăng xuất sau 30 phút không hoạt động', enabled: true },
-                { label: 'Log hoạt động', description: 'Ghi lại mọi thao tác của admin', enabled: true },
-                { label: 'Giới hạn IP truy cập admin', description: 'Chỉ cho phép truy cập admin từ các IP được phép', enabled: false },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 border border-slate-100 rounded-lg">
+              {([
+                { key: 'twoFactor', label: 'Bắt buộc 2FA', description: 'Yêu cầu xác thực hai yếu tố cho tất cả admin' },
+                { key: 'loginLock', label: 'Khoá sau 5 lần đăng nhập sai', description: 'Tạm khoá tài khoản sau 5 lần nhập sai mật khẩu' },
+                { key: 'sessionTimeout', label: 'Session timeout (30 phút)', description: 'Tự động đăng xuất sau 30 phút không hoạt động' },
+                { key: 'activityLog', label: 'Log hoạt động', description: 'Ghi lại mọi thao tác của admin' },
+                { key: 'ipFilter', label: 'Giới hạn IP truy cập admin', description: 'Chỉ cho phép truy cập admin từ các IP được phép' },
+              ] as Array<{ key: keyof typeof security; label: string; description: string }>).map((item) => (
+                <div key={item.key} className="flex items-center justify-between p-4 border border-slate-100 rounded-lg">
                   <div>
                     <p className="text-sm font-semibold text-slate-700">{item.label}</p>
                     <p className="text-xs text-slate-500">{item.description}</p>
                   </div>
-                  <button className={cn('w-12 h-7 rounded-full transition-colors relative', item.enabled ? 'bg-blue-500' : 'bg-slate-200')}>
-                    <span className={cn('absolute top-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', item.enabled ? 'left-6' : 'left-1')} />
+                  <button onClick={() => setSecurity(s => ({ ...s, [item.key]: !s[item.key] }))} className={cn('w-12 h-7 rounded-full transition-colors relative', security[item.key] ? 'bg-blue-500' : 'bg-slate-200')}>
+                    <span className={cn('absolute top-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', security[item.key] ? 'left-6' : 'left-1')} />
                   </button>
                 </div>
               ))}
@@ -712,21 +767,21 @@ REVALIDATION_SECRET=${connection.secretKey}`}
             <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5 animate-fade-in">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Bell size={18} /> Thông báo</h2>
               <p className="text-sm text-slate-500">Cấu hình thông báo email cho các sự kiện</p>
-              {[
-                { label: 'Đơn hàng mới', description: 'Nhận email khi có đơn hàng mới', enabled: true },
-                { label: 'Liên hệ mới', description: 'Nhận email khi có liên hệ từ khách hàng', enabled: true },
-                { label: 'Đăng ký tài khoản mới', description: 'Nhận email khi có người đăng ký mới', enabled: false },
-                { label: 'Sản phẩm hết hàng', description: 'Cảnh báo khi sản phẩm hết hàng trong kho', enabled: true },
-                { label: 'Báo cáo hàng tuần', description: 'Tổng hợp dữ liệu tuần gửi vào thứ Hai', enabled: true },
-                { label: 'Cập nhật hệ thống', description: 'Thông báo khi có phiên bản mới', enabled: false },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 border border-slate-100 rounded-lg">
+              {([
+                { key: 'newOrder', label: 'Đơn hàng mới', description: 'Nhận email khi có đơn hàng mới' },
+                { key: 'newContact', label: 'Liên hệ mới', description: 'Nhận email khi có liên hệ từ khách hàng' },
+                { key: 'newRegistration', label: 'Đăng ký tài khoản mới', description: 'Nhận email khi có người đăng ký mới' },
+                { key: 'outOfStock', label: 'Sản phẩm hết hàng', description: 'Cảnh báo khi sản phẩm hết hàng trong kho' },
+                { key: 'weeklyReport', label: 'Báo cáo hàng tuần', description: 'Tổng hợp dữ liệu tuần gửi vào thứ Hai' },
+                { key: 'systemUpdate', label: 'Cập nhật hệ thống', description: 'Thông báo khi có phiên bản mới' },
+              ] as Array<{ key: keyof typeof notifications; label: string; description: string }>).map((item) => (
+                <div key={item.key} className="flex items-center justify-between p-4 border border-slate-100 rounded-lg">
                   <div>
                     <p className="text-sm font-semibold text-slate-700">{item.label}</p>
                     <p className="text-xs text-slate-500">{item.description}</p>
                   </div>
-                  <button className={cn('w-12 h-7 rounded-full transition-colors relative', item.enabled ? 'bg-blue-500' : 'bg-slate-200')}>
-                    <span className={cn('absolute top-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', item.enabled ? 'left-6' : 'left-1')} />
+                  <button onClick={() => setNotifications(n => ({ ...n, [item.key]: !n[item.key] }))} className={cn('w-12 h-7 rounded-full transition-colors relative', notifications[item.key] ? 'bg-blue-500' : 'bg-slate-200')}>
+                    <span className={cn('absolute top-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', notifications[item.key] ? 'left-6' : 'left-1')} />
                   </button>
                 </div>
               ))}

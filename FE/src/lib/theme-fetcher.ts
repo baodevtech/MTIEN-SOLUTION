@@ -48,6 +48,14 @@ export interface SiteSettings {
     facebookPixelId?: string
   }
   robotsTxt?: string
+  trackingScripts?: Array<{
+    id: string
+    name: string
+    type: 'gtm' | 'ga4' | 'gsc' | 'fb_pixel' | 'tiktok' | 'custom_head' | 'custom_body'
+    value: string
+    active: boolean
+    owner: string
+  }>
   [key: string]: unknown
 }
 

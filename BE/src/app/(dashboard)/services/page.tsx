@@ -31,6 +31,7 @@ export default function ServicesPage() {
   const [showModal, setShowModal] = useState(false)
   const [editService, setEditService] = useState<ServiceData | null>(null)
   const [form, setForm] = useState({ title: '', description: '', shortDesc: '', icon: 'Zap', status: 'active', features: '' })
+  const [pricingTiers, setPricingTiers] = useState<Array<{ name: string; price: string; features: string; popular: boolean }>>([{ name: '', price: '', features: '', popular: false }])
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const showMsg = (type: 'success' | 'error', text: string) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000) }
@@ -50,12 +51,14 @@ export default function ServicesPage() {
   const openNew = () => {
     setEditService(null)
     setForm({ title: '', description: '', shortDesc: '', icon: 'Zap', status: 'active', features: '' })
+    setPricingTiers([{ name: '', price: '', features: '', popular: false }])
     setShowModal(true)
   }
 
   const openEdit = (s: ServiceData) => {
     setEditService(s)
     setForm({ title: s.title, description: s.description || '', shortDesc: s.shortDesc || '', icon: s.icon || 'Zap', status: s.status, features: (s.features || []).map(String).join('\n') })
+    setPricingTiers(s.pricing.length > 0 ? s.pricing.map(t => ({ name: t.name, price: t.price, features: t.features.join('\n'), popular: !!t.popular })) : [{ name: '', price: '', features: '', popular: false }])
     setShowModal(true)
   }
 
@@ -73,6 +76,7 @@ export default function ServicesPage() {
         status: form.status,
         features: form.features.split('\n').map(s => s.trim()).filter(Boolean),
         order: editService?.order ?? services.length,
+        pricing: pricingTiers.filter(t => t.name).map(t => ({ name: t.name, price: t.price, features: t.features.split('\n').map(s => s.trim()).filter(Boolean), popular: t.popular })),
       }
       const res = await fetch('/api/admin/services', {
         method: editService ? 'PUT' : 'POST',
@@ -149,7 +153,7 @@ export default function ServicesPage() {
                   {service.status === 'active' ? 'Đang hoạt động' : 'Nháp'}
                 </span>
                 <div className="flex items-center gap-1">
-                  <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-100"><ExternalLink size={14} /></button>
+                  <button className="p-2 rounded-lg text-slate-400 hover:bg-slate-100">{service.slug ? <a href={`/dich-vu/${service.slug}`} target="_blank" rel="noopener noreferrer"><ExternalLink size={14} /></a> : <ExternalLink size={14} />}</button>
                   <button onClick={() => openEdit(service)} className="p-2 rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600"><Pencil size={14} /></button>
                   <button onClick={() => handleDelete(service.id, service.title)} className="p-2 rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-500"><Trash2 size={14} /></button>
                   <button onClick={() => setExpandedId(expanded ? null : service.id)} className={cn('p-2 rounded-lg text-slate-400 hover:bg-slate-100 transition-transform', expanded && 'rotate-180')}>
@@ -245,6 +249,35 @@ export default function ServicesPage() {
                     <option value="active">Hoạt động</option>
                     <option value="draft">Nháp</option>
                   </select>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-slate-700">Gói giá (Pricing Tiers)</label>
+                  <button type="button" onClick={() => setPricingTiers(t => [...t, { name: '', price: '', features: '', popular: false }])} className="text-xs text-blue-600 hover:underline">+ Thêm gói</button>
+                </div>
+                <div className="space-y-3 max-h-64 overflow-y-auto">
+                  {pricingTiers.map((tier, idx) => (
+                    <div key={idx} className="border border-slate-200 rounded-lg p-3 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-slate-500">Gói #{idx + 1}</span>
+                        <div className="flex items-center gap-3">
+                          <label className="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                            <input type="checkbox" checked={tier.popular} onChange={e => setPricingTiers(t => t.map((x, i) => i === idx ? { ...x, popular: e.target.checked } : x))} className="accent-blue-500" />
+                            Nổi bật
+                          </label>
+                          {pricingTiers.length > 1 && (
+                            <button type="button" onClick={() => setPricingTiers(t => t.filter((_, i) => i !== idx))} className="text-xs text-red-500 hover:underline">Xóa</button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input value={tier.name} onChange={e => setPricingTiers(t => t.map((x, i) => i === idx ? { ...x, name: e.target.value } : x))} placeholder="Tên gói (VD: Basic)" className="border border-slate-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                        <input value={tier.price} onChange={e => setPricingTiers(t => t.map((x, i) => i === idx ? { ...x, price: e.target.value } : x))} placeholder="Giá (VD: 500000)" className="border border-slate-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                      </div>
+                      <textarea value={tier.features} onChange={e => setPricingTiers(t => t.map((x, i) => i === idx ? { ...x, features: e.target.value } : x))} rows={2} placeholder="Tính năng gói (mỗi dòng 1 tính năng)" className="w-full border border-slate-300 rounded px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none font-mono" />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
