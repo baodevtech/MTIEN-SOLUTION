@@ -46,6 +46,11 @@ export async function generateMetadata(): Promise<Metadata> {
     ? (ogImagePath.startsWith('http') ? ogImagePath : `${adminUrl}${ogImagePath}`)
     : '/og-image.png'
 
+  const rawFavicon = settings?.general?.favicon
+  const faviconUrl = rawFavicon
+    ? (rawFavicon.startsWith('http') ? rawFavicon : `${adminUrl}${rawFavicon.startsWith('/') ? '' : '/'}${rawFavicon}`)
+    : '/favicon.ico'
+
   return {
     metadataBase: new URL(siteUrl),
     title: {
@@ -56,6 +61,11 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords,
     authors: [{ name: siteName, url: siteUrl }],
     creator: siteName,
+    icons: {
+      icon: faviconUrl,
+      shortcut: faviconUrl,
+      apple: faviconUrl,
+    },
     verification: seo?.googleSearchConsoleId ? { google: seo.googleSearchConsoleId } : undefined,
     openGraph: {
       type: 'website',

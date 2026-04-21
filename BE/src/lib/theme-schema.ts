@@ -72,6 +72,8 @@ export const globalThemeSchema: GlobalThemeSchema = {
       { key: 'logoText', label: 'Tên logo', type: 'text', defaultValue: 'MTIEN' },
       { key: 'logoSubtext', label: 'Phụ đề logo', type: 'text', defaultValue: 'Solution' },
       { key: 'logoImage', label: 'Ảnh logo (thay chữ)', type: 'image', defaultValue: '' },
+      { key: 'logoWidth', label: 'Chiều rộng Logo tối đa (px)', type: 'number', defaultValue: 120, min: 20, max: 400 },
+      { key: 'logoHeight', label: 'Chiều cao Logo tối đa (px)', type: 'number', defaultValue: 48, min: 20, max: 200 },
       { key: 'navBgColor', label: 'Màu nền navbar', type: 'color', defaultValue: '#FFFFFF' },
       { key: 'navTextColor', label: 'Màu chữ navbar', type: 'color', defaultValue: '#1A1A1A' },
       { key: 'navStyle', label: 'Kiểu navbar', type: 'select', defaultValue: 'sticky', options: [

@@ -1,53 +1,92 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { Globe, Target } from 'lucide-react';
 
 /**
- * VisionMission - Section Tầm nhìn & Sứ mệnh (Bento Grid)
- * Hiển thị tầm nhìn công ty (card lớn 2 cột) và sứ mệnh (card nhỏ 1 cột)
+ * VisionMission - Bento Box Layout
+ * Tối ưu responsive: thu nhỏ text thẻ, giảm padding, điều chỉnh grid gap 
  */
 export default function VisionMission() {
-  return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
-      <div className="grid md:grid-cols-3 gap-6">
-        {/* Tầm nhìn */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="md:col-span-2 bg-slate-50 rounded-[2.5rem] p-10 md:p-12 relative overflow-hidden group"
-        >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-200 transition-colors"></div>
-          <div className="relative z-10">
-            <div className="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-blue-200">
-              <Globe size={32} />
-            </div>
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Tầm nhìn</h2>
-            <p className="text-lg text-slate-600 leading-relaxed max-w-xl">
-              Trở thành tập đoàn công nghệ hàng đầu khu vực, tiên phong trong việc cung cấp hệ sinh thái IT toàn diện. Chúng tôi khát vọng đưa công nghệ Việt Nam vươn tầm quốc tế, tạo ra những sản phẩm mang tiêu chuẩn toàn cầu.
-            </p>
-          </div>
-        </motion.div>
+  const cards = [
+    {
+      title: 'Tử tế với Users 🫂',
+      desc: 'Sản phẩm tạo ra trước hết phải hữu ích và tôn trọng trải nghiệm của con người. Không chèn ép thao tác khó chịu.',
+      col: 'lg:col-span-2 lg:row-span-2',
+      bg: 'bg-[#FFE8D6]',
+      textConfig: 'text-orange-950',
+      titleSize: 'text-2xl md:text-4xl lg:text-5xl',
+      pad: 'p-8 md:p-10 lg:p-14'
+    },
+    {
+      title: 'Thiết kế Vui vẻ 🎨',
+      desc: 'Ai nói phần mềm nghiệp vụ thì phải nhàm chán? Thêm chút màu sắc cho ngày làm việc bớt dài.',
+      col: 'col-span-1 row-span-1',
+      bg: 'bg-[#E3F2FD]',
+      textConfig: 'text-blue-950',
+      titleSize: 'text-xl md:text-2xl',
+      pad: 'p-6 md:p-8'
+    },
+    {
+      title: 'Code như Thơ ✍️',
+      desc: 'Clean code không chỉ để máy đọc, mà để đồng nghiệp tương lai kế thừa.',
+      col: 'col-span-1 row-span-1',
+      bg: 'bg-[#E8F5E9]',
+      textConfig: 'text-green-950',
+      titleSize: 'text-xl md:text-2xl',
+      pad: 'p-6 md:p-8'
+    },
+    {
+      title: 'Hiệu suất thật ⚡',
+      desc: 'Nhanh không phải là hiệu ứng hoa mỹ. Nhanh là bấm vào có ngay lập tức.',
+      col: 'col-span-1 row-span-1',
+      bg: 'bg-[#FCE4EC]',
+      textConfig: 'text-rose-950',
+      titleSize: 'text-xl md:text-2xl',
+      pad: 'p-6 md:p-8'
+    },
+    {
+      title: 'Học hỏi liên tục 📚',
+      desc: 'Công nghệ thay đổi mỗi ngày, framework ra như nấm. Chúng tôi chọn lọc thay vì chạy theo trend.',
+      col: 'col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1',
+      bg: 'bg-[#FFF3E0]',
+      textConfig: 'text-amber-950',
+      titleSize: 'text-xl md:text-2xl',
+      pad: 'p-6 md:p-8'
+    },
+  ];
 
-        {/* Sứ mệnh */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="bg-orange-500 rounded-[2.5rem] p-10 md:p-12 text-white relative overflow-hidden"
-        >
-          <div className="absolute bottom-0 right-0 opacity-10 transform translate-x-1/4 translate-y-1/4">
-            <Target size={200} />
-          </div>
-          <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-4">Sứ mệnh</h2>
-            <p className="text-orange-50 text-lg leading-relaxed">
-              Trao quyền cho doanh nghiệp thông qua các giải pháp công nghệ tối ưu, an toàn và dễ tiếp cận. Biến những ý tưởng phức tạp thành hiện thực đơn giản.
+  return (
+    <section className="w-full bg-[#f8f9fa] py-12 md:py-20 px-4 md:px-8">
+      
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between mb-8 md:mb-12 gap-4 md:gap-6">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 tracking-tight leading-tight">
+          Chiếc la bàn <br className="hidden md:block" />
+          <span className="text-zinc-500">của team</span>
+        </h2>
+        <p className="text-base md:text-lg text-zinc-600 font-medium max-w-sm md:text-right">
+          Bọn mình không có "sứ mệnh tỷ đô", chỉ có vài nguyên tắc cố chấp giữ gìn để làm nghề.
+        </p>
+      </div>
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 auto-rows-[auto]">
+        {cards.map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 15, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ delay: i * 0.05, type: 'spring', stiffness: 100, damping: 20 }}
+            whileHover={{ scale: 1.01 }}
+            className={`rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col justify-between ${item.col} ${item.bg} ${item.pad} transition-transform duration-300`}
+          >
+            <h3 className={`${item.titleSize} font-bold ${item.textConfig} tracking-tight mb-3 lg:mb-8 leading-tight`}>
+              {item.title}
+            </h3>
+            <p className={`text-sm md:text-base lg:text-lg ${item.textConfig} font-medium opacity-85 leading-relaxed`}>
+              {item.desc}
             </p>
-          </div>
-        </motion.div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );

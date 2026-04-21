@@ -7,7 +7,7 @@ import { ThemedPage } from '@/components/theme/ThemedPage';
 
 export default function About() {
   return (
-    <div className="pt-20 pb-24 bg-white overflow-hidden">
+    <div className="bg-[#f8f9fa] text-zinc-900 overflow-hidden font-sans selection:bg-rose-200 selection:text-zinc-900">
       <ThemedPage
         pageId="about"
         sections={{

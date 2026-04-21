@@ -91,6 +91,8 @@ export default function Navbar() {
   const logoText = useGlobal('navbar', 'logoText', 'MTIEN') as string;
   const logoSubtext = useGlobal('navbar', 'logoSubtext', 'Solution') as string;
   const logoImage = useGlobal('navbar', 'logoImage', '') as string;
+  const logoWidth = Number(useGlobal('navbar', 'logoWidth', 120)) || 120;
+  const logoHeight = Number(useGlobal('navbar', 'logoHeight', 48)) || 48;
   const ctaButton = useGlobal('navbar', 'ctaButton', 'Nhận báo giá') as string;
   const ctaButtonLink = useGlobal('navbar', 'ctaButtonLink', '#') as string;
   const showTopBanner = useGlobal('navbar', 'showTopBanner', true) as boolean;
@@ -181,7 +183,7 @@ export default function Navbar() {
               <div className="flex items-center">
                 <Link href="/" className="flex items-center gap-2.5 group" aria-label="MTIEN SOLUTION - Trang chủ">
                   {logoImage ? (
-                    <Image src={logoImage.startsWith('http') ? logoImage : `${process.env.NEXT_PUBLIC_ADMIN_API_URL || ''}${logoImage}`} alt={`${logoText} ${logoSubtext}`} width={120} height={48} className="h-10 md:h-12 w-auto object-contain" priority />
+                    <Image src={logoImage.startsWith('http') ? logoImage : `${process.env.NEXT_PUBLIC_ADMIN_API_URL || ''}${logoImage}`} alt={`${logoText} ${logoSubtext}`} width={logoWidth} height={logoHeight} className="object-contain transition-transform group-hover:scale-105 duration-300" style={{ maxHeight: `${logoHeight}px`, maxWidth: `${logoWidth}px`, width: 'auto', height: 'auto' }} priority />
                   ) : (
                     <>
                       <div className="relative w-[38px] h-[38px] md:w-11 md:h-11">
