@@ -14,7 +14,7 @@ async function fetchAllBlogSlugs(): Promise<SitemapPost[]> {
   try {
     const res = await fetch(`${ADMIN_API_URL}/api/public/posts?page=1&limit=100`, {
       headers: { 'x-api-key': API_KEY },
-      next: { revalidate: 3600 },
+      next: { tags: ['posts', 'pages'] },
     });
     if (!res.ok) return [];
     const json = await res.json();

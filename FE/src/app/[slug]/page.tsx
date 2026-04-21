@@ -31,7 +31,7 @@ async function getPage(slug: string): Promise<PageData | null> {
   try {
     const res = await fetch(`${ADMIN_API_URL}/api/public/pages?slug=${slug}`, {
       headers: { 'x-api-key': API_KEY },
-      next: { revalidate: 60 },
+      next: { tags: ['pages'] },
     })
     if (!res.ok) return null
     const json = await res.json()

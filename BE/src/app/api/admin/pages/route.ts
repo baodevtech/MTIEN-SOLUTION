@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
+import { triggerFERevalidate } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
         parentId: body.parentId || null,
       },
     })
+    triggerFERevalidate(['pages'])
     return corsResponse({ success: true, data: page }, 201)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Invalid request body'
@@ -56,6 +58,7 @@ export async function PUT(request: NextRequest) {
     if (!id) return corsResponse({ success: false, message: 'ID required' }, 400)
 
     const page = await prisma.page.update({ where: { id }, data })
+    triggerFERevalidate(['pages'])
     return corsResponse({ success: true, data: page })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Update failed'
@@ -69,5 +72,6 @@ export async function DELETE(request: NextRequest) {
   if (!id) return corsResponse({ success: false, message: 'ID required' }, 400)
 
   await prisma.page.delete({ where: { id } })
+  triggerFERevalidate(['pages'])
   return corsResponse({ success: true })
 }

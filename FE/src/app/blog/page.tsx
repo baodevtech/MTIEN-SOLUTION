@@ -45,7 +45,7 @@ async function fetchBlogData(params: {
 
     const res = await fetch(`${ADMIN_API_URL}/api/public/posts?${sp.toString()}`, {
       headers: { 'x-api-key': API_KEY },
-      next: { revalidate: 60 },
+      next: { tags: ['posts'] },
     });
 
     if (!res.ok) return null;
