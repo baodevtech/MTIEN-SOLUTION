@@ -223,6 +223,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="preconnect" href="https://portal.minhtiensolutions.cloud" crossOrigin="anonymous" />
         <JsonLd settings={settings} />
         {headScripts}
+      </head>
       <body
         className="bg-white text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900"
         suppressHydrationWarning
