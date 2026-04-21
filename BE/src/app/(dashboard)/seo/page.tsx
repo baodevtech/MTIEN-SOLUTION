@@ -424,24 +424,6 @@ Sitemap: https://mtiensolution.vn/sitemap.xml`)
             <input type="text" value={globalSEO.defaultKeywords} onChange={(e) => setGlobalSEO({ ...globalSEO, defaultKeywords: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
           </div>
 
-          <hr className="border-slate-100" />
-
-          <h3 className="text-sm font-semibold text-slate-700">Tracking & Analytics</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Google Analytics ID</label>
-              <input type="text" value={globalSEO.googleAnalyticsId} onChange={(e) => setGlobalSEO({ ...globalSEO, googleAnalyticsId: e.target.value })} placeholder="G-XXXXXXXXXX" className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none font-mono focus:ring-2 focus:ring-blue-500/20" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Search Console ID</label>
-              <input type="text" value={globalSEO.googleSearchConsoleId} onChange={(e) => setGlobalSEO({ ...globalSEO, googleSearchConsoleId: e.target.value })} placeholder="Verification code" className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none font-mono focus:ring-2 focus:ring-blue-500/20" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Facebook Pixel ID</label>
-              <input type="text" value={globalSEO.facebookPixelId} onChange={(e) => setGlobalSEO({ ...globalSEO, facebookPixelId: e.target.value })} placeholder="Pixel ID" className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none font-mono focus:ring-2 focus:ring-blue-500/20" />
-            </div>
-          </div>
-
           <div className="flex justify-end">
             <button onClick={handleSaveGlobalSEO} disabled={saving} className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50">
               {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
