@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Calendar, Clock, Facebook, Twitter, Linkedin, Share2, Tag, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, Facebook, Twitter, Linkedin, Share2, Tag, ChevronRight, Eye } from 'lucide-react';
 import { TableOfContents } from '@/components/blog/TableOfContents';
 import type { BlogDetailResponse, BlogPost } from '@/types';
 
@@ -65,7 +65,7 @@ async function fetchPostBySlug(slug: string): Promise<BlogDetailResponse | null>
   try {
     const res = await fetch(`${ADMIN_API_URL}/api/public/posts/${slug}`, {
       headers: { 'x-api-key': API_KEY },
-      next: { tags: ['posts'] },
+      next: { revalidate: 60 },
     });
     if (!res.ok) return null;
     return res.json();
@@ -175,46 +175,64 @@ export default async function BlogDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       
-      <header className="bg-[#f8f8f8] pt-24 md:pt-36 pb-8 md:pb-14 px-4 sm:px-6 lg:px-8 border-b border-gray-200/60">
-           <div className="max-w-7xl mx-auto">
-               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs mb-5 md:mb-8 uppercase tracking-wider font-semibold">
-                  <Link href="/blog" className="text-slate-400 hover:text-slate-700 transition-colors">Blog</Link>
+      <header className="relative overflow-hidden pt-24 md:pt-32 pb-10 md:pb-14 px-4 sm:px-6 lg:px-8">
+           {/* Gradient background */}
+           <div className="absolute inset-0 bg-gradient-to-br from-[#001440] via-[#002f90] to-[#0066FF]" />
+           
+           {/* Decorative blobs — desktop only, no backdrop-blur for perf */}
+           <div className="absolute top-[-15%] left-[-5%] w-[400px] h-[400px] bg-cyan-400/15 rounded-full blur-3xl hidden md:block" />
+           <div className="absolute bottom-[-20%] right-[-5%] w-[350px] h-[350px] bg-[#0066FF]/25 rounded-full blur-3xl hidden md:block" />
+           
+           {/* Bottom fade */}
+           <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+           <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
+
+           <div className="relative z-10 max-w-7xl mx-auto">
+               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs text-blue-200/70 mb-4 md:mb-6 uppercase tracking-wider font-medium">
+                  <Link href="/" className="hover:text-white transition-colors">Trang chủ</Link>
+                  <ChevronRight size={12} className="text-blue-300/40" aria-hidden="true" />
+                  <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
                   {post.category && (
                     <>
-                      <ChevronRight size={12} className="text-slate-300" aria-hidden="true" />
-                      <Link href={`/blog?category=${encodeURIComponent(post.category)}`} className="text-amber-600 hover:text-amber-700 transition-colors">
+                      <ChevronRight size={12} className="text-blue-300/40" aria-hidden="true" />
+                      <Link href={`/blog?category=${encodeURIComponent(post.category)}`} className="text-cyan-300 hover:text-white transition-colors">
                           {post.category}
                       </Link>
                     </>
                   )}
                </nav>
 
-               <h1 className="text-2xl sm:text-3xl md:text-[2.75rem] font-extrabold text-slate-800 mb-6 md:mb-8 leading-snug md:leading-tight max-w-4xl">
+               <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-5 md:mb-6 leading-snug md:leading-tight max-w-4xl">
                   {post.title}
                </h1>
                
-               {/* Metadata */}
-               <div className="flex flex-wrap items-center gap-3 md:gap-5">
-                   <div className="flex items-center gap-2.5 md:gap-3">
-                       <div className="w-9 h-9 md:w-10 md:h-10 rounded-full overflow-hidden bg-gradient-to-br from-amber-400 to-orange-500 shrink-0 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+               {/* Metadata — lightweight pills */}
+               <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm text-blue-100/80">
+                   <div className="flex items-center gap-2 md:gap-3">
+                       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 shadow-sm overflow-hidden bg-white/10 shrink-0 flex items-center justify-center text-white font-bold text-sm">
                            {post.author ? post.author.charAt(0).toUpperCase() : 'A'}
                        </div>
                        <div>
-                           <p className="font-bold text-slate-800 leading-tight text-sm">{post.author || 'admin'}</p>
-                           <p className="text-[10px] md:text-xs text-slate-400 font-medium">Tác giả</p>
+                           <p className="font-bold text-white leading-tight">{post.author || 'Admin'}</p>
+                           <p className="text-[10px] md:text-xs text-blue-200/60">Tác giả</p>
                        </div>
                    </div>
                    
-                   <div className="hidden sm:block w-px h-5 bg-slate-300/60" aria-hidden="true" />
+                   <div className="hidden md:block w-px h-6 bg-white/15" aria-hidden="true"></div>
                    
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white/80 text-slate-500 text-xs md:text-sm">
-                       <Calendar size={14} className="text-amber-500 md:w-4 md:h-4" aria-hidden="true" /> 
-                       <time dateTime={post.publishedAt || post.createdAt} className="font-medium">{formatDate(post.publishedAt || post.createdAt)}</time>
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10">
+                       <Calendar size={14} className="text-cyan-300 md:w-4 md:h-4" aria-hidden="true" /> 
+                       <time dateTime={post.publishedAt || post.createdAt}>{formatDate(post.publishedAt || post.createdAt)}</time>
                    </div>
                    
-                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-white/80 text-slate-500 text-xs md:text-sm">
-                       <Clock size={14} className="text-blue-500 md:w-4 md:h-4" aria-hidden="true" /> 
-                       <span className="font-medium">{readTime}</span>
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10">
+                       <Clock size={14} className="text-cyan-300 md:w-4 md:h-4" aria-hidden="true" /> 
+                       <span>{readTime}</span>
+                   </div>
+
+                   <div className="flex items-center gap-1.5 md:gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10">
+                       <Eye size={14} className="text-cyan-300 md:w-4 md:h-4" aria-hidden="true" /> 
+                       <span>{post.views} lượt xem</span>
                    </div>
                </div>
            </div>
@@ -234,8 +252,7 @@ export default async function BlogDetailPage({ params }: Props) {
                             fill
                             priority
                             fetchPriority="high"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 900px"
-                            quality={60}
+                            sizes="(max-width: 1200px) 100vw, 900px"
                             className="object-cover" 
                         />
                     </div>
