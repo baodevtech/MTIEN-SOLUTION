@@ -1,17 +1,12 @@
 import React, { Suspense } from 'react';
 import { Metadata } from 'next';
-import BlogHeader from '@/components/blog/BlogHeader';
-import FeaturedPost from '@/components/blog/FeaturedPost';
-import PostGrid from '@/components/blog/PostGrid';
-import BlogSidebar from '@/components/blog/BlogSidebar';
-import Pagination from '@/components/blog/Pagination';
-import Newsletter from '@/components/blog/Newsletter';
-import type { BlogListResponse, BlogPost } from '@/types';
+import BlogListClient from '@/components/blog/BlogListClient';
+import type { BlogListResponse } from '@/types';
 
 const ADMIN_API_URL = process.env.ADMIN_API_URL || 'http://localhost:3001';
 const API_KEY = process.env.REVALIDATION_SECRET || '';
 const BASE_URL = process.env.APP_URL || 'https://mtiensolution.vn';
-const POSTS_PER_PAGE = 12;
+const POSTS_PER_PAGE = 5;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -50,7 +45,7 @@ async function fetchBlogData(params: {
 
     const res = await fetch(`${ADMIN_API_URL}/api/public/posts?${sp.toString()}`, {
       headers: { 'x-api-key': API_KEY },
-      next: { revalidate: 60 },
+      next: { tags: ['posts'] },
     });
 
     if (!res.ok) return null;
@@ -60,35 +55,17 @@ async function fetchBlogData(params: {
   }
 }
 
-async function fetchRecentPosts(): Promise<BlogPost[]> {
-  try {
-    const res = await fetch(`${ADMIN_API_URL}/api/public/posts?page=1&limit=5`, {
-      headers: { 'x-api-key': API_KEY },
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.data || [];
-  } catch {
-    return [];
-  }
-}
-
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function BlogPage({ searchParams }: Props) {
   const params = await searchParams;
-  const page = Math.max(1, Number(params.page) || 1);
   const category = typeof params.category === 'string' ? params.category : '';
   const tag = typeof params.tag === 'string' ? params.tag : '';
   const search = typeof params.search === 'string' ? params.search : '';
 
-  const [blogData, recentPosts] = await Promise.all([
-    fetchBlogData({ page, category, tag, search }),
-    fetchRecentPosts(),
-  ]);
+  const blogData = await fetchBlogData({ page: 1, category, tag, search });
 
   const posts = blogData?.data || [];
   const categories = blogData?.categories || [];
@@ -100,11 +77,6 @@ export default async function BlogPage({ searchParams }: Props) {
     totalPages: 0,
     hasNextPage: false,
   };
-
-  // Show featured post only on first page without filters
-  const isFirstPage = page === 1 && !category && !tag && !search;
-  const featuredPost = isFirstPage && posts.length > 0 ? posts[0] : null;
-  const gridPosts = isFirstPage && posts.length > 1 ? posts.slice(1) : posts;
 
   const categoryNames = categories.map((c) => c.name);
 
@@ -133,78 +105,39 @@ export default async function BlogPage({ searchParams }: Props) {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans">
+    <div className="bg-white min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero + Header */}
-      <div className="bg-white pt-28 md:pt-36 pb-10 md:pb-14">
-        <Suspense fallback={null}>
-          <BlogHeader categories={categoryNames} activeCategory={category} />
-        </Suspense>
+      {/* Hero Header */}
+      <div className="bg-slate-50 pt-28 md:pt-36 pb-10 md:pb-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl">
+            <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-2 md:mb-4 tracking-tight">
+              MTIEN <span className="text-blue-600">Insights</span>
+            </h1>
+            <p className="text-sm md:text-lg text-slate-600 leading-relaxed">
+              Góc nhìn chuyên sâu, xu hướng công nghệ và kinh nghiệm thực chiến từ đội ngũ chuyên gia.
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Featured Post — only on first unfiltered page */}
-      {featuredPost && <FeaturedPost post={featuredPost} />}
-
-      {/* Active filters indicator */}
-      {(category || tag || search) && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="text-slate-500">Đang lọc:</span>
-            {category && (
-              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-medium">
-                Danh mục: {category}
-              </span>
-            )}
-            {tag && (
-              <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full font-medium">
-                Tag: #{tag}
-              </span>
-            )}
-            {search && (
-              <span className="px-3 py-1 bg-orange-50 text-orange-700 rounded-full font-medium">
-                Tìm: &ldquo;{search}&rdquo;
-              </span>
-            )}
-            <a href="/blog" className="text-blue-600 hover:underline font-medium ml-2">
-              Xóa bộ lọc
-            </a>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content + Sidebar */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div className="flex flex-col lg:flex-row gap-10">
-          {/* Left: Post Grid + Pagination */}
-          <section className="lg:w-2/3" aria-label="Danh sách bài viết">
-            <PostGrid posts={gridPosts} />
-            <Suspense fallback={null}>
-              <Pagination pagination={pagination} />
-            </Suspense>
-          </section>
-
-          {/* Right: Sidebar */}
-          <div className="lg:w-1/3">
-            <div className="lg:sticky lg:top-28">
-              <Suspense fallback={null}>
-                <BlogSidebar
-                  categories={categories}
-                  tags={tags}
-                  recentPosts={recentPosts}
-                />
-              </Suspense>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Newsletter — full width */}
-      <div className="mb-20">
-        <Newsletter />
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+        <Suspense fallback={null}>
+          <BlogListClient
+            initialPosts={posts}
+            initialPageInfo={{
+              hasNextPage: pagination.hasNextPage,
+              endCursor: String(pagination.page + 1),
+            }}
+            categories={categoryNames}
+            tags={tags}
+          />
+        </Suspense>
       </div>
     </div>
   );
