@@ -43,7 +43,7 @@ export default function Timeline() {
     },
   ];
 
-  const milestones = useThemeValue('about', 'timeline', 'milestones', defaultMilestones) as typeof defaultMilestones;
+  const milestones = useThemeValue('about', 'timeline', 'milestones', defaultMilestones) as Array<Record<string, any>>;
 
   return (
     <section className="bg-white py-16 md:py-32 overflow-hidden">
@@ -66,27 +66,33 @@ export default function Timeline() {
         <div className="flex flex-col gap-6 md:gap-8 items-center justify-center relative z-10 w-full">
           <div className="absolute top-0 bottom-0 left-[50%] w-[1px] md:w-0.5 border-l md:border-l-2 border-dashed border-zinc-200 -z-10"></div>
           
-          {milestones.map((item, i) => (
+          {milestones.map((item, i) => {
+            const rotateStr = item?.rotate || 'rotate-[0deg]';
+            const parsedRotate = rotateStr.includes('md:') 
+              ? parseFloat(rotateStr.split(' ')[0].replace('rotate-[', '').replace('deg]', '')) 
+              : parseFloat(rotateStr.replace('rotate-[', '').replace('deg]', ''));
+              
+            return (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20, rotate: 0 }}
-              whileInView={{ opacity: 1, y: 0, rotate: item.rotate.includes('md:') ? parseFloat(item.rotate.split(' ')[0].replace('rotate-[', '').replace('deg]', '')) : parseFloat(item.rotate.replace('rotate-[', '').replace('deg]', '')) }}
+              whileInView={{ opacity: 1, y: 0, rotate: parsedRotate || 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
               whileHover={{ scale: 1.02, rotate: 0, zIndex: 20 }}
-              className={`w-[90%] max-w-[20rem] md:max-w-sm ${item.color} ${item.rotate} p-6 md:p-8 rounded-[1.5rem] md:rounded-3xl shadow-sm border-2 border-white/50 cursor-pointer mx-auto`}
+              className={`w-[90%] max-w-[20rem] md:max-w-sm ${item?.color || 'bg-zinc-100 text-zinc-900'} ${rotateStr} p-6 md:p-8 rounded-[1.5rem] md:rounded-3xl shadow-sm border-2 border-white/50 cursor-pointer mx-auto`}
             >
               <div className="text-xs md:text-sm font-black opacity-60 mb-1 md:mb-2">
-                {item.year}
+                {item?.year || ''}
               </div>
               <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-2 md:mb-4 leading-tight">
-                {item.title}
+                {item?.title || ''}
               </h3>
               <p className="text-sm md:text-base font-medium opacity-80 leading-relaxed">
-                {item.desc}
+                {item?.desc || item?.description || ''}
               </p>
             </motion.div>
-          ))}
+          )})}
         </div>
 
       </div>

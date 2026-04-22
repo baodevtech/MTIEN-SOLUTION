@@ -60,7 +60,7 @@ export default function VisionMission() {
     },
   ];
 
-  const cards = useThemeValue('about', 'visionMission', 'cards', defaultCards) as typeof defaultCards;
+  const cards = useThemeValue('about', 'visionMission', 'cards', defaultCards) as Array<Record<string, any>>;
 
   return (
     <section className="w-full bg-[#f8f9fa] py-12 md:py-20 px-4 md:px-8">
@@ -84,13 +84,13 @@ export default function VisionMission() {
             viewport={{ once: true, margin: '-20px' }}
             transition={{ delay: i * 0.05, type: 'spring', stiffness: 100, damping: 20 }}
             whileHover={{ scale: 1.01 }}
-            className={`rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col justify-between ${item.col} ${item.bg} ${item.pad} transition-transform duration-300`}
+            className={`rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col justify-between ${item?.col || 'col-span-1'} ${item?.bg || 'bg-zinc-100'} ${item?.pad || 'p-6'} transition-transform duration-300`}
           >
-            <h3 className={`${item.titleSize} font-bold ${item.textConfig} tracking-tight mb-3 lg:mb-8 leading-tight`}>
-              {item.title}
+            <h3 className={`${item?.titleSize || 'text-xl'} font-bold ${item?.textConfig || 'text-black'} tracking-tight mb-3 lg:mb-8 leading-tight`}>
+              {item?.title || ''}
             </h3>
-            <p className={`text-sm md:text-base lg:text-lg ${item.textConfig} font-medium opacity-85 leading-relaxed`}>
-              {item.desc}
+            <p className={`text-sm md:text-base lg:text-lg ${item?.textConfig || 'text-black'} font-medium opacity-85 leading-relaxed`}>
+              {item?.desc || ''}
             </p>
           </motion.div>
         ))}

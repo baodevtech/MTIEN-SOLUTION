@@ -21,7 +21,7 @@ export default function StatsCapabilities() {
     { val: '99', title: 'Dự Án 🎉', desc: 'Đưa lên live thành công.' },
     { val: '0', title: 'Drama ✌️', desc: 'Môi trường toàn là high-fives.' },
   ];
-  const stats = useThemeValue('about', 'statsCapabilities', 'stats', defaultStats) as typeof defaultStats;
+  const stats = useThemeValue('about', 'statsCapabilities', 'stats', defaultStats) as Array<Record<string, any>>;
 
   return (
     <section className="bg-[#f8f9fa] py-12 md:py-20 px-4 md:px-0">
@@ -58,9 +58,9 @@ export default function StatsCapabilities() {
                 transition={{ delay: i * 0.1, type: "spring" }}
                 className="bg-indigo-50/50 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-indigo-100"
               >
-                <div className="text-2xl md:text-3xl lg:text-4xl font-black text-indigo-900 mb-2">{stat.val}</div>
-                <div className="text-sm md:text-base text-indigo-800 font-bold mb-1 md:mb-2">{stat.title}</div>
-                <p className="hidden sm:block text-indigo-600/70 text-xs md:text-sm font-medium leading-relaxed">{stat.desc}</p>
+                <div className="text-2xl md:text-3xl lg:text-4xl font-black text-indigo-900 mb-2">{stat?.val || ''}</div>
+                <div className="text-sm md:text-base text-indigo-800 font-bold mb-1 md:mb-2">{stat?.title || ''}</div>
+                <p className="hidden sm:block text-indigo-600/70 text-xs md:text-sm font-medium leading-relaxed">{stat?.desc || ''}</p>
               </motion.div>
             ))}
           </div>

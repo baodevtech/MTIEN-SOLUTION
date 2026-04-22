@@ -21,7 +21,7 @@ export default function LeadershipTeam() {
     { name: 'Lê H. Nam', role: 'Gặp Bug Là Khóc', bg: 'bg-amber-200', image: 'https://picsum.photos/seed/happy-cloud/200/200' },
   ];
 
-  const team = useThemeValue('about', 'team', 'members', defaultTeam) as typeof defaultTeam;
+  const team = useThemeValue('about', 'team', 'members', defaultTeam) as Array<Record<string, any>>;
 
   return (
     <section className="bg-[#f8f9fa] py-16 md:py-24 pb-24 md:pb-40">
@@ -51,21 +51,21 @@ export default function LeadershipTeam() {
               transition={{ delay: i * 0.1, type: 'spring', bounce: 0.4 }}
               className="flex flex-col items-center text-center group"
             >
-              <div className={`relative w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48 mb-4 md:mb-6 rounded-full overflow-visible ${member.bg}`}>
+              <div className={`relative w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48 mb-4 md:mb-6 rounded-full overflow-visible ${member?.bg || 'bg-zinc-200'}`}>
                 {/* Background color blob */}
-                <div className={`absolute inset-0 rounded-full ${member.bg} lg:group-hover:scale-110 transition-transform duration-500 ease-out`}></div>
-                {member.image && (
+                <div className={`absolute inset-0 rounded-full ${member?.bg || 'bg-zinc-200'} lg:group-hover:scale-110 transition-transform duration-500 ease-out`}></div>
+                {member?.image && (
                   <Image
                     src={member.image}
-                    alt={member.name}
+                    alt={member?.name || 'Thành viên'}
                     fill
                     className="rounded-full object-cover z-10 p-1.5 md:p-2 origin-bottom transition-transform duration-500 lg:group-hover:translate-y-[-10px] lg:group-hover:scale-105"
                   />
                 )}
               </div>
               
-              <h3 className="text-base sm:text-lg md:text-xl font-bold text-zinc-900 tracking-tight mb-1">{member.name}</h3>
-              <p className="text-zinc-500 font-medium text-xs sm:text-sm leading-snug max-w-[100px] sm:max-w-none mx-auto">{member.role}</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-zinc-900 tracking-tight mb-1">{member?.name || ''}</h3>
+              <p className="text-zinc-500 font-medium text-xs sm:text-sm leading-snug max-w-[100px] sm:max-w-none mx-auto">{member?.role || member?.title || ''}</p>
 
             </motion.div>
           ))}
