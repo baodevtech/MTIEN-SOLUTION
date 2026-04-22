@@ -69,8 +69,9 @@ export default function Timeline() {
           <div className="absolute top-0 bottom-0 left-[50%] w-[1px] md:w-0.5 border-l md:border-l-2 border-dashed border-zinc-200 -z-10"></div>
           
           {timeline.map((item, i) => {
-            const rotateStr = item.rotate || 'rotate-0';
-            const colorStr = item.color || 'bg-gray-100 text-gray-900';
+            const fallbackIndex = i % defaultTimeline.length;
+            const rotateStr = defaultTimeline[fallbackIndex].rotate;
+            const colorStr = defaultTimeline[fallbackIndex].color;
             const finalRotate = rotateStr.includes('md:') 
               ? parseFloat(rotateStr.split(' ')[0].replace('rotate-[', '').replace('deg]', '')) || 0
               : parseFloat(rotateStr.replace('rotate-[', '').replace('deg]', '')) || 0;

@@ -1,22 +1,14 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useTheme } from '@/hooks/use-theme';
 
 /**
  * AboutHero - Bento / Playful Startup Style
  * Gọn gàng hơn cho mobile (giảm padding, margin, font size, kích thước avatar)
  */
 export default function AboutHero() {
-  const t = useTheme('about', 'hero');
-  const badge = t('badge', '👋');
-  const title = t('title', 'Chào bạn,');
-  const titleHighlight = t('titleHighlight', 'sản phẩm.');
-  const description = t('description', 'Không đao to búa lớn. Chỉ là một tập thể thích viết code sạch và vẽ nên những giao diện khiến người dùng mỉm cười.');
-  const bgColor = t('bgColor', '#f8f9fa');
-
   return (
-    <section className="relative min-h-[70vh] md:min-h-[90vh] flex flex-col items-center justify-center pt-24 md:pt-32 pb-16 md:pb-20 px-4 overflow-hidden" style={{ backgroundColor: bgColor }}>
+    <section className="relative min-h-[70vh] md:min-h-[90vh] flex flex-col items-center justify-center bg-[#f8f9fa] pt-24 md:pt-32 pb-16 md:pb-20 px-4 overflow-hidden">
       
       {/* Decorative blobs (Solid colors, no gradient) - Thu nhỏ lại trên mobile */}
       <motion.div 
@@ -37,7 +29,7 @@ export default function AboutHero() {
           transition={{ type: "spring", stiffness: 200, damping: 15 }}
           className="inline-flex items-center justify-center w-16 h-16 md:w-24 md:h-24 bg-rose-100 rounded-[1.5rem] md:rounded-[2rem] mb-6 md:mb-10 text-3xl md:text-5xl shadow-sm border-2 border-rose-200"
         >
-          {badge}
+          👋
         </motion.div>
         
         <motion.h1
@@ -46,8 +38,8 @@ export default function AboutHero() {
           transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
           className="text-4xl sm:text-5xl md:text-[5.5rem] font-bold text-zinc-900 tracking-tight leading-[1.15] md:leading-[1.1] mb-6 md:mb-8"
         >
-          {title} <br className="hidden sm:block" />
-           <span className="text-rose-500 bg-rose-50 px-3 md:px-4 rounded-[1rem] md:rounded-3xl inline-block -rotate-2 mt-2 md:mt-0">{titleHighlight}</span>
+          Chào bạn, <br className="hidden sm:block" />
+          bọn mình làm <span className="text-rose-500 bg-rose-50 px-3 md:px-4 rounded-[1rem] md:rounded-3xl inline-block -rotate-2 mt-2 md:mt-0">sản phẩm.</span>
         </motion.h1>
 
         <motion.p
@@ -56,7 +48,7 @@ export default function AboutHero() {
            transition={{ duration: 0.8, delay: 0.2 }}
            className="text-lg md:text-2xl text-zinc-500 font-medium max-w-2xl mx-auto leading-relaxed"
         >
-          {description}
+          Không đao to búa lớn. Chỉ là một tập thể thích viết code sạch và vẽ nên những giao diện khiến người dùng mỉm cười.
         </motion.p>
       </div>
 
