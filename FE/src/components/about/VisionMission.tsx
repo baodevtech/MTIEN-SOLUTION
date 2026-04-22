@@ -1,13 +1,18 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { useThemeValue } from '@/lib/theme-context';
 
 /**
  * VisionMission - Bento Box Layout
  * Tối ưu responsive: thu nhỏ text thẻ, giảm padding, điều chỉnh grid gap 
  */
 export default function VisionMission() {
-  const cards = [
+  const title = useThemeValue('about', 'visionMission', 'title', 'Chiếc la bàn') as string;
+  const titleHighlight = useThemeValue('about', 'visionMission', 'titleHighlight', 'của team') as string;
+  const description = useThemeValue('about', 'visionMission', 'description', 'Bọn mình không có "sứ mệnh tỷ đô", chỉ có vài nguyên tắc cố chấp giữ gìn để làm nghề.') as string;
+  
+  const defaultCards = [
     {
       title: 'Tử tế với Users 🫂',
       desc: 'Sản phẩm tạo ra trước hết phải hữu ích và tôn trọng trải nghiệm của con người. Không chèn ép thao tác khó chịu.',
@@ -55,16 +60,18 @@ export default function VisionMission() {
     },
   ];
 
+  const cards = useThemeValue('about', 'visionMission', 'cards', defaultCards) as typeof defaultCards;
+
   return (
     <section className="w-full bg-[#f8f9fa] py-12 md:py-20 px-4 md:px-8">
       
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between mb-8 md:mb-12 gap-4 md:gap-6">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 tracking-tight leading-tight">
-          Chiếc la bàn <br className="hidden md:block" />
-          <span className="text-zinc-500">của team</span>
+          {title} <br className="hidden md:block" />
+          <span className="text-zinc-500">{titleHighlight}</span>
         </h2>
         <p className="text-base md:text-lg text-zinc-600 font-medium max-w-sm md:text-right">
-          Bọn mình không có "sứ mệnh tỷ đô", chỉ có vài nguyên tắc cố chấp giữ gìn để làm nghề.
+          {description}
         </p>
       </div>
 

@@ -2,12 +2,27 @@
 
 import { motion } from 'motion/react';
 import Image from 'next/image';
+import { useThemeValue } from '@/lib/theme-context';
 
 /**
  * StatsCapabilities - Playful Emoji & Cards
  * Tối ưu responsive: thu nhỏ ảnh trên mobile, bo góc giảm bớt, padding và font vừa phải
  */
 export default function StatsCapabilities() {
+  const badge = useThemeValue('about', 'statsCapabilities', 'badge', '👾 Fun Facts') as string;
+  const title = useThemeValue('about', 'statsCapabilities', 'title', 'Những con số') as string;
+  const titleHighlight = useThemeValue('about', 'statsCapabilities', 'titleHighlight', 'biết hát.') as string;
+  const description = useThemeValue('about', 'statsCapabilities', 'description', 'Chúng mình không đo lường thành công chỉ bằng doanh thu, mà bằng khối lượng công việc vui vẻ đã hoàn thành mỗi ngày.') as string;
+  const image = useThemeValue('about', 'statsCapabilities', 'image', 'https://picsum.photos/seed/fun-startup/1000/1000') as string;
+  
+  const defaultStats = [
+    { val: '2,450', title: 'Ly Cà Phê ☕', desc: 'Đã tiêu thụ để maintain não bộ.' },
+    { val: '1M+', title: 'Dòng Code ⌨️', desc: 'Được gõ và thi thoảng phải xóa đi.' },
+    { val: '99', title: 'Dự Án 🎉', desc: 'Đưa lên live thành công.' },
+    { val: '0', title: 'Drama ✌️', desc: 'Môi trường toàn là high-fives.' },
+  ];
+  const stats = useThemeValue('about', 'statsCapabilities', 'stats', defaultStats) as typeof defaultStats;
+
   return (
     <section className="bg-[#f8f9fa] py-12 md:py-20 px-4 md:px-0">
       <div className="max-w-6xl mx-auto px-6 md:px-8 bg-white rounded-[2rem] md:rounded-[3rem] p-6 sm:p-10 md:p-20 shadow-sm border border-zinc-100 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
@@ -21,25 +36,20 @@ export default function StatsCapabilities() {
           className="w-full lg:w-1/2 flex flex-col justify-center"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-indigo-100 text-indigo-700 rounded-full font-bold text-xs md:text-sm tracking-wide mb-6 md:mb-8 w-fit">
-            <span>👾</span>
-            <span>Fun Facts</span>
+            <span>{badge.split(' ')[0]}</span>
+            <span>{badge.substring(badge.indexOf(' ') + 1)}</span>
           </div>
           
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 mb-4 md:mb-6 tracking-tight leading-[1.15] md:leading-[1.1]">
-            Những con số <br className="hidden sm:block" /> <span className="text-indigo-500">biết hát.</span>
+            {title} <br className="hidden sm:block" /> <span className="text-indigo-500">{titleHighlight}</span>
           </h2>
           
           <p className="text-base md:text-lg text-zinc-500 font-medium leading-relaxed mb-10 md:mb-12 max-w-md">
-            Chúng mình không đo lường thành công chỉ bằng doanh thu, mà bằng khối lượng công việc vui vẻ đã hoàn thành mỗi ngày.
+            {description}
           </p>
 
           <div className="grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-6 md:gap-y-12">
-            {[
-              { val: '2,450', title: 'Ly Cà Phê ☕', desc: 'Đã tiêu thụ để maintain não bộ.' },
-              { val: '1M+', title: 'Dòng Code ⌨️', desc: 'Được gõ và thi thoảng phải xóa đi.' },
-              { val: '99', title: 'Dự Án 🎉', desc: 'Đưa lên live thành công.' },
-              { val: '0', title: 'Drama ✌️', desc: 'Môi trường toàn là high-fives.' },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -65,12 +75,14 @@ export default function StatsCapabilities() {
             transition={{ duration: 0.8, type: "spring" }}
             className="w-full aspect-square sm:aspect-video lg:aspect-[4/3] rounded-[2rem] md:rounded-[3rem] relative overflow-hidden bg-amber-100 border-4 md:border-8 border-white shadow-xl rotate-[-2deg]"
           >
-            <Image
-              src="https://picsum.photos/seed/fun-startup/1000/1000"
-              alt="Fun Workspace"
-              fill
-              className="object-cover hover:scale-[1.05] transition-transform duration-700 ease-out"
-            />
+            {image && (
+              <Image
+                src={image}
+                alt="Fun Workspace"
+                fill
+                className="object-cover hover:scale-[1.05] transition-transform duration-700 ease-out"
+              />
+            )}
             {/* Floating emoji sticker */}
             <div className="absolute top-4 -right-2 md:top-6 bg-white text-2xl md:text-4xl p-2 md:p-4 rounded-full shadow-lg rotate-12">
               🍕
