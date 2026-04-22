@@ -95,7 +95,7 @@ export default function ContactForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-bold text-zinc-700 ml-1">
-                Người anh em tên gì? *
+                Họ và tên *
               </label>
               <input
                 type="text"
@@ -109,7 +109,7 @@ export default function ContactForm() {
             {showPhoneField && (
             <div className="space-y-2">
               <label htmlFor="phone" className="text-sm font-bold text-zinc-700 ml-1">
-                Số cầm tay *
+                Số điện thoại *
               </label>
               <input
                 type="tel"
@@ -126,7 +126,7 @@ export default function ContactForm() {
           {showCompanyField && (
           <div className="space-y-2">
             <label htmlFor="company" className="text-sm font-bold text-zinc-700 ml-1">
-              Pháp danh công ty
+             Công ty
             </label>
             <input
               type="text"
@@ -140,7 +140,7 @@ export default function ContactForm() {
 
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-bold text-zinc-700 ml-1">
-              Hộp thư điện tử *
+              Email *
             </label>
             <input
               type="email"
@@ -154,28 +154,28 @@ export default function ContactForm() {
 
           {showServiceField && (
           <div className="space-y-2">
-            <label htmlFor="service" className="text-sm font-bold text-zinc-700 ml-1">
-              Muốn chúng mình phụ gì nè?
+            <label htmlFor="service" className="text-sm font-semibold text-slate-700">
+              Dịch vụ quan tâm
             </label>
             <select
               id="service"
               name="service"
-              className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 appearance-none"
+              className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all text-slate-700"
             >
-              <option value="">-- Cứ chọn thoải mái --</option>
-              <option value="software">Code giùm app/web đi</option>
-              <option value="consulting">Ngồi nghe tôi tâm sự chuyện hệ thống</option>
-              <option value="cloud">Gánh hộ con Server</option>
-              <option value="design">Làm sao cho nó đẹp lên là được</option>
-              <option value="hardware">Bán tôi mấy cục cắm điện</option>
-              <option value="other">Tới chơi là chính ☕</option>
+              <option value="">-- Chọn dịch vụ --</option>
+              <option value="software">Phát triển phần mềm & Web</option>
+              <option value="consulting">Tư vấn giải pháp IT</option>
+              <option value="cloud">Cloud & Máy chủ</option>
+              <option value="design">Thiết kế đồ họa & Quảng cáo</option>
+              <option value="hardware">Cung cấp thiết bị IT</option>
+              <option value="other">Khác</option>
             </select>
           </div>
           )}
 
           <div className="space-y-2">
             <label htmlFor="message" className="text-sm font-bold text-zinc-700 ml-1">
-              Viết chi tiết hơn nè *
+              Mô tả chi tiết *
             </label>
             <textarea
               id="message"
@@ -183,7 +183,7 @@ export default function ContactForm() {
               required
               rows={4}
               className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400 resize-none"
-              placeholder="Mô tả kỹ vô bạn ơi..."
+              placeholder="Nhập Mô Tả Chi Tiết Vấn Đề Của Bạn Vào Đây, Càng Nhiều Thông Tin Càng Tốt Cho Chúng Tôi Để Có Thể Hỗ Trợ Bạn Tốt Hơn!"
             ></textarea>
           </div>
 
@@ -191,19 +191,19 @@ export default function ContactForm() {
             <p className="text-rose-500 font-bold bg-rose-50 px-4 py-3 rounded-xl text-center text-sm">{error}</p>
           )}
 
-          <button
+           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-zinc-900 hover:bg-zinc-800 disabled:bg-zinc-300 text-white font-black tracking-wide py-4 md:py-5 rounded-[1.2rem] flex items-center justify-center gap-2 transition-transform shadow-sm transform hover:-translate-y-0.5 disabled:transform-none"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 disabled:transform-none"
           >
             {isLoading ? (
-              <><Loader2 className="w-5 h-5 animate-spin" /> Đang vận nội công gởi...</>
+              <><Loader2 className="w-5 h-5 animate-spin" /> Đang bắt đầu gửi...</>
             ) : (
               <>{buttonText} <Send className="w-5 h-5 ml-1" /></>
             )}
           </button>
           <p className="text-xs font-medium text-zinc-400 text-center mt-4">
-            Mọi chuyện giữa chúng ta là bí mật, cứ yên tâm nha.
+            Bằng việc gửi thông tin, bạn đồng ý với Chính sách bảo mật của chúng tôi.
           </p>
         </form>
       )}
