@@ -55,14 +55,17 @@ export default function ContactForm() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
-      className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.3, type: 'spring', stiffness: 100 }}
+      className="bg-white p-6 sm:p-8 md:p-12 rounded-[1.5rem] md:rounded-[2.5rem] shadow-sm border-2 border-white/50"
     >
-      <h2 className="text-3xl font-bold text-slate-900 mb-2">{formTitle}</h2>
-      <p className="text-slate-500 mb-8">
-        Điền thông tin bên dưới, chúng tôi sẽ phản hồi trong vòng 24h làm việc.
+      <h2 className="text-3xl md:text-4xl font-bold text-zinc-900 tracking-tight mb-3 leading-tight">
+        {formTitle}
+      </h2>
+      <p className="text-zinc-500 mb-8 md:mb-10 font-medium">
+        Điền thông tin bên dưới, chúng tôi sẽ phản hồi lại bạn bằng đường truyền sớm nhất! 🚀
       </p>
 
       {/* Trạng thái gửi thành công */}
@@ -70,50 +73,50 @@ export default function ContactForm() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-emerald-50 border border-emerald-100 rounded-3xl p-8 text-center"
+          className="bg-emerald-50 border border-emerald-100 rounded-3xl p-8 md:p-12 text-center"
         >
-          <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-10 h-10 text-emerald-600" />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">Gửi thành công!</h3>
-          <p className="text-slate-600 mb-6">
+          <h3 className="text-2xl font-bold text-emerald-950 tracking-tight mb-3">Gửi thành công!</h3>
+          <p className="text-emerald-800 opacity-90 font-medium mb-8">
             {successMessage}
           </p>
           <button
             onClick={() => setIsSubmitted(false)}
-            className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
+            className="text-emerald-600 font-bold hover:text-emerald-700 transition-colors bg-white px-6 py-2.5 rounded-full shadow-sm"
           >
-            Gửi tin nhắn khác
+            Gửi cái nữa không?
           </button>
         </motion.div>
       ) : (
         /* Form nhập liệu */
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-semibold text-slate-700">
-                Họ và tên *
+              <label htmlFor="name" className="text-sm font-bold text-zinc-700 ml-1">
+                Người anh em tên gì? *
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 required
-                className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400"
                 placeholder="Nguyễn Văn A"
               />
             </div>
             {showPhoneField && (
             <div className="space-y-2">
-              <label htmlFor="phone" className="text-sm font-semibold text-slate-700">
-                Số điện thoại *
+              <label htmlFor="phone" className="text-sm font-bold text-zinc-700 ml-1">
+                Số cầm tay *
               </label>
               <input
                 type="tel"
                 id="phone"
                 name="phone"
                 required
-                className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400"
                 placeholder="09xx xxx xxx"
               />
             </div>
@@ -122,85 +125,85 @@ export default function ContactForm() {
 
           {showCompanyField && (
           <div className="space-y-2">
-            <label htmlFor="company" className="text-sm font-semibold text-slate-700">
-              Công ty
+            <label htmlFor="company" className="text-sm font-bold text-zinc-700 ml-1">
+              Pháp danh công ty
             </label>
             <input
               type="text"
               id="company"
               name="company"
-              className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-              placeholder="Tên công ty"
+              className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400"
+              placeholder="Ghi vào nếu có"
             />
           </div>
           )}
 
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-semibold text-slate-700">
-              Email *
+            <label htmlFor="email" className="text-sm font-bold text-zinc-700 ml-1">
+              Hộp thư điện tử *
             </label>
             <input
               type="email"
               id="email"
               name="email"
               required
-              className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-              placeholder="email@domain.com"
+              className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400"
+              placeholder="thu-nay-ai-gui@domain.com"
             />
           </div>
 
           {showServiceField && (
           <div className="space-y-2">
-            <label htmlFor="service" className="text-sm font-semibold text-slate-700">
-              Dịch vụ quan tâm
+            <label htmlFor="service" className="text-sm font-bold text-zinc-700 ml-1">
+              Muốn chúng mình phụ gì nè?
             </label>
             <select
               id="service"
               name="service"
-              className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all text-slate-700"
+              className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 appearance-none"
             >
-              <option value="">-- Chọn dịch vụ --</option>
-              <option value="software">Phát triển phần mềm & Web</option>
-              <option value="consulting">Tư vấn giải pháp IT</option>
-              <option value="cloud">Cloud & Máy chủ</option>
-              <option value="design">Thiết kế đồ họa & Quảng cáo</option>
-              <option value="hardware">Cung cấp thiết bị IT</option>
-              <option value="other">Khác</option>
+              <option value="">-- Cứ chọn thoải mái --</option>
+              <option value="software">Code giùm app/web đi</option>
+              <option value="consulting">Ngồi nghe tôi tâm sự chuyện hệ thống</option>
+              <option value="cloud">Gánh hộ con Server</option>
+              <option value="design">Làm sao cho nó đẹp lên là được</option>
+              <option value="hardware">Bán tôi mấy cục cắm điện</option>
+              <option value="other">Tới chơi là chính ☕</option>
             </select>
           </div>
           )}
 
           <div className="space-y-2">
-            <label htmlFor="message" className="text-sm font-semibold text-slate-700">
-              Nội dung tin nhắn *
+            <label htmlFor="message" className="text-sm font-bold text-zinc-700 ml-1">
+              Viết chi tiết hơn nè *
             </label>
             <textarea
               id="message"
               name="message"
               required
               rows={4}
-              className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
-              placeholder="Mô tả chi tiết yêu cầu của bạn..."
+              className="w-full px-5 py-4 rounded-[1rem] bg-zinc-50/80 border-2 border-transparent focus:bg-white focus:border-teal-400 focus:ring-4 focus:ring-teal-100/50 outline-none transition-all font-medium text-zinc-900 placeholder:text-zinc-400 resize-none"
+              placeholder="Mô tả kỹ vô bạn ơi..."
             ></textarea>
           </div>
 
           {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
+            <p className="text-rose-500 font-bold bg-rose-50 px-4 py-3 rounded-xl text-center text-sm">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-200 transform hover:-translate-y-0.5 disabled:transform-none"
+            className="w-full bg-zinc-900 hover:bg-zinc-800 disabled:bg-zinc-300 text-white font-black tracking-wide py-4 md:py-5 rounded-[1.2rem] flex items-center justify-center gap-2 transition-transform shadow-sm transform hover:-translate-y-0.5 disabled:transform-none"
           >
             {isLoading ? (
-              <><Loader2 className="w-5 h-5 animate-spin" /> Đang gửi...</>
+              <><Loader2 className="w-5 h-5 animate-spin" /> Đang vận nội công gởi...</>
             ) : (
-              <>{buttonText} <Send className="w-5 h-5" /></>
+              <>{buttonText} <Send className="w-5 h-5 ml-1" /></>
             )}
           </button>
-          <p className="text-xs text-slate-400 text-center mt-4">
-            Bằng việc gửi thông tin, bạn đồng ý với Chính sách bảo mật của chúng tôi.
+          <p className="text-xs font-medium text-zinc-400 text-center mt-4">
+            Mọi chuyện giữa chúng ta là bí mật, cứ yên tâm nha.
           </p>
         </form>
       )}

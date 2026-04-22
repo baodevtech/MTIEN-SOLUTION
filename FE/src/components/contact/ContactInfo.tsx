@@ -25,87 +25,106 @@ export default function ContactInfo() {
 
   const mapImageUrl = getImageUrl(mapImage || null);
 
+  const contactCards = [
+    {
+      icon: <MapPin className="w-6 h-6 md:w-7 md:h-7 opacity-90" />,
+      title: 'Ghé chơi nè 🏡',
+      desc: <span className="block mt-1">{address}</span>,
+      bg: 'bg-[#FFE8D6]',
+      textConfig: 'text-orange-950',
+    },
+    {
+      icon: <Phone className="w-6 h-6 md:w-7 md:h-7 opacity-90" />,
+      title: 'Alo liền 📞',
+      desc: (
+        <span className="flex flex-col gap-1 mt-1">
+          <span>Hotline: <strong>{hotline}</strong></span>
+          <span>Hỗ trợ: <strong>{support}</strong></span>
+        </span>
+      ),
+      bg: 'bg-[#E3F2FD]',
+      textConfig: 'text-blue-950',
+    },
+    {
+      icon: <Mail className="w-6 h-6 md:w-7 md:h-7 opacity-90" />,
+      title: 'Gửi thư tay 💌',
+      desc: (
+        <span className="flex flex-col gap-1 mt-1">
+          <span>Tư vấn: <strong>{email}</strong></span>
+          <span>HR: <strong>{emailHR}</strong></span>
+        </span>
+      ),
+      bg: 'bg-[#E8F5E9]',
+      textConfig: 'text-green-950',
+    },
+    {
+      icon: <Clock className="w-6 h-6 md:w-7 md:h-7 opacity-90" />,
+      title: 'Giờ mở cửa ⏰',
+      desc: (
+        <span className="flex flex-col gap-1 mt-1">
+          <span>T2 - T6: {hoursWeekday}</span>
+          <span>Thứ 7: {hoursSaturday}</span>
+        </span>
+      ),
+      bg: 'bg-[#FFF3E0]',
+      textConfig: 'text-amber-950',
+    }
+  ];
+
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-    >
-      <h2 className="text-3xl font-bold text-slate-900 mb-8">Thông Tin Liên Hệ</h2>
-
-      <div className="space-y-8 mb-12">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
-            <MapPin className="w-6 h-6 text-blue-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Trụ sở chính</h3>
-            <p className="text-slate-600 leading-relaxed">{address}</p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center shrink-0">
-            <Phone className="w-6 h-6 text-orange-500" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Điện thoại</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Hotline: {hotline}
-              <br />
-              Hỗ trợ kỹ thuật: {support}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center shrink-0">
-            <Mail className="w-6 h-6 text-emerald-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Email</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Tư vấn: {email}
-              <br />
-              Tuyển dụng: {emailHR}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center shrink-0">
-            <Clock className="w-6 h-6 text-purple-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-1">Giờ làm việc</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Thứ 2 - Thứ 6: {hoursWeekday}
-              <br />
-              Thứ 7: {hoursSaturday}
-            </p>
-          </div>
-        </div>
+    <div className="flex flex-col gap-4 md:gap-5">
+      {/* Vertical Bento List */}
+      <div className="flex flex-col gap-3 md:gap-4">
+        {contactCards.map((item, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -15, scale: 0.98 }}
+            whileInView={{ opacity: 1, x: 0, scale: 1 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ delay: i * 0.05, type: 'spring', stiffness: 100, damping: 20 }}
+            whileHover={{ scale: 1.02 }}
+            className={`rounded-[1.5rem] md:rounded-[2rem] flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-5 ${item.bg} p-5 md:p-6 transition-transform duration-300`}
+          >
+            <div className={`flex-shrink-0 flex items-center justify-center bg-white/50 w-14 h-14 sm:w-16 sm:h-16 rounded-[1rem] sm:rounded-full shadow-sm ${item.textConfig}`}>
+              {item.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className={`text-lg md:text-xl font-bold ${item.textConfig} tracking-tight leading-tight mb-1 sm:mb-0`}>
+                {item.title}
+              </h3>
+              <div className={`text-sm md:text-base ${item.textConfig} opacity-85 break-words`}>
+                {item.desc}
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Bản đồ */}
-      <div className="w-full h-64 bg-slate-200 rounded-3xl overflow-hidden relative shadow-inner">
+      {/* Map Bento Box */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
+        className="w-full h-64 md:h-[22rem] bg-white rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden relative shadow-sm border-2 border-white/50"
+      >
         {mapImageUrl ? (
           mapUrl ? (
             <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-              <Image src={mapImageUrl} alt="Bản đồ" fill className="object-cover" />
+              <Image src={mapImageUrl} alt="Bản đồ" fill className="object-cover hover:scale-105 transition-transform duration-700" />
             </a>
           ) : (
-            <Image src={mapImageUrl} alt="Bản đồ" fill className="object-cover" />
+            <Image src={mapImageUrl} alt="Bản đồ" fill className="object-cover hover:scale-105 transition-transform duration-700" />
           )
         ) : mapUrl ? (
-          <iframe src={mapUrl} className="w-full h-full border-0" allowFullScreen loading="lazy" />
+          <iframe src={mapUrl} className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-500" allowFullScreen loading="lazy" />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center flex-col text-slate-400">
+          <div className="absolute inset-0 flex items-center justify-center flex-col text-zinc-400 bg-zinc-100">
             <MapPin className="w-10 h-10 mb-2 opacity-50" />
-            <span className="font-medium">Bản đồ Google Maps</span>
+            <span className="font-medium">Chưa cấu hình Map</span>
           </div>
         )}
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
