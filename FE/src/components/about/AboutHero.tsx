@@ -1,24 +1,22 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useThemeValue } from '@/lib/theme-context';
+import { useTheme } from '@/hooks/use-theme';
 
 /**
  * AboutHero - Bento / Playful Startup Style
  * Gọn gàng hơn cho mobile (giảm padding, margin, font size, kích thước avatar)
  */
 export default function AboutHero() {
-  const badge = useThemeValue('about', 'hero', 'badge', '👋') as string;
-  const title = useThemeValue('about', 'hero', 'title', 'Chào bạn,') as string;
-  const titleHighlight = useThemeValue('about', 'hero', 'titleHighlight', 'sản phẩm.') as string;
-  const description = useThemeValue('about', 'hero', 'description', 'Không đao to búa lớn. Chỉ là một tập thể thích viết code sạch và vẽ nên những giao diện khiến người dùng mỉm cười.') as string;
-  const bgColor = useThemeValue('about', 'hero', 'bgColor', '#f8f9fa') as string;
+  const t = useTheme('about', 'hero');
+  const badge = t('badge', '👋');
+  const title = t('title', 'Chào bạn,');
+  const titleHighlight = t('titleHighlight', 'sản phẩm.');
+  const description = t('description', 'Không đao to búa lớn. Chỉ là một tập thể thích viết code sạch và vẽ nên những giao diện khiến người dùng mỉm cười.');
+  const bgColor = t('bgColor', '#f8f9fa');
 
   return (
-    <section 
-      className="relative min-h-[70vh] md:min-h-[90vh] flex flex-col items-center justify-center pt-24 md:pt-32 pb-16 md:pb-20 px-4 overflow-hidden"
-      style={{ backgroundColor: bgColor }}
-    >
+    <section className="relative min-h-[70vh] md:min-h-[90vh] flex flex-col items-center justify-center pt-24 md:pt-32 pb-16 md:pb-20 px-4 overflow-hidden" style={{ backgroundColor: bgColor }}>
       
       {/* Decorative blobs (Solid colors, no gradient) - Thu nhỏ lại trên mobile */}
       <motion.div 
@@ -49,7 +47,7 @@ export default function AboutHero() {
           className="text-4xl sm:text-5xl md:text-[5.5rem] font-bold text-zinc-900 tracking-tight leading-[1.15] md:leading-[1.1] mb-6 md:mb-8"
         >
           {title} <br className="hidden sm:block" />
-          <span className="text-rose-500 bg-rose-50 px-3 md:px-4 rounded-[1rem] md:rounded-3xl inline-block -rotate-2 mt-2 md:mt-0">{titleHighlight}</span>
+           <span className="text-rose-500 bg-rose-50 px-3 md:px-4 rounded-[1rem] md:rounded-3xl inline-block -rotate-2 mt-2 md:mt-0">{titleHighlight}</span>
         </motion.h1>
 
         <motion.p

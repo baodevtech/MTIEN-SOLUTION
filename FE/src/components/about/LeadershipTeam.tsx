@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import { useThemeValue } from '@/lib/theme-context';
+import { useTheme } from '@/hooks/use-theme';
 
 /**
  * LeadershipTeam - Playful Circle Avatars
@@ -11,9 +11,6 @@ import { useThemeValue } from '@/lib/theme-context';
  */
 
 export default function LeadershipTeam() {
-  const badge = useThemeValue('about', 'team', 'badge', 'Meet the gang 🤘') as string;
-  const title = useThemeValue('about', 'team', 'title', 'Những người đứng sau bàn phím.') as string;
-
   const defaultTeam = [
     { name: 'Trần Q. Huy', role: 'Vẽ Giao Diện, Uống Trà Sữa', bg: 'bg-rose-200', image: 'https://picsum.photos/seed/happy-ceo/200/200' },
     { name: 'Nguyễn L. Minh', role: 'Phá Code Người Khác', bg: 'bg-blue-200', image: 'https://picsum.photos/seed/happy-cto/200/200' },
@@ -21,7 +18,11 @@ export default function LeadershipTeam() {
     { name: 'Lê H. Nam', role: 'Gặp Bug Là Khóc', bg: 'bg-amber-200', image: 'https://picsum.photos/seed/happy-cloud/200/200' },
   ];
 
-  const team = useThemeValue('about', 'team', 'members', defaultTeam) as Array<Record<string, any>>;
+  const t = useTheme('about', 'team');
+  const badge = t('badge', 'Meet the gang 🤘') as string;
+  const title = t('title', 'Những người đứng sau bàn phím.') as string;
+  const rawTeam = t<Record<string, any>[]>('members', []);
+  const team = Array.isArray(rawTeam) && rawTeam.length > 0 ? rawTeam : defaultTeam;
 
   return (
     <section className="bg-[#f8f9fa] py-16 md:py-24 pb-24 md:pb-40">
@@ -51,21 +52,19 @@ export default function LeadershipTeam() {
               transition={{ delay: i * 0.1, type: 'spring', bounce: 0.4 }}
               className="flex flex-col items-center text-center group"
             >
-              <div className={`relative w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48 mb-4 md:mb-6 rounded-full overflow-visible ${member?.bg || 'bg-zinc-200'}`}>
+              <div className={`relative w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48 mb-4 md:mb-6 rounded-full overflow-visible ${member.bg}`}>
                 {/* Background color blob */}
-                <div className={`absolute inset-0 rounded-full ${member?.bg || 'bg-zinc-200'} lg:group-hover:scale-110 transition-transform duration-500 ease-out`}></div>
-                {member?.image && (
-                  <Image
-                    src={member.image}
-                    alt={member?.name || 'Thành viên'}
-                    fill
-                    className="rounded-full object-cover z-10 p-1.5 md:p-2 origin-bottom transition-transform duration-500 lg:group-hover:translate-y-[-10px] lg:group-hover:scale-105"
-                  />
-                )}
+                <div className={`absolute inset-0 rounded-full ${member.bg} lg:group-hover:scale-110 transition-transform duration-500 ease-out`}></div>
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  fill
+                  className="rounded-full object-cover z-10 p-1.5 md:p-2 origin-bottom transition-transform duration-500 lg:group-hover:translate-y-[-10px] lg:group-hover:scale-105"
+                />
               </div>
               
-              <h3 className="text-base sm:text-lg md:text-xl font-bold text-zinc-900 tracking-tight mb-1">{member?.name || ''}</h3>
-              <p className="text-zinc-500 font-medium text-xs sm:text-sm leading-snug max-w-[100px] sm:max-w-none mx-auto">{member?.role || member?.title || ''}</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-zinc-900 tracking-tight mb-1">{member.name}</h3>
+              <p className="text-zinc-500 font-medium text-xs sm:text-sm leading-snug max-w-[100px] sm:max-w-none mx-auto">{member.role}</p>
 
             </motion.div>
           ))}

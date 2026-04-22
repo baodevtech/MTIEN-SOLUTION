@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useThemeValue } from '@/lib/theme-context';
+import { useTheme } from '@/hooks/use-theme';
 
 /**
  * Timeline - Card Stack / Winding Path
@@ -9,10 +9,11 @@ import { useThemeValue } from '@/lib/theme-context';
  */
 
 export default function Timeline() {
-  const badge = useThemeValue('about', 'timeline', 'badge', 'Kỷ niệm 📸') as string;
-  const title = useThemeValue('about', 'timeline', 'title', 'Hành trình khôn lớn') as string;
+  const t = useTheme('about', 'timeline');
+  const badge = t('badge', 'Kỷ niệm 📸');
+  const title = t('title', 'Hành trình khôn lớn');
 
-  const defaultMilestones = [
+  const defaultTimeline = [
     { 
       year: '2016', 
       title: 'Câu chuyện bắt đầu 🎒', 
@@ -43,7 +44,8 @@ export default function Timeline() {
     },
   ];
 
-  const milestones = useThemeValue('about', 'timeline', 'milestones', defaultMilestones) as Array<Record<string, any>>;
+  const rawTimeline = t<Record<string, any>[]>('milestones', []);
+  const timeline = Array.isArray(rawTimeline) && rawTimeline.length > 0 ? rawTimeline : defaultTimeline;
 
   return (
     <section className="bg-white py-16 md:py-32 overflow-hidden">
@@ -66,33 +68,27 @@ export default function Timeline() {
         <div className="flex flex-col gap-6 md:gap-8 items-center justify-center relative z-10 w-full">
           <div className="absolute top-0 bottom-0 left-[50%] w-[1px] md:w-0.5 border-l md:border-l-2 border-dashed border-zinc-200 -z-10"></div>
           
-          {milestones.map((item, i) => {
-            const rotateStr = item?.rotate || 'rotate-[0deg]';
-            const parsedRotate = rotateStr.includes('md:') 
-              ? parseFloat(rotateStr.split(' ')[0].replace('rotate-[', '').replace('deg]', '')) 
-              : parseFloat(rotateStr.replace('rotate-[', '').replace('deg]', ''));
-              
-            return (
+          {timeline.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20, rotate: 0 }}
-              whileInView={{ opacity: 1, y: 0, rotate: parsedRotate || 0 }}
+              whileInView={{ opacity: 1, y: 0, rotate: item.rotate.includes('md:') ? parseFloat(item.rotate.split(' ')[0].replace('rotate-[', '').replace('deg]', '')) : parseFloat(item.rotate.replace('rotate-[', '').replace('deg]', '')) }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
               whileHover={{ scale: 1.02, rotate: 0, zIndex: 20 }}
-              className={`w-[90%] max-w-[20rem] md:max-w-sm ${item?.color || 'bg-zinc-100 text-zinc-900'} ${rotateStr} p-6 md:p-8 rounded-[1.5rem] md:rounded-3xl shadow-sm border-2 border-white/50 cursor-pointer mx-auto`}
+              className={`w-[90%] max-w-[20rem] md:max-w-sm ${item.color} ${item.rotate} p-6 md:p-8 rounded-[1.5rem] md:rounded-3xl shadow-sm border-2 border-white/50 cursor-pointer mx-auto`}
             >
               <div className="text-xs md:text-sm font-black opacity-60 mb-1 md:mb-2">
-                {item?.year || ''}
+                {item.year}
               </div>
               <h3 className="text-xl md:text-2xl font-bold tracking-tight mb-2 md:mb-4 leading-tight">
-                {item?.title || ''}
+                {item.title}
               </h3>
               <p className="text-sm md:text-base font-medium opacity-80 leading-relaxed">
-                {item?.desc || item?.description || ''}
+                {item.desc}
               </p>
             </motion.div>
-          )})}
+          ))}
         </div>
 
       </div>
