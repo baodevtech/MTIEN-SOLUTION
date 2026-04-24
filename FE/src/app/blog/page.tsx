@@ -111,36 +111,63 @@ export default async function BlogPage({ searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Neo-brutalist Floating Island Header */}
-      <div className="bg-[#f4f4f0] bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:20px_20px] pt-12 md:pt-16 pb-12 relative overflow-hidden">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          
-          {/* The Brutal "Island" Box */}
-          <div className="bg-white border-[3px] md:border-4 border-black shadow-[8px_8px_0_rgba(0,0,0,1)] rounded-2xl p-6 md:p-8 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-8 hover:shadow-[12px_12px_0_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
+      {/* Tech Newsletter / Substack Profile Header */}
+      <div className="bg-white pt-24 md:pt-32 pb-8 md:pb-12 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-10">
             
-            {/* Left Content */}
-            <div className="flex-1 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-300 border-2 border-black text-black text-xs font-black uppercase tracking-widest shadow-[2px_2px_0_rgba(0,0,0,1)] mb-6 transform -rotate-1 hover:rotate-0 transition-transform cursor-pointer">
-                Tài nguyên học tập cực chất
+            {/* Left: Brand & Newsletter */}
+            <div className="w-full lg:w-3/5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-xl shadow-md shrink-0">
+                  M.
+                </div>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">MTIEN Insights</h1>
+                  <div className="text-sm text-slate-500 font-medium font-mono tracking-widest mt-0.5">TECH-DIGEST @ 2026</div>
+                </div>
               </div>
-              
-              <h1 className="text-4xl md:text-5xl font-black text-black tracking-tighter mb-5 uppercase leading-[1.1] drop-shadow-[2px_2px_0_#ccc]">
-                MTIEN <span className="px-3 border-[3px] border-black rounded-lg text-black -rotate-3 inline-block bg-amber-300 shadow-[4px_4px_0_rgba(0,0,0,1)]">Insights</span>
-              </h1>
-              
-              <p className="text-black text-sm md:text-base leading-relaxed max-w-lg mx-auto md:mx-0 font-bold border-l-4 border-blue-500 pl-4">
-                Chia sẻ kiến thức lập trình, phân tích chuyên sâu về kiến trúc hệ thống và những bài học xương máu trong phát triển phần mềm.
+              <p className="text-slate-600 text-base md:text-lg mb-6 max-w-xl leading-relaxed">
+                Bản tin xuất bản hàng tuần về kiến trúc phần mềm, xu hướng Cloud và các Case study triển khai hệ thống giải pháp số thực chiến.
               </p>
+              
+              {/* Form Inline (Dummy form) để tăng tính thực dụng UI */}
+              <div className="flex flex-col sm:flex-row gap-2 max-w-md">
+                <input 
+                  type="email" 
+                  placeholder="Nhập email của bạn..." 
+                  className="flex-1 bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
+                />
+                <button className="bg-slate-900 text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors whitespace-nowrap shadow-sm">
+                  Đăng ký nhận bài
+                </button>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2.5 font-medium">✨ Tham gia cùng hơn 2,000+ Engineers & CEO khác hàng tháng.</p>
             </div>
-
-             {/* Right Floating Avatars / Contributors */}
-            <div className="flex flex-col items-center shrink-0 mt-4 md:mt-0">
-              <span className="text-[10px] uppercase font-black text-black tracking-widest mb-3 py-1 px-2 border-2 border-black bg-blue-100 shadow-[2px_2px_0_rgba(0,0,0,1)] -rotate-2">Đóng góp bởi chuyên gia</span>
-              <div className="flex -space-x-3 md:-space-x-4 cursor-pointer hover:space-x-2 transition-all duration-300">
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-[3px] border-black bg-blue-400 flex items-center justify-center text-black font-black shadow-[2px_2px_0_rgba(0,0,0,1)] hover:-translate-y-2 transition-transform">AI</div>
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-[3px] border-black bg-amber-400 flex items-center justify-center text-black font-black shadow-[2px_2px_0_rgba(0,0,0,1)] z-10 hover:-translate-y-2 transition-transform">PM</div>
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-[3px] border-black bg-emerald-400 flex items-center justify-center text-black font-black shadow-[2px_2px_0_rgba(0,0,0,1)] z-20 hover:-translate-y-2 transition-transform">DE</div>
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-[3px] border-black bg-white text-black flex items-center justify-center text-base md:text-lg font-black shadow-[2px_2px_0_rgba(0,0,0,1)] z-30 hover:-translate-y-2 transition-transform">+9</div>
+            
+            {/* Right: Trending Topics Sidebar-style */}
+            <div className="w-full lg:w-2/5 lg:pl-10 lg:border-l border-slate-100 flex flex-col gap-4">
+              <div className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Đang được quan tâm</div>
+              
+              <div className="flex flex-col gap-4">
+                <div className="group cursor-pointer">
+                  <div className="text-blue-600 text-[10px] font-bold uppercase tracking-wider mb-1">#SystemDesign</div>
+                  <h3 className="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors text-sm md:text-base leading-snug">Thiết kế hệ thống chịu tải cao (High Availability) cho doanh nghiệp TMĐT</h3>
+                </div>
+                
+                <div className="w-full h-px bg-slate-100"></div>
+                
+                <div className="group cursor-pointer">
+                  <div className="text-amber-600 text-[10px] font-bold uppercase tracking-wider mb-1">#DevOps</div>
+                  <h3 className="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors text-sm md:text-base leading-snug">Tối ưu chi phí vận hành AWS Cloud cho dòng quy mô SME</h3>
+                </div>
+                
+                <div className="w-full h-px bg-slate-100"></div>
+                
+                <div className="group cursor-pointer">
+                  <div className="text-emerald-600 text-[10px] font-bold uppercase tracking-wider mb-1">#Management</div>
+                  <h3 className="text-slate-800 font-semibold group-hover:text-blue-600 transition-colors text-sm md:text-base leading-snug">Case Study đắt giá: Chuyển đổi số thành công trong 6 tháng</h3>
+                </div>
               </div>
             </div>
             
