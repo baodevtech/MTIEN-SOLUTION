@@ -41,7 +41,7 @@ export default function MarketingTechProcess() {
            
            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="flex-1 relative z-10">
               <BarChart3 className="w-10 h-10 md:w-16 md:h-16 text-blue-400 mb-5 md:mb-8" />
-              <h2 className="text-[24px] md:text-4xl font-extrabold mb-4 md:mb-6">Trang Bị "Vũ Khí" Tối Tân</h2>
+              <h2 className="text-[24px] md:text-4xl font-extrabold mb-4 md:mb-6">Trang Bị &ldquo;Vũ Khí&rdquo; Tối Tân</h2>
               <p className="text-[15px] md:text-xl text-neutral-400 leading-relaxed mb-6 md:mb-8">Không dựa trên cảm tính. Chúng tôi gắn Tracking mạnh mẽ đến tận cùng để kiểm soát Mọi hành vi khách hàng: Google Tag Manager, GA4, Meta Pixel, Conversion API.</p>
               <Link href="/contact" className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-base hover:bg-blue-700 transition-colors shadow-lg">Khởi Tạo Tracking Audit</Link>
            </motion.div>

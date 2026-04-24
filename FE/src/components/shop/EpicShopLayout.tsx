@@ -213,7 +213,7 @@ export default function EpicShopLayout() {
              <div className="flex flex-row items-center justify-between mb-3 md:mb-4 gap-2 z-30 relative">
                 <h2 className="text-base md:text-2xl font-bold text-slate-800 truncate flex items-center gap-1.5 md:gap-2">
                   {searchQuery ? (
-                    <>Tìm: <span className="text-blue-600 font-black">"{searchQuery}"</span></>
+                    <>Tìm: <span className="text-blue-600 font-black">&ldquo;{searchQuery}&rdquo;</span></>
                   ) : activeTab === "all" ? (
                     <>Khám phá <Flame className="w-4 h-4 md:w-5 md:h-5 text-[#FF6B00]" /></>
                   ) : (

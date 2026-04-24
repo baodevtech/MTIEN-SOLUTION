@@ -44,7 +44,7 @@ export default function MarketingVisionProblem() {
             <div className="absolute inset-0 bg-gradient-to-t from-red-950/80 via-black/30 to-black/10" />
             <div className="absolute inset-0 p-4 flex flex-col justify-end">
               <span className="text-red-400 text-[10px] font-bold uppercase tracking-wider mb-1">Cảnh Báo</span>
-              <h3 className="text-[17px] font-black text-white leading-tight">90% doanh nghiệp đang "đốt tiền" sai cách.</h3>
+              <h3 className="text-[17px] font-black text-white leading-tight">90% doanh nghiệp đang &ldquo;đốt tiền&rdquo; sai cách.</h3>
             </div>
           </div>
           {/* Right — Stacked problem cards */}
@@ -77,7 +77,7 @@ export default function MarketingVisionProblem() {
              </div>
           </motion.div>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-            <h3 className="text-4xl lg:text-5xl font-bold tracking-tight mb-6">90% doanh nghiệp <br/>đang "đốt tiền" sai cách.</h3>
+            <h3 className="text-4xl lg:text-5xl font-bold tracking-tight mb-6">90% doanh nghiệp <br/>đang &ldquo;đốt tiền&rdquo; sai cách.</h3>
             <p className="text-lg text-neutral-600 leading-relaxed mb-8">Bạn đang chạy quảng cáo theo cảm tính? Target sai tệp khách hàng? Hoặc có lượt nhấp (clicks) nhưng không có đơn hàng (no sales)? Đã đến lúc đưa dữ liệu vào điều hướng chiến lược.</p>
             <div className="grid grid-cols-2 gap-6">
                <div className="bg-neutral-50 p-6 rounded-2xl border border-neutral-100">

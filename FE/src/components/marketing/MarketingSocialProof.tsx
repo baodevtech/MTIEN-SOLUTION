@@ -51,7 +51,7 @@ export default function MarketingSocialProof() {
           <div className="flex flex-col md:flex-row gap-8 md:gap-16">
             <div className="flex-1">
                <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-[26px] md:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 mb-4 md:mb-6">Lời nói từ<br/>Các Nhà Đầu Tư</motion.h2>
-               <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-[15px] md:text-lg text-neutral-500 mb-6 md:mb-8">Một Agency tốt sẽ cam kết bằng chỉ số và doanh thu thực, không phải những lượt "Like" viển vông.</motion.p>
+               <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-[15px] md:text-lg text-neutral-500 mb-6 md:mb-8">Một Agency tốt sẽ cam kết bằng chỉ số và doanh thu thực, không phải những lượt &ldquo;Like&rdquo; viển vông.</motion.p>
                <Link href="/projects" className="font-bold border-b-2 border-neutral-900 pb-1 hover:text-blue-700 hover:border-blue-700 transition-colors">Xem Báo cáo Case Studies</Link>
             </div>
             <div className="flex-1 space-y-6">

@@ -7,14 +7,14 @@ import { useEffect, useState } from 'react';
  * - User prefers reduced motion (accessibility)
  */
 export function useReducedMotion(): boolean {
-  const [shouldReduce, setShouldReduce] = useState(false);
+  const [shouldReduce, setShouldReduce] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
 
   useEffect(() => {
     const mqMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
     const update = (e: MediaQueryListEvent) => setShouldReduce(e.matches);
-    setShouldReduce(mqMotion.matches);
-
     mqMotion.addEventListener('change', update);
     return () => {
       mqMotion.removeEventListener('change', update);
