@@ -3,7 +3,6 @@
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import { useTheme } from '@/hooks/use-theme';
-import { getImageUrl } from '@/lib/utils';
 
 /**
  * LeadershipTeam - Playful Circle Avatars
@@ -57,7 +56,7 @@ export default function LeadershipTeam() {
                 {/* Background color blob */}
                 <div className={`absolute inset-0 rounded-full ${member.bg} lg:group-hover:scale-110 transition-transform duration-500 ease-out`}></div>
                 <Image
-                  src={getImageUrl(member.image)}
+                  src={member.image}
                   alt={member.name}
                   fill
                   className="rounded-full object-cover z-10 p-1.5 md:p-2 origin-bottom transition-transform duration-500 lg:group-hover:translate-y-[-10px] lg:group-hover:scale-105"

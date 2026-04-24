@@ -60,18 +60,6 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/uploads/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'minhtiensolutions.com',
-        port: '',
-        pathname: '/uploads/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.minhtiensolutions.com',
-        port: '',
-        pathname: '/uploads/**',
-      },
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 31536000,
@@ -97,20 +85,6 @@ const nextConfig: NextConfig = {
       {
         source: '/:path*',
         headers: securityHeaders,
-      },
-    ];
-  },
-  async rewrites() {
-    // Proxy any /uploads/* request from the FE domain to the admin backend.
-    // This makes relative paths like "/uploads/general/foo.png" (saved in
-    // content editors, theme config, etc.) resolve correctly without having
-    // to rewrite every src prop in every component.
-    const adminUrl = (process.env.NEXT_PUBLIC_ADMIN_API_URL || process.env.ADMIN_API_URL || '').replace(/\/$/, '');
-    if (!adminUrl) return [];
-    return [
-      {
-        source: '/uploads/:path*',
-        destination: `${adminUrl}/uploads/:path*`,
       },
     ];
   },

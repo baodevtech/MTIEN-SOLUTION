@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import { Star, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import { useTheme } from '@/hooks/use-theme';
-import { getImageUrl } from '@/lib/utils';
 
 const defaultClients = [
   { id: 1, name: 'Client A' },
@@ -47,7 +46,7 @@ export default function TrustSection() {
         <div className="grid grid-cols-3 md:grid-cols-6 items-center gap-5 md:gap-10 lg:gap-16">
           {clients.map((client, idx) => (
             <div key={client.id || idx} className="w-full h-10 md:h-12 relative">
-              <Image src={getImageUrl(client.image) || `https://picsum.photos/seed/techlogo${(client.id || idx) + 1}/200/100`} alt={`Logo ${client.name}`} fill className="object-contain mix-blend-multiply opacity-60" loading="lazy" />
+              <Image src={client.image || `https://picsum.photos/seed/techlogo${(client.id || idx) + 1}/200/100`} alt={`Logo ${client.name}`} fill className="object-contain mix-blend-multiply opacity-60" loading="lazy" />
             </div>
           ))}
         </div>
