@@ -54,8 +54,8 @@ async function main() {
   const tagNames = [
     'phần mềm', 'quản lý kho', 'WMS', 'cloud', 'server', 'hosting',
     'marketing', 'digital', 'SEO', 'website', 'thiết kế', 'responsive',
-    'AI', 'tự động hóa', '2025', 'SME', 'hướng dẫn', 'ROI', 'chiến lược',
-    'UX', 'UI', 'e-commerce', 'bảo mật', 'cybersecurity', 'doanh nghiệp'
+    for (const c of categoryData) {
+      const cat = await prisma.Category.upsert({
   ];
   const tags = {};
   for (const t of tagNames) {
@@ -72,8 +72,8 @@ async function main() {
   // ─── Products ────────────────────────────────────
   const products = [
     {
-      name: 'Phần mềm Quản lý Kho MTIEN WMS',
-      slug: 'phan-mem-quan-ly-kho-mtien-wms',
+    for (const t of tagNames) {
+      const tag = await prisma.Tag.upsert({
       description: 'Giải pháp quản lý kho hàng thông minh, tối ưu quy trình nhập xuất tồn',
       price: 3500000,
       comparePrice: 5000000,
