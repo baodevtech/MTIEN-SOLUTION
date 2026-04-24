@@ -51,7 +51,7 @@ FE/
 |---|---|---|
 | `NEXT_PUBLIC_ADMIN_API_URL` | ✅ | `https://admin.example.com` |
 | `NEXT_PUBLIC_SITE_URL` | ✅ | `https://example.com` |
-| `REVALIDATE_SECRET` | ✅ | shared secret với BE, dùng cho `/api/revalidate` |
+| `REVALIDATION_SECRET` | ✅ | shared secret với BE (admin → Settings → Connection), dùng cho `/api/revalidate` |
 
 ## Scripts
 
@@ -78,7 +78,7 @@ npm run dev
 
 ## Revalidation
 
-`/api/revalidate?path=/blog/hello&secret=xxx` — gọi bởi BE sau khi publish bài viết để rebuild ISR trang tương ứng. Secret verify qua `REVALIDATE_SECRET`.
+`/api/revalidate?path=/blog/hello&secret=xxx` — gọi bởi BE sau khi publish bài viết để rebuild ISR trang tương ứng. Secret verify qua `REVALIDATION_SECRET`.
 
 ## Theme
 
