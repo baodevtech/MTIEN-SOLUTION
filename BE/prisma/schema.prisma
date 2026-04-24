@@ -30,9 +30,9 @@ model Tag {
   type      String   // 'post' | 'product' | 'project' | ...
   desc      String?
   status    String   @default("active")
-  posts     Post[]   @relation("PostTags", references: [id])
-  products  Product[] @relation("ProductTags", references: [id])
-  projects  Project[] @relation("ProjectTags", references: [id])
+  posts     Post[]
+  products  Product[]
+  projects  Project[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
