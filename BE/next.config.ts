@@ -1,7 +1,9 @@
 import type { NextConfig } from 'next'
+import { securityHeaders } from './src/lib/security-headers'
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  poweredByHeader: false,
   serverExternalPackages: ['@prisma/adapter-pg', 'pg'],
   images: {
     remotePatterns: [
@@ -15,6 +17,14 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '12mb',
     },
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: securityHeaders,
+      },
+    ]
   },
 }
 

@@ -6,10 +6,10 @@
  * Moi buoc co thanh mau va do rong giam dan tao hieu ung hinh pheu.
  */
 
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { Target } from 'lucide-react';
 
-const fadeUp: any = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (custom: number = 0) => ({
     opacity: 1, y: 0, transition: { duration: 0.8, delay: custom * 0.1, ease: [0.16, 1, 0.3, 1] }

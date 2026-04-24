@@ -1,13 +1,13 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 
 /**
  * DesignProcess - Quy trinh trien khai thiet ke va cac chi so tac dong
  * Bao gom: timeline 4 buoc (Kham pha, Wireframe, Design UI, Ban giao) va luoi thong ke (500+ du an, 98% danh gia tot, ...)
  */
 
-const fadeUp: any = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (custom: number = 0) => ({
     opacity: 1, y: 0, transition: { duration: 0.8, delay: custom * 0.1, ease: [0.16, 1, 0.3, 1] }

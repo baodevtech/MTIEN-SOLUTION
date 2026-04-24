@@ -1,0 +1,23 @@
+{
+  "name": "mtien-solution-root",
+  "private": true,
+  "description": "Devtools-only root for Husky/lint-staged. BE/ and FE/ remain independent Next.js apps.",
+  "scripts": {
+    "prepare": "husky",
+    "lint": "npm --prefix BE run lint && npm --prefix FE run lint",
+    "typecheck": "npm --prefix BE run typecheck && npm --prefix FE run typecheck",
+    "format": "npm --prefix BE run format && npm --prefix FE run format"
+  },
+  "devDependencies": {
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10"
+  },
+  "lint-staged": {
+    "BE/**/*.{ts,tsx,js,json,css}": [
+      "prettier --write --config BE/.prettierrc.json --ignore-path BE/.prettierignore"
+    ],
+    "FE/**/*.{ts,tsx,js,json,css}": [
+      "prettier --write --config FE/.prettierrc.json --ignore-path FE/.prettierignore"
+    ]
+  }
+}

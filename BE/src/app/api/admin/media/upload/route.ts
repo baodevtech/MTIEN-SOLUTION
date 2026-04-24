@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
+import sharp from 'sharp'
 import { prisma } from '@/lib/prisma'
 import { corsResponse, corsOptions } from '@/lib/cors'
 import { logActivity } from '@/lib/activity-log'
@@ -37,10 +38,14 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const files = formData.getAll('files') as File[]
-    const folder = (formData.get('folder') as string) || 'uploads'
+    const folder = (formData.get('folder') as string) || 'general'
 
-    // Validate folder name (no path traversal)
-    const safeFolder = folder.replace(/[^a-zA-Z0-9_-]/g, '_')
+    // Validate folder name (no path traversal). Also guard against the historical
+    // 'uploads' default which produced nested /public/uploads/uploads/ paths.
+    let safeFolder = folder.replace(/[^a-zA-Z0-9_-]/g, '_')
+    if (safeFolder === 'uploads' || safeFolder === '') {
+      safeFolder = 'general'
+    }
 
     if (!files || files.length === 0) {
       return corsResponse({ success: false, message: 'Không có file nào được chọn', code: 'NO_FILES' }, 400)
@@ -74,24 +79,57 @@ export async function POST(request: NextRequest) {
       const timestamp = Date.now()
       const uniqueName = `${baseName}-${timestamp}${ext}`
 
-      // Write file
-      const buffer = Buffer.from(await file.arrayBuffer())
-      const filePath = path.join(uploadDir, uniqueName)
-      await writeFile(filePath, buffer)
+      // Read source bytes
+      const sourceBuffer = Buffer.from(await file.arrayBuffer())
 
-      // Get image dimensions if it's an image
+      // Process images with sharp (auto-rotate from EXIF, downscale, re-encode, strip metadata).
+      // SVG and non-images are written as-is.
+      const isRasterImage =
+        file.type.startsWith('image/') && file.type !== 'image/svg+xml' && file.type !== 'image/x-icon' && file.type !== 'image/vnd.microsoft.icon'
+
+      let finalBuffer: Buffer = sourceBuffer
       let width: number | undefined
       let height: number | undefined
-      if (file.type.startsWith('image/') && !file.type.includes('svg')) {
+      let finalSize = file.size
+
+      if (isRasterImage) {
         try {
-          // Simple PNG/JPEG dimension parsing
-          const dims = getImageDimensions(buffer, file.type)
-          if (dims) {
-            width = dims.width
-            height = dims.height
+          const pipeline = sharp(sourceBuffer, { failOn: 'error' }).rotate()
+          const meta = await pipeline.metadata()
+          // Cap max dimension at 2560px to avoid huge hero images on disk
+          const MAX_DIM = 2560
+          const needsResize = (meta.width ?? 0) > MAX_DIM || (meta.height ?? 0) > MAX_DIM
+          const resized = needsResize
+            ? pipeline.resize({ width: MAX_DIM, height: MAX_DIM, fit: 'inside', withoutEnlargement: true })
+            : pipeline
+
+          // Re-encode in original format with sensible quality. This also strips EXIF
+          // (sharp drops metadata by default unless .withMetadata() is called).
+          if (file.type === 'image/jpeg') {
+            finalBuffer = await resized.jpeg({ quality: 82, mozjpeg: true }).toBuffer()
+          } else if (file.type === 'image/png') {
+            finalBuffer = await resized.png({ compressionLevel: 9 }).toBuffer()
+          } else if (file.type === 'image/webp') {
+            finalBuffer = await resized.webp({ quality: 82 }).toBuffer()
+          } else if (file.type === 'image/gif') {
+            // Keep GIF as-is (sharp loses animation); only read dims.
+            finalBuffer = sourceBuffer
+          } else {
+            finalBuffer = await resized.toBuffer()
           }
-        } catch { /* ignore dimension parsing errors */ }
+          const outMeta = await sharp(finalBuffer).metadata()
+          width = outMeta.width
+          height = outMeta.height
+          finalSize = finalBuffer.length
+        } catch (imgErr) {
+          console.warn('sharp pipeline failed, falling back to raw bytes:', imgErr)
+          finalBuffer = sourceBuffer
+        }
       }
+
+      // Write file
+      const filePath = path.join(uploadDir, uniqueName)
+      await writeFile(filePath, finalBuffer)
 
       // Save to database
       const url = `/uploads/${safeFolder}/${uniqueName}`
@@ -102,7 +140,7 @@ export async function POST(request: NextRequest) {
             originalName: file.name,
             url,
             type: getMediaType(file.type),
-            size: file.size,
+            size: finalSize,
             width,
             height,
             alt: '',
@@ -120,7 +158,7 @@ export async function POST(request: NextRequest) {
           originalName: file.name,
           url,
           type: getMediaType(file.type),
-          size: file.size,
+          size: finalSize,
           width: width ?? null,
           height: height ?? null,
           alt: '',
@@ -154,36 +192,4 @@ export async function POST(request: NextRequest) {
     console.error('Upload error:', message, err)
     return corsResponse({ success: false, message: `Lỗi upload: ${message}`, code: 'UPLOAD_FAILED' }, 500)
   }
-}
-
-// Simple image dimension parser (no external dependency)
-function getImageDimensions(buffer: Buffer, mime: string): { width: number; height: number } | null {
-  try {
-    if (mime === 'image/png') {
-      if (buffer.length > 24 && buffer[0] === 0x89 && buffer[1] === 0x50) {
-        return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) }
-      }
-    }
-    if (mime === 'image/jpeg') {
-      let offset = 2
-      while (offset < buffer.length) {
-        if (buffer[offset] !== 0xFF) break
-        const marker = buffer[offset + 1]
-        if (marker === 0xC0 || marker === 0xC2) {
-          return { height: buffer.readUInt16BE(offset + 5), width: buffer.readUInt16BE(offset + 7) }
-        }
-        const segLen = buffer.readUInt16BE(offset + 2)
-        offset += 2 + segLen
-      }
-    }
-    if (mime === 'image/gif' && buffer.length > 10) {
-      return { width: buffer.readUInt16LE(6), height: buffer.readUInt16LE(8) }
-    }
-    if (mime === 'image/webp' && buffer.length > 30) {
-      if (buffer.slice(12, 16).toString() === 'VP8 ') {
-        return { width: buffer.readUInt16LE(26) & 0x3FFF, height: buffer.readUInt16LE(28) & 0x3FFF }
-      }
-    }
-  } catch { /* ignore */ }
-  return null
 }

@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+# Husky pre-commit hook — runs Prettier on staged files in BE/ and FE/.
+# Enable after installing root deps:
+#   npm install
+#   npx husky init
+# (This file is created up-front; `husky init` will make it executable.)
+npx lint-staged

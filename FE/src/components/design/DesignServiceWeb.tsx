@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from 'motion/react';
+import { motion, type Variants } from 'motion/react';
 import { Monitor, Smartphone, CheckCircle2 } from 'lucide-react';
 
 /**
@@ -9,14 +9,14 @@ import { Monitor, Smartphone, CheckCircle2 } from 'lucide-react';
  * Bao gom: Section Web UX/UI (hinh anh + danh sach tinh nang) va Section Mobile App (mockup dien thoai + tinh nang)
  */
 
-const fadeUp: any = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (custom: number = 0) => ({
     opacity: 1, y: 0, transition: { duration: 0.8, delay: custom * 0.1, ease: [0.16, 1, 0.3, 1] }
   })
 };
 
-const scaleIn: any = {
+const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: { opacity: 1, scale: 1, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
 };

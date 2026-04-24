@@ -16,6 +16,9 @@ model User {
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([role])
+  @@index([createdAt])
 }
 
 // ─── Products ────────────────────────────────────────
@@ -37,6 +40,12 @@ model Product {
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([featured])
+  @@index([status, category])
+  @@index([createdAt])
 }
 
 // ─── Posts / Blog ────────────────────────────────────
@@ -66,6 +75,12 @@ model Post {
   publishedAt DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([publishedAt])
+  @@index([status, publishedAt])
+  @@index([createdAt])
 }
 
 // ─── Contacts ────────────────────────────────────────
@@ -80,6 +95,10 @@ model Contact {
   status    String   @default("new")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
 }
 
 // ─── Orders ──────────────────────────────────────────
@@ -98,6 +117,12 @@ model Order {
   notes         String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([customerEmail])
+  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model OrderItem {
@@ -110,6 +135,9 @@ model OrderItem {
   price     Float
   quantity  Int
   image     String?
+
+  @@index([orderId])
+  @@index([productId])
 }
 
 // ─── Media ───────────────────────────────────────────
@@ -126,6 +154,10 @@ model Media {
   folder       String?
   uploadedBy   String?
   createdAt    DateTime @default(now())
+
+  @@index([folder])
+  @@index([type])
+  @@index([createdAt])
 }
 
 // ─── Settings (key-value store) ──────────────────────
@@ -149,6 +181,9 @@ model Service {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([order])
 }
 
 // ─── Projects ────────────────────────────────────────
@@ -167,6 +202,12 @@ model Project {
   completedAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([featured])
+  @@index([completedAt])
+  @@index([createdAt])
 }
 
 // ─── Site Pages ──────────────────────────────────────
@@ -182,6 +223,10 @@ model Page {
   parentId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([parentId])
+  @@index([order])
 }
 
 // ─── Analytics ───────────────────────────────────────
@@ -240,4 +285,7 @@ model ActivityLog {
   @@index([module])
   @@index([status])
   @@index([createdAt])
+  @@index([userId])
+  @@index([action])
+  @@index([module, createdAt])
 }

@@ -7,12 +7,12 @@
  */
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, type Variants } from 'motion/react';
 import { TrendingUp, ArrowRight, Target, Activity } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const fadeUp: any = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (custom: number = 0) => ({
     opacity: 1, y: 0, transition: { duration: 0.8, delay: custom * 0.1, ease: [0.16, 1, 0.3, 1] }

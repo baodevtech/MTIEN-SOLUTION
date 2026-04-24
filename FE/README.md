@@ -1,20 +1,97 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# MTIEN Solution — Frontend (Public website)
 
-# Run and deploy your AI Studio app
+Website public cho M.TIEN Solution. Next.js 15 App Router + Tailwind CSS v4 + Motion.
 
-This contains everything you need to run your app locally.
+## Tech stack
 
-View your app in AI Studio: https://ai.studio/apps/67911b80-c137-4f3a-b6f8-22e9ae8a5156
+- **Runtime:** Node.js 20
+- **Framework:** Next.js 15 (App Router, ISR)
+- **Language:** TypeScript 5.9 (strict)
+- **Styling:** Tailwind CSS v4
+- **Animation:** `motion/react` (Framer Motion v12)
+- **Icons:** `lucide-react`
+- **Test:** Vitest 2 + Testing Library + jsdom
 
-## Run Locally
+## Cấu trúc thư mục
 
-**Prerequisites:**  Node.js
+```
+FE/
+├── src/
+│   ├── app/
+│   │   ├── (routes)/        # Pages
+│   │   ├── api/             # Route handlers (revalidate, theme proxy)
+│   │   ├── sitemap.ts
+│   │   ├── robots.ts
+│   │   ├── layout.tsx
+│   │   ├── error.tsx        # Error boundary
+│   │   └── not-found.tsx
+│   ├── components/
+│   │   ├── layout/          # Header, Footer
+│   │   ├── sections/        # Landing sections
+│   │   ├── marketing/       # /dich-vu/marketing
+│   │   ├── design/          # /dich-vu/marketing-design
+│   │   ├── cloud-server/    # /dich-vu/cloud-server
+│   │   ├── phan-mem/        # /dich-vu/phan-mem
+│   │   ├── blog/, shop/, contact/, about/, projects/, services/
+│   │   ├── theme/           # Theme editor preview
+│   │   └── ui/              # shadcn/ui primitives
+│   ├── hooks/
+│   ├── lib/
+│   │   ├── settings-context.tsx
+│   │   ├── theme-context.tsx
+│   │   ├── theme-fetcher.ts
+│   │   └── utils.ts         # `cn()` helper
+│   └── types/
+└── next.config.ts
+```
 
+## Environment variables
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+| Variable | Required | Example |
+|---|---|---|
+| `NEXT_PUBLIC_ADMIN_API_URL` | ✅ | `https://admin.example.com` |
+| `NEXT_PUBLIC_SITE_URL` | ✅ | `https://example.com` |
+| `REVALIDATE_SECRET` | ✅ | shared secret với BE, dùng cho `/api/revalidate` |
+
+## Scripts
+
+```bash
+npm run dev             # next dev
+npm run build           # next build
+npm start               # next start
+npm run lint            # ESLint
+npm run typecheck       # tsc --noEmit
+npm run format          # Prettier write
+npm run format:check    # Prettier verify
+npm test                # Vitest run
+npm run test:watch
+npm run test:coverage
+```
+
+## Local development
+
+```bash
+npm install
+cp .env.example .env.local   # điền biến
+npm run dev
+```
+
+## Revalidation
+
+`/api/revalidate?path=/blog/hello&secret=xxx` — gọi bởi BE sau khi publish bài viết để rebuild ISR trang tương ứng. Secret verify qua `REVALIDATE_SECRET`.
+
+## Theme
+
+Theme config được fetch từ BE (`/api/public/theme`) với cache `revalidate: 60`. Fallback sang theme mặc định khi BE không sẵn sàng (xem `src/lib/theme-fetcher.ts`).
+
+## Testing
+
+```bash
+npm test
+```
+
+jsdom env + `@testing-library/jest-dom` matchers. Config: `vitest.config.ts` + `vitest.setup.ts`.
+
+## CI
+
+GitHub Actions: `.github/workflows/ci.yml` — chạy lint → typecheck → format:check → test → build trên mỗi PR.
