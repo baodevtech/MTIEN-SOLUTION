@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import { useTheme } from '@/hooks/use-theme';
+import { getImageUrl } from '@/lib/utils';
 
 /**
  * StatsCapabilities - Playful Emoji & Cards
@@ -78,7 +79,7 @@ export default function StatsCapabilities() {
             className="w-full aspect-square sm:aspect-video lg:aspect-[4/3] rounded-[2rem] md:rounded-[3rem] relative overflow-hidden bg-amber-100 border-4 md:border-8 border-white shadow-xl rotate-[-2deg]"
           >
             <Image
-              src={image || "https://picsum.photos/seed/fun-startup/1000/1000"}
+              src={getImageUrl(image) || "https://picsum.photos/seed/fun-startup/1000/1000"}
               alt="Fun Workspace"
               fill
               className="object-cover hover:scale-[1.05] transition-transform duration-700 ease-out"
