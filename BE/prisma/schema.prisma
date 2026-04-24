@@ -7,6 +7,35 @@ datasource db {
 }
 
 // ─── Auth ────────────────────────────────────────────
+// ─── Category & Tag ───────────────────────────────
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  type      String   // 'post' | 'product' | 'project' | ...
+  icon      String?
+  desc      String?
+  status    String   @default("active")
+  posts     Post[]
+  products  Product[]
+  projects  Project[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  type      String   // 'post' | 'product' | 'project' | ...
+  desc      String?
+  status    String   @default("active")
+  posts     Post[]   @relation("PostTags", references: [id])
+  products  Product[] @relation("ProductTags", references: [id])
+  projects  Project[] @relation("ProjectTags", references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -29,22 +58,23 @@ model Product {
   description String?
   price       Float
   comparePrice Float?
-  category    String
+  categoryId  String?
+  category    Category?   @relation(fields: [categoryId], references: [id])
   status      String      @default("active")
   stock       Int         @default(0)
   sku         String?
   image       String?
   images      String[]    @default([])
-  tags        String[]    @default([])
+  tags        Tag[]       @relation("ProductTags")
   featured    Boolean     @default(false)
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
   @@index([status])
-  @@index([category])
+  @@index([categoryId])
   @@index([featured])
-  @@index([status, category])
+  @@index([status, categoryId])
   @@index([createdAt])
 }
 
@@ -56,8 +86,9 @@ model Post {
   excerpt         String?
   content         String?
   coverImage      String?
-  category        String?
-  tags            String[] @default([])
+  categoryId      String?
+  category        Category? @relation(fields: [categoryId], references: [id])
+  tags            Tag[]    @relation("PostTags")
   author          String?
   status          String   @default("draft")
   views           Int      @default(0)
@@ -77,7 +108,7 @@ model Post {
   updatedAt   DateTime @updatedAt
 
   @@index([status])
-  @@index([category])
+  @@index([categoryId])
   @@index([publishedAt])
   @@index([status, publishedAt])
   @@index([createdAt])
@@ -195,7 +226,9 @@ model Project {
   description  String?
   images       String[]  @default([])
   technologies String[]  @default([])
-  category     String
+  categoryId   String?
+  category     Category? @relation(fields: [categoryId], references: [id])
+  tags         Tag[]     @relation("ProjectTags")
   status       String    @default("planned")
   featured     Boolean   @default(false)
   url          String?
@@ -204,7 +237,7 @@ model Project {
   updatedAt    DateTime  @updatedAt
 
   @@index([status])
-  @@index([category])
+  @@index([categoryId])
   @@index([featured])
   @@index([completedAt])
   @@index([createdAt])

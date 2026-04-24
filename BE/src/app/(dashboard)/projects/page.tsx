@@ -174,7 +174,7 @@ export default function ProjectsPage() {
                   ) : (
                     <div className="w-full h-full flex items-center justify-center"><ImageIcon size={40} className="text-slate-300" /></div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute top-3 right-3 flex items-center gap-2">
                     {project.featured && (
                       <span className="px-2 py-1 rounded-md text-[10px] font-semibold bg-amber-400 text-amber-900"><Star size={10} className="inline -mt-0.5 mr-0.5" /> Nổi bật</span>
