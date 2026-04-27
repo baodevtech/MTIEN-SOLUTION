@@ -1,5 +1,6 @@
 'use client'
 
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect, useRef } from 'react'
 import { Phone, Mail, MessageCircle, MessageSquare, X, Headphones } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -41,7 +42,8 @@ export default function FloatingContact({
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setMounted(true)
+    // eslint-disable-next-line
+    setTimeout(() => setMounted(true), 0)
     
     // Hiện tooltip sau 3s
     const timer = setTimeout(() => setShowTooltip(true), 3000)
@@ -60,7 +62,9 @@ export default function FloatingContact({
   }, [])
 
   useEffect(() => {
-    if (isOpen) setShowTooltip(false)
+    if (isOpen) {
+      setTimeout(() => setShowTooltip(false), 0)
+    }
   }, [isOpen])
 
   if (!mounted || enabled === false) return null
@@ -161,89 +165,88 @@ export default function FloatingContact({
         </div>
       )}
 
-      {/* Cửa sổ hỗ trợ (Apple iOS/iPadOS Glass Style) */}
+      {/* Cửa sổ hỗ trợ (Apple iOS/iPadOS Glass Style - Compact) */}
       <div 
         className={cn(
-          "mb-4 w-[300px] sm:w-[320px] rounded-[32px] shadow-[0_24px_64px_rgba(0,0,0,0.15)] border border-white/60",
-          "bg-white/70 backdrop-blur-[48px] overflow-hidden flex flex-col transform transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom-right",
+          "mb-3 w-[280px] sm:w-[300px] rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white/70",
+          "bg-white/80 backdrop-blur-[48px] overflow-hidden flex flex-col transform transition-all duration-400 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom-right",
           isOpen ? 'pointer-events-auto scale-100 opacity-100 translate-y-0' : 'pointer-events-none scale-90 opacity-0 translate-y-8 absolute bottom-16'
         )}
       >
-        {/* Header: iOS Style */}
-        <div className="pt-5 pb-3.5 px-5 relative">
-          <div className="absolute inset-0 bg-white/40 border-b border-black/[0.05] pointer-events-none"></div>
+        {/* Header: iOS Style (Compact) */}
+        <div className="pt-4 pb-3 px-5 relative bg-white/40">
+          <div className="absolute inset-0 border-b border-black/[0.04] pointer-events-none"></div>
           <div className="relative flex items-center justify-between">
-            <h3 className="font-bold text-[20px] sm:text-[22px] text-black tracking-tight">Trung tâm hỗ trợ</h3>
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/5 rounded-full">
+            <h3 className="font-bold text-[18px] sm:text-[19px] text-gray-900 tracking-tight">Trung tâm hỗ trợ</h3>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-black/5 rounded-full">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34C759] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#34C759]"></span>
               </span>
-              <span className="text-[10px] sm:text-[11px] font-semibold text-gray-700 uppercase tracking-wide">Trực tuyến</span>
+              <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Online</span>
             </div>
           </div>
         </div>
 
-        {/* Brand Representation instead of Multi-agents */}
-        <div className="relative bg-white/40">
-          <div className="px-3 pb-5 pt-3">
+        {/* Brand Representation (Centered Compact) */}
+        <div className="relative bg-white/20">
+          <div className="px-3 pb-4 pt-2">
             
             {/* Main Brand Agent */}
-            <div className="p-3 pb-1 mb-[10px] mt-1 flex flex-col items-center text-center">
-              <div className="relative mb-[14px] inline-block">
+            <div className="px-3 pb-1 mb-[10px] mt-1 flex flex-col items-center text-center">
+              <div className="relative mb-[10px] inline-block">
                 {avatar ? (
-                  <div className="relative w-[76px] h-[76px] sm:w-[84px] sm:h-[84px] rounded-full bg-white flex items-center justify-center overflow-hidden ring-[4px] ring-white shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+                  <div className="relative w-[64px] h-[64px] sm:w-[70px] sm:h-[70px] rounded-full bg-white flex items-center justify-center overflow-hidden ring-[3px] ring-white shadow-[0_6px_16px_rgba(0,0,0,0.06)]">
                     <img src={avatar} alt={displayBrandName} className="w-full h-full object-contain bg-white" />
                   </div>
                 ) : (
-                  <div className="relative w-[76px] h-[76px] sm:w-[84px] sm:h-[84px] rounded-full bg-gradient-to-tr from-[#9247f0] to-[#603ded] flex items-center justify-center text-[34px] sm:text-[38px] font-bold text-white ring-[4px] ring-white shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+                  <div className="relative w-[64px] h-[64px] sm:w-[70px] sm:h-[70px] rounded-full bg-gradient-to-tr from-[#8E2DE2] to-[#4A00E0] flex items-center justify-center text-[28px] sm:text-[30px] font-bold text-white ring-[3px] ring-white shadow-[0_6px_16px_rgba(0,0,0,0.06)]">
                     {displayBrandName.slice(0, 1).toUpperCase()}
                   </div>
                 )}
-                {/* Status Dot properly carved out of avatar */}
-                <div className="absolute -bottom-1 -right-1 w-[18px] h-[18px] sm:w-[20px] sm:h-[20px] bg-[#34C759] border-[4px] border-white rounded-full z-10 box-content shadow-sm"></div>
+                {/* Status Dot */}
+                <div className="absolute -bottom-0.5 -right-0.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] bg-[#34C759] border-[3px] border-white rounded-full z-10 box-content shadow-sm"></div>
               </div>
-              <h4 className="font-semibold text-[18px] sm:text-[20px] text-[#0f172a] tracking-tight">{displayBrandName}</h4>
-              <p className="text-[13px] sm:text-[13.5px] text-[#475569] mt-1.5 font-medium bg-[#f1f5f9] px-4 py-[6px] rounded-full w-fit mx-auto">{displayDesc}</p>
+              <h4 className="font-semibold text-[17px] sm:text-[18px] text-gray-900 tracking-tight leading-tight">{displayBrandName}</h4>
+              <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1 font-medium bg-black/[0.03] px-3.5 py-1 rounded-full w-fit mx-auto leading-tight">{displayDesc}</p>
             </div>
 
             {/* Contact Action List */}
-            <div className="space-y-1 mt-2">
+            <div className="space-y-1 mt-1">
               {contacts.map((contact) => (
                 <a 
                   key={contact.id}
                   href={contact.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="group p-2.5 rounded-[20px] hover:bg-black/[0.04] transition-all duration-300 flex flex-row items-center gap-3.5 no-underline active:scale-[0.98]"
+                  className="group p-2.5 rounded-[20px] hover:bg-white/60 hover:shadow-sm transition-all duration-300 flex flex-row items-center gap-3 no-underline active:scale-[0.98]"
                 >
                   {/* Action Icon */}
                   <div className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 relative",
-                    contact.bg, contact.hover
+                    "w-[38px] h-[38px] rounded-[14px] flex items-center justify-center shrink-0 transition-all duration-300 relative border border-black/5 shadow-sm bg-white"
                   )}>
-                    {contact.icon}
+                    <div className="scale-90">{contact.icon}</div>
                     {contact.brandText && (
-                      <span className={cn("absolute text-[10px] font-extrabold mt-[3px] tracking-tight", contact.brandColor)}>{contact.brandText}</span>
+                      <span className={cn("absolute text-[9px] font-extrabold mt-[2px] tracking-tight", contact.brandColor)}>{contact.brandText}</span>
                     )}
                   </div>
 
                   {/* Action Info */}
                   <div className="flex-1 text-left min-w-0 pt-0.5">
-                    <h4 className="font-semibold text-[16px] text-black tracking-tight mb-0.5">{contact.name}</h4>
-                    <p className="text-[13px] font-medium text-gray-500 truncate tracking-tight">{contact.value}</p>
+                    <h4 className="font-semibold text-[14.5px] text-gray-900 tracking-tight leading-tight mb-0.5">{contact.name}</h4>
+                    <p className="text-[12px] font-medium text-gray-500 truncate tracking-tight">{contact.value}</p>
                   </div>
                   
                   {/* Action Arrow */}
-                  <div className="w-8 h-8 rounded-full bg-black/5 text-gray-400 flex items-center justify-center mr-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                  <div className="w-7 h-7 rounded-full bg-black/5 text-gray-400 flex items-center justify-center mr-[2px] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                   </div>
                 </a>
               ))}
             </div>
 
           </div>
-          <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/90 to-transparent pointer-events-none rounded-b-[32px]"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/80 to-transparent pointer-events-none rounded-b-[30px]"></div>
         </div>
       </div>
 
