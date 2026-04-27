@@ -42,7 +42,6 @@ export default function FloatingContact({
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // eslint-disable-next-line
     setTimeout(() => setMounted(true), 0)
     
     // Hiện tooltip sau 3s
