@@ -4,6 +4,7 @@ import { Manrope } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FloatingContact from '@/components/layout/FloatingContact';
 import { ThemeProvider } from '@/lib/theme-context';
 import { SettingsProvider } from '@/lib/settings-context';
 import { getTheme, getSettings } from '@/lib/theme-fetcher';
@@ -256,6 +257,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               {children}
             </main>
             <Footer />
+            <FloatingContact 
+              enabled={settings?.floatContact?.enabled}
+              brandName={settings?.floatContact?.brandName}
+              brandDesc={settings?.floatContact?.brandDesc}
+              tooltipText={settings?.floatContact?.tooltipText}
+              avatar={settings?.floatContact?.avatar}
+              phone={settings?.floatContact?.phone || settings?.company?.phone}
+              email={settings?.floatContact?.email || settings?.company?.email}
+              zaloUrl={settings?.floatContact?.zalo || settings?.social?.zalo}
+              facebookUrl={settings?.floatContact?.messenger || settings?.social?.facebook}
+              iconPhone={settings?.floatContact?.iconPhone}
+              iconZalo={settings?.floatContact?.iconZalo}
+              iconMessenger={settings?.floatContact?.iconMessenger}
+              iconEmail={settings?.floatContact?.iconEmail}
+            />
           </SettingsProvider>
         </ThemeProvider>
       </body>

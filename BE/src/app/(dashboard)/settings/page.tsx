@@ -15,6 +15,7 @@ const tabs = [
   { key: 'connection', label: 'Kết nối Frontend', icon: Link2 },
   { key: 'general', label: 'Tổng quan', icon: Globe },
   { key: 'company', label: 'Công ty', icon: Building2 },
+  { key: 'floatcontact', label: 'Liên hệ nổi', icon: Zap },
   { key: 'social', label: 'Mạng xã hội', icon: Facebook },
   { key: 'email', label: 'Email (SMTP)', icon: Send },
   { key: 'appearance', label: 'Giao diện', icon: Palette },
@@ -151,6 +152,22 @@ export default function SettingsPage() {
     zalo: '0901234567',
   })
 
+  const [floatContact, setFloatContact] = useState({
+    enabled: true,
+    brandName: 'MTIEN SOLUTION',
+    brandDesc: 'Hỗ trợ trực tuyến 24/7',
+    avatar: '/logo.svg',
+    tooltipText: 'Chào bạn! 👋 Mình có thể giúp gì cho bạn?',
+    phone: '',
+    zalo: '',
+    messenger: '',
+    email: '',
+    iconPhone: '',
+    iconZalo: '',
+    iconMessenger: '',
+    iconEmail: '',
+  })
+
   const [email, setEmail] = useState({
     smtpHost: 'smtp.gmail.com',
     smtpPort: '587',
@@ -205,6 +222,7 @@ export default function SettingsPage() {
         if (d.general) setGeneral(prev => ({ ...prev, ...d.general }))
         if (d.company) setCompany(prev => ({ ...prev, ...d.company }))
         if (d.social) setSocial(prev => ({ ...prev, ...d.social }))
+        if (d.floatContact) setFloatContact(prev => ({ ...prev, ...d.floatContact }))
         if (d.email) setEmail(prev => ({ ...prev, ...d.email }))
         if (d.appearance) setAppearance(prev => ({ ...prev, ...d.appearance }))
         if (d.security) setSecurity(prev => ({ ...prev, ...d.security }))
@@ -216,7 +234,7 @@ export default function SettingsPage() {
   const saveSettings = useCallback(async (keys?: string[]) => {
     setSettingsSaving(true)
     try {
-      const allData: Record<string, unknown> = { general, company, social, email, appearance, security, notifications }
+      const allData: Record<string, unknown> = { general, company, floatContact, social, email, appearance, security, notifications }
       const payload = keys ? Object.fromEntries(keys.map(k => [k, allData[k]])) : allData
       const res = await fetch('/api/admin/settings', {
         method: 'PUT',
@@ -231,7 +249,7 @@ export default function SettingsPage() {
     } finally {
       setSettingsSaving(false)
     }
-  }, [general, company, social, email, appearance, security, notifications])
+  }, [general, company, floatContact, social, email, appearance, security, notifications])
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -562,6 +580,99 @@ REVALIDATION_SECRET=${connection.secretKey}`}
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1">Năm thành lập</label>
                   <input type="text" value={company.foundedYear} onChange={(e) => setCompany({ ...company, foundedYear: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Float Contact */}
+          {tab === 'floatcontact' && (
+            <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5 animate-fade-in">
+              <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Zap size={18} /> Liên hệ nổi (Floating Contact)</h2>
+              
+              <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200 mb-6">
+                <div>
+                  <p className="text-sm font-semibold text-slate-800">Hiển thị Widget</p>
+                  <p className="text-xs text-slate-500">Bật/Tắt widget liên hệ nổi ở góc dưới trang web</p>
+                </div>
+                <button type="button" onClick={() => setFloatContact({ ...floatContact, enabled: !floatContact.enabled })} className={cn('w-12 h-7 rounded-full transition-colors relative', floatContact.enabled ? 'bg-blue-500' : 'bg-slate-200')}>
+                  <span className={cn('absolute top-1 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', floatContact.enabled ? 'left-6' : 'left-1')} />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Tên thương hiệu (Hiển thị đầu widget)</label>
+                  <input type="text" value={floatContact.brandName} onChange={(e) => setFloatContact({ ...floatContact, brandName: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Lời chào (Tooltip 3s)</label>
+                  <input type="text" value={floatContact.tooltipText} onChange={(e) => setFloatContact({ ...floatContact, tooltipText: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Mô tả ngắn</label>
+                  <input type="text" value={floatContact.brandDesc} onChange={(e) => setFloatContact({ ...floatContact, brandDesc: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600 mb-1">Link Avatar/Logo Brand</label>
+                  <input type="text" value={floatContact.avatar} onChange={(e) => setFloatContact({ ...floatContact, avatar: e.target.value })} placeholder="/logo.svg" className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" />
+                </div>
+                
+                <div className="md:col-span-2 mt-4">
+                  <h3 className="text-sm font-semibold text-slate-800 mb-3">Liên kết riêng cho Widget</h3>
+                  <p className="text-xs text-slate-500 mb-4">Để trống nếu muốn sử dụng liên kết chung từ phần "Mạng xã hội/Công ty".</p>
+                </div>
+                
+                <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Số điện thoại</label>
+                      <input type="text" value={floatContact.phone} onChange={(e) => setFloatContact({ ...floatContact, phone: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="VD: 0901234567" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Icon tuỳ chỉnh (URL)</label>
+                      <input type="text" value={floatContact.iconPhone} onChange={(e) => setFloatContact({ ...floatContact, iconPhone: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="/icons/phone.svg hoặc https://..." />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Link Zalo</label>
+                      <input type="text" value={floatContact.zalo} onChange={(e) => setFloatContact({ ...floatContact, zalo: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="https://zalo.me/..." />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Icon tuỳ chỉnh (URL)</label>
+                      <input type="text" value={floatContact.iconZalo} onChange={(e) => setFloatContact({ ...floatContact, iconZalo: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="/icons/zalo.svg hoặc htpps://..." />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Link Messenger</label>
+                      <input type="text" value={floatContact.messenger} onChange={(e) => setFloatContact({ ...floatContact, messenger: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="https://m.me/..." />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Icon tuỳ chỉnh (URL)</label>
+                      <input type="text" value={floatContact.iconMessenger} onChange={(e) => setFloatContact({ ...floatContact, iconMessenger: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="/icons/messenger.svg hoặc https://..." />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-4 md:col-span-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Email</label>
+                      <input type="email" value={floatContact.email} onChange={(e) => setFloatContact({ ...floatContact, email: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="hoitro@..." />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">Icon tuỳ chỉnh (URL)</label>
+                      <input type="text" value={floatContact.iconEmail} onChange={(e) => setFloatContact({ ...floatContact, iconEmail: e.target.value })} className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="/icons/email.svg hoặc https://..." />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

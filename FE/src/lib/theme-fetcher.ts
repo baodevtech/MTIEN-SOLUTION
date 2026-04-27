@@ -37,6 +37,21 @@ export interface SiteSettings {
     tiktok?: string
     zalo?: string
   }
+  floatContact?: {
+    enabled?: boolean
+    brandName?: string
+    brandDesc?: string
+    avatar?: string
+    tooltipText?: string
+    phone?: string
+    zalo?: string
+    messenger?: string
+    email?: string
+    iconPhone?: string
+    iconZalo?: string
+    iconMessenger?: string
+    iconEmail?: string
+  }
   globalSEO?: {
     defaultTitle?: string
     titleTemplate?: string
